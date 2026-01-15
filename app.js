@@ -21,20 +21,20 @@ async function initUser() {
     if (data && data.status === 'paid') {
         userStatus = 'paid';
         const banner = document.getElementById('premiumBanner');
-        if (banner) banner.style.display = 'none'; // পেইড ইউজারদের ব্যানার দেখাবে না
+        if (banner) banner.style.display = 'none'; // পেইড ইউজারদের জন্য ব্যানার হাইড
     }
 }
 
-// --- ২. PWA ইন্সটল বাটন ফিক্স ---
+// --- ২. PWA ইন্সটল বাটন ফিক্স (Global Logic) ---
 const installBtn = document.getElementById('installPwa');
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    console.log("PWA ইন্সটল করার জন্য প্রস্তুত।");
+    console.log("PWA ইন্সটল প্রম্পট ফায়ার হয়েছে।");
     if (installBtn) {
-        installBtn.classList.remove('hidden'); // hidden ক্লাস সরাবে
-        installBtn.style.display = 'block';    // বাটন দেখাবে
+        installBtn.classList.remove('hidden'); // CSS এর hidden ক্লাস সরাবে
+        installBtn.style.display = 'block';    // সরাসরি বাটনটি দেখাবে
     }
 });
 
@@ -43,14 +43,16 @@ if (installBtn) {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') installBtn.style.display = 'none';
+            if (outcome === 'accepted') {
+                installBtn.style.display = 'none';
+            }
             deferredPrompt = null;
         }
     };
 }
 
-// --- ৩. পেমেন্ট রিডাইরেক্ট (Checkout Page) ---
-// এটি গ্লোবাল উইন্ডো অবজেক্টে রাখা হয়েছে যাতে HTML এর onclick এটি খুঁজে পায়
+// --- ৩. পেমেন্ট রিডাইরেক্ট (window অবজেক্টে রাখা হয়েছে) ---
+// এটি করলে HTML এর onclick="initPayment()" এটি সরাসরি খুঁজে পাবে
 window.initPayment = function() {
     console.log("চেকআউট পেজে পাঠানো হচ্ছে...");
     window.location.href = "checkout.html"; 
@@ -76,7 +78,7 @@ function playStory(story) {
 
     if (story.is_premium && userStatus === 'free') {
         frame.src = "about:blank";
-        overlay.classList.remove('hidden');
+        overlay.classList.remove('hidden'); // লক দেখাবে
     } else {
         overlay.classList.add('hidden');
         const blob = new Blob([story.webapp_html], { type: 'text/html' });
@@ -94,7 +96,10 @@ function renderSidebar(stories) {
         if (userStatus === 'free' && s.is_premium) {
             banner.innerHTML = `<div class="banner-lock-icon">🔒</div>`;
         }
-        banner.onclick = () => { playStory(s); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+        banner.onclick = () => { 
+            playStory(s); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        };
         sidebarList.appendChild(banner);
     });
 }
@@ -105,17 +110,13 @@ if (refreshBtn) {
     refreshBtn.onclick = () => loadStories(true);
 }
 
-// --- ৬. কন্টেন্ট প্রোটেকশন ---
-document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && ['c', 'u', 's', 'p'].includes(e.key)) e.preventDefault();
-});
-
 // --- ইনিশিয়ালাইজেশন ---
 document.addEventListener('DOMContentLoaded', async () => {
     await initUser();
     await loadStories();
 });
 
+// সার্ভিস ওয়ার্কার রেজিস্ট্রেশন
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW এরর:', err));
+    navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Error:', err));
 }
