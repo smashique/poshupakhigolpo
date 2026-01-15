@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>অ্যাডমিন প্যানেল - পশুপাখি গল্প</title>
+    <style>
+        body { font-family: sans-serif; padding: 50px; background: #f4f4f4; }
+        .admin-box { background: white; padding: 30px; border-radius: 15px; max-width: 600px; margin: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        input, textarea, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        button { background: #4CAF50; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="loginSection" class="admin-box">
+        <h2>অ্যাডমিন লগইন</h2>
+        <input type="password" id="adminPass" placeholder="পাসওয়ার্ড দিন">
+        <button onclick="checkPass()">প্রবেশ করুন</button>
+    </div>
+
+    <div id="uploadSection" class="admin-box hidden">
+        <h2>নতুন গল্প আপলোড করুন</h2>
+        <input type="text" id="t_bn" placeholder="গল্পের শিরোনাম (বাংলা)">
+        <input type="text" id="t_en" placeholder="Story Title (English)">
+        <input type="text" id="thumb" placeholder="থাম্বনেইল ইমেজ URL (১২০০x৬৭৫ রেশিও ভালো)">
+        <textarea id="web_html" rows="10" placeholder="গল্পের WebApp HTML কোড এখানে পেস্ট করুন..."></textarea>
+        <select id="premium">
+            <option value="true">প্রিমিয়াম (Paid)</option>
+            <option value="false">ফ্রি (Free)</option>
+        </select>
+        <button id="submitBtn" onclick="uploadStory()">গল্প পাবলিশ করুন</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const _supabase = supabase.createClient('YOUR_URL', 'YOUR_KEY');
+
+        function checkPass() {
+            if (document.getElementById('adminPass').value === '1234') { // আপনার সিক্রেট পাসওয়ার্ড
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('uploadSection').classList.remove('hidden');
+            } else { alert('ভুল পাসওয়ার্ড!'); }
+        }
+
+        async function uploadStory() {
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "আপলোড হচ্ছে...";
+            btn.disabled = true;
+
+            const { error } = await _supabase.from('stories').insert([{
+                title_bn: document.getElementById('t_bn').value,
+                title_en: document.getElementById('t_en').value,
+                thumbnail_url: document.getElementById('thumb').value,
+                webapp_html: document.getElementById('web_html').value,
+                is_premium: document.getElementById('premium').value === 'true'
+            }]);
+
+            if (error) { alert("এরর: " + error.message); } 
+            else { alert("গল্প সফলভাবে পাবলিশ হয়েছে!"); location.reload(); }
+        }
+    </script>
+</body>
+</html>
