@@ -1,43 +1,29 @@
-// sw.js
-
-// ক্যাশের নাম ভার্সন অনুযায়ী পরিবর্তন করবেন যখন বড় কোনো আপডেট দেবেন।
 const CACHE_NAME = 'poshupakhi-static-v1';
 const DYNAMIC_CACHE_NAME = 'poshupakhi-dynamic-v1';
 
-// অ্যাপ শেলের জন্য প্রয়োজনীয় ফাইলগুলো এখানে লিস্ট করুন।
-// এগুলো প্রথমবার লোড হওয়ার সময় সেভ হয়ে যাবে।
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
     '/style.css',
     '/app.js',
-    '/assets/logo.svg',
-    // সুপাবেস JS লাইব্রেরি CDN থেকে লোড হচ্ছে, তাই ওটা এখানে ক্যাশ করছি না।
-    // অফলাইন সাপোর্টের জন্য ওটা লোকালি ডাউনলোড করে ব্যবহার করা ভালো।
-    // আপাতত CDN-ই থাকুক, নিচের লজিকে ওটা হ্যান্ডেল হবে।
+    '/assets/logo.svg'
 ];
 
-// 1. Install Event (ফাইল ক্যাশ করা)
+// 1. Install Event
 self.addEventListener('install', event => {
-    // console.log('[Service Worker] Installing Service Worker ...', event);
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log('[Service Worker] Precaching App Shell');
-                return cache.addAll(ASSETS_TO_CACHE);
-            })
-            .then(() => self.skipWaiting()) // নতুন SW সাথে সাথে অ্যাক্টিভ হবে
+        caches.open(CACHE_NAME).then(cache => {
+            return cache.addAll(ASSETS_TO_CACHE);
+        }).then(() => self.skipWaiting())
     );
 });
 
-// 2. Activate Event (পুরোনো ক্যাশ ডিলিট করা)
+// 2. Activate Event
 self.addEventListener('activate', event => {
-    // console.log('[Service Worker] Activating Service Worker ....', event);
     event.waitUntil(
         caches.keys().then(keyList => {
             return Promise.all(keyList.map(key => {
                 if (key !== CACHE_NAME && key !== DYNAMIC_CACHE_NAME) {
-                    console.log('[Service Worker] Removing old cache.', key);
                     return caches.delete(key);
                 }
             }));
@@ -46,5 +32,33 @@ self.addEventListener('activate', event => {
     return self.clients.claim();
 });
 
-// 3. Fetch Event (নেটওয়ার্ক রিকোয়েস্ট হ্যান্ডেল করা)
+// 3. Fetch Event (Caching Strategy)
 self.addEventListener('fetch', event => {
+    const url = new URL(event.request.url);
+
+    // Supabase API রিকোয়েস্ট ক্যাশ করা হবে না (সবসময় নেটওয়ার্ক থেকে আসবে)
+    if (url.hostname.includes('supabase.co')) {
+        return event.respondWith(fetch(event.request));
+    }
+
+    // স্ট্যাটিক ফাইলের জন্য Cache-first, then Network
+    event.respondWith(
+        caches.match(event.request).then(cachedResponse => {
+            if (cachedResponse) return cachedResponse;
+
+            return fetch(event.request).then(networkResponse => {
+                return caches.open(DYNAMIC_CACHE_NAME).then(cache => {
+                    if (event.request.method === 'GET') {
+                        cache.put(event.request, networkResponse.clone());
+                    }
+                    return networkResponse;
+                });
+            });
+        }).catch(() => {
+            // যদি অফলাইন থাকে এবং ক্যাশে না থাকে
+            if (event.request.headers.get('accept').includes('text/html')) {
+                return caches.match('/index.html');
+            }
+        })
+    );
+});
