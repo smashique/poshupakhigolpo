@@ -11,16 +11,94 @@
             --primary-color: #2E7D32;
             --secondary-color: #FF9800;
         }
-        .checkout-container { max-width: 500px; margin: 40px auto; padding: 30px; background: white; border-radius: 25px; box-shadow: var(--shadow); text-align: center; border: 1px solid #eee; }
-        .benefit-list { text-align: left; margin: 25px 0; padding-left: 10px; list-style: none; }
-        .benefit-list li { margin: 12px 0; color: #333; font-size: 1.05rem; display: flex; align-items: flex-start; gap: 10px; }
-        .wa-support { display: inline-flex; align-items: center; gap: 8px; color: #25D366; text-decoration: none; font-weight: bold; margin-top: 20px; border: 2px solid #25D366; padding: 10px 20px; border-radius: 50px; transition: 0.3s; }
+
+        .checkout-container { 
+            max-width: 500px; 
+            margin: 40px auto; 
+            padding: 30px; 
+            background: white; 
+            border-radius: 25px; 
+            box-shadow: var(--shadow); 
+            text-align: center; 
+            border: 1px solid #eee; 
+        }
+
+        .lifetime-badge { 
+            background: #FFF9C4; 
+            color: #827717; 
+            padding: 6px 18px; 
+            border-radius: 50px; 
+            font-weight: bold; 
+            font-size: 0.85rem; 
+            display: inline-block; 
+            margin-bottom: 15px; 
+            border: 1px solid #FBC02D; 
+        }
+
+        .price-tag { margin: 20px 0; }
+        .price-tag del { font-size: 1.2rem; color: #999; }
+        .price-tag strong { font-size: 2.8rem; font-weight: bold; color: #333; }
+
+        .benefit-list { 
+            text-align: left; 
+            margin: 25px 0; 
+            padding-left: 10px; 
+            list-style: none; 
+        }
+
+        .benefit-list li { 
+            margin: 12px 0; 
+            color: #333; 
+            font-size: 1.05rem; 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 10px; 
+        }
+
+        .uid-box { 
+            background: #f8f9fa; 
+            padding: 12px; 
+            border-radius: 12px; 
+            margin: 20px 0; 
+            border: 1px dashed #ccc; 
+            font-size: 0.85rem; 
+            color: #666; 
+        }
+
+        .btn-buy-now { 
+            width: 100%; 
+            font-size: 1.3rem; 
+            padding: 18px; 
+            border-radius: 15px; 
+            background: var(--secondary-color); 
+            color: white; 
+            border: none; 
+            font-weight: bold; 
+            cursor: pointer; 
+            box-shadow: 0 6px 15px rgba(255,152,0,0.3); 
+            transition: 0.3s; 
+        }
+
+        .btn-buy-now:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 20px rgba(255,152,0,0.4); 
+        }
+
+        .wa-support { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            color: #25D366; 
+            text-decoration: none; 
+            font-weight: bold; 
+            margin-top: 20px; 
+            border: 2px solid #25D366; 
+            padding: 10px 20px; 
+            border-radius: 50px; 
+            transition: 0.3s; 
+        }
+
         .wa-support:hover { background: #25D366; color: white; }
-        .lifetime-badge { background: #FFF9C4; color: #827717; padding: 6px 18px; border-radius: 50px; font-weight: bold; font-size: 0.85rem; display: inline-block; margin-bottom: 15px; border: 1px solid #FBC02D; }
-        .uid-box { background: #f8f9fa; padding: 12px; border-radius: 12px; margin: 20px 0; border: 1px dashed #ccc; font-size: 0.85rem; color: #666; }
-        .price-tag strong { color: var(--secondary-color); }
-        .btn-buy-now { width: 100%; font-size: 1.3rem; padding: 18px; border-radius: 15px; background: var(--secondary-color); color: white; border: none; font-weight: bold; cursor: pointer; box-shadow: 0 6px 15px rgba(255,152,0,0.3); transition: 0.3s; }
-        .btn-buy-now:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255,152,0,0.4); }
     </style>
 </head>
 <body>
@@ -28,15 +106,15 @@
         <div class="lifetime-badge">♾️ আজীবনের জন্য আনলক (Lifetime)</div>
         <h2 style="color: var(--primary-color);">সোনামণির নৈতিক শিক্ষার পথে মাত্র এক ধাপ...</h2>
         
-        <div class="price-tag" style="margin: 20px 0;">
-            <span style="font-size: 1.2rem; color: #999;"><del>৳৪৯৯</del></span>
-            <span style="font-size: 2.8rem; font-weight: bold;"> ৳২৯৯</span>
+        <div class="price-tag">
+            <span><del>৳৪৯৯</del></span>
+            <strong> ৳২৯৯</strong>
         </div>
 
         <ul class="benefit-list">
-            <li>✅ <strong>আপনার সন্তানের শৈশবকে আনন্দময় করতে:</strong> পশু-পাখিদের শিক্ষামূলক গল্পের ভাণ্ডার।</li>
+            <li>✅ <strong>আপনার সন্তানের শৈশবকে আনন্দময় করতে:</strong> পশু-পাখিদের শিক্ষামূলক গল্পের ভাণ্ডার।</li>
             <li>✅ <strong>ইংরেজি শেখার সুযোগ:</strong> প্রতিটি গল্প বাংলা ও A1 লেভেল ইংরেজিতে লেখা।</li>
-            <li>✅ <strong>স্মার্ট লার্নিং:</strong> গল্প শোনার সাথে সাথে শিশু ইংরেজি ভাষায় দক্ষ হবে।</li>
+            <li>✅ <strong>স্মার্ট লার্নিং:</strong> গল্প শোনার সাথে সাথে শিশু ইংরেজি ভাষায় দক্ষ হবে।</li>
             <li>✅ <strong>আজীবন এক্সেস:</strong> একবার কিনুন, কোনো মাসিক চার্জ নেই।</li>
             <li>✅ <strong>নিরাপদ পেমেন্ট:</strong> বিকাশ বা রকেটে নিশ্চিন্তে পেমেন্ট করুন।</li>
         </ul>
