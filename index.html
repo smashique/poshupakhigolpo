@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>পশুপাখি গল্প - ছোটদের গল্পের ভুবন</title>
-    <link rel="stylesheet" href="style.css">
+    
+    <meta name="theme-color" content="#2E7D32">
     <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="/assets/icon-192.png">
+    
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
@@ -17,12 +21,15 @@
     </div>
 
     <header class="navbar">
-        <div class="logo">
-            <svg width="40" height="40" viewBox="0 0 100 100">
-                <path d="M20 80C20 80 40 20 80 20C80 20 60 80 20 80Z" fill="#4CAF50"/>
-            </svg>
-            <span>পশুপাখি গল্প</span>
+        <div class="logo-wrapper" onclick="window.location.reload()">
+            <div class="css-logo">
+                <div class="animal bird"></div>
+                <div class="animal elephant"></div>
+                <div class="animal bear"></div>
+            </div>
+            <span class="logo-text">পশুপাখি গল্প</span>
         </div>
+        
         <button id="installPwa" class="btn-install hidden">অ্যাপ ডাউনলোড</button>
     </header>
 
@@ -62,6 +69,5 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js"></script>
-</body>
+    <script src="icon.js"></script> <script src="app.js"></script>  </body>
 </html>
