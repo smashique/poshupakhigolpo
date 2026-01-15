@@ -1,12 +1,13 @@
+/* Custom Fonts and Variables */
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap');
 
 :root {
     --primary-color: #4CAF50;
     --secondary-color: #FF9800;
-    --bg-color: #f0f2f5;
-    --card-bg: #ffffff;
+    --bg-light: #e1f5fe;
+    --card-bg: rgba(255, 255, 255, 0.92);
     --text-main: #2c3e50;
-    --shadow: 0 4px 15px rgba(0,0,0,0.1);
+    --shadow: 0 8px 30px rgba(0,0,0,0.12);
 }
 
 * {
@@ -16,18 +17,65 @@
 
 body {
     margin: 0;
-    background-color: var(--bg-color);
+    overflow-x: hidden;
     color: var(--text-main);
+    background-color: var(--bg-light);
 }
 
-/* Header Styling */
+/* --- Infinite Jungle Animation Background --- */
+.jungle-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    background: linear-gradient(#e1f5fe, #b9fbc0);
+}
+
+.jungle-layer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background-repeat: repeat-x;
+    background-position: bottom;
+    animation: moveJungle linear infinite;
+}
+
+.layer-1 {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300'%3E%3Cpath d='M0 300V150l100-50 150 80 200-100 250 120 200-80v130z' fill='%2381c784' fill-opacity='0.3'/%3E%3C/svg%3E");
+    background-size: 1000px 300px;
+    animation-duration: 60s;
+}
+
+.layer-2 {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 400'%3E%3Cpath d='M50 400Q100 150 150 400M250 400Q300 100 350 400M550 400Q600 200 650 400' stroke='%234caf50' stroke-width='20' fill='none' opacity='0.4'/%3E%3C/svg%3E");
+    background-size: 800px 400px;
+    animation-duration: 40s;
+}
+
+.layer-3 {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 200'%3E%3Cpath d='M0 200Q50 100 100 200T200 200 300 200 400 200' fill='%232e7d32' fill-opacity='0.2'/%3E%3C/svg%3E");
+    background-size: 500px 150px;
+    animation-duration: 20s;
+}
+
+@keyframes moveJungle {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+/* --- Layout Components --- */
 .navbar {
     background: white;
     padding: 10px 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: var(--shadow);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -36,13 +84,22 @@ body {
 .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 1.5rem;
+    gap: 12px;
+    font-size: 1.6rem;
     font-weight: 700;
     color: var(--primary-color);
 }
 
-/* Layout Grid */
+.btn-install {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
 .container {
     display: grid;
     grid-template-columns: 1fr 320px;
@@ -52,17 +109,17 @@ body {
     padding: 0 20px;
 }
 
-/* Main Story Player */
+/* --- Story Player --- */
 .story-player {
     background: var(--card-bg);
-    border-radius: 20px;
+    border-radius: 24px;
     overflow: hidden;
     box-shadow: var(--shadow);
-    padding: 0;
+    backdrop-filter: blur(10px);
 }
 
 .player-header {
-    background: #f8f9fa;
+    background: rgba(248, 249, 250, 0.8);
     padding: 15px 25px;
     border-bottom: 1px solid #eee;
     display: flex;
@@ -80,7 +137,7 @@ body {
 
 .lang-toggle button {
     border: none;
-    padding: 8px 20px;
+    padding: 8px 22px;
     border-radius: 50px;
     cursor: pointer;
     font-weight: 600;
@@ -93,137 +150,94 @@ body {
 }
 
 .content-box {
-    padding: 40px;
+    padding: 45px;
     min-height: 500px;
-    line-height: 2;
 }
 
 .content-box h1 {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     color: #1a1a1a;
-    margin-bottom: 25px;
-    border-bottom: 3px solid var(--secondary-color);
+    margin-bottom: 30px;
+    border-bottom: 4px solid var(--secondary-color);
     display: inline-block;
 }
 
-.content-box #storyBody {
-    font-size: 1.3rem;
-    color: #444;
+#storyBody {
+    font-size: 1.4rem;
+    line-height: 2.1;
+    color: #333;
     text-align: justify;
 }
 
-/* Sidebar Styling */
+/* --- Sidebar --- */
 .sidebar {
     background: var(--card-bg);
-    border-radius: 20px;
+    border-radius: 24px;
     padding: 20px;
     box-shadow: var(--shadow);
     height: fit-content;
+    backdrop-filter: blur(10px);
 }
 
 .sidebar h3 {
-    margin-top: 0;
+    margin: 0 0 15px 0;
     font-size: 1.4rem;
     border-left: 5px solid var(--primary-color);
-    padding-left: 10px;
+    padding-left: 12px;
 }
 
 .story-item {
-    padding: 15px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    background: #fdfdfd;
-    border: 1px solid #f0f0f0;
+    padding: 14px;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid #eee;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s ease;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
 }
 
 .story-item:hover {
     background: #e8f5e9;
-    transform: translateY(-2px);
+    transform: scale(1.02);
 }
 
-.lock-icon { font-size: 14px; color: #ff5252; }
-
-/* Pricing Area */
+/* --- Pricing --- */
 .pricing-badge {
     background: #fff3e0;
-    padding: 20px;
-    text-align: center;
+    padding: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
     border-top: 1px solid #ffe0b2;
 }
+
+.price-info span { font-size: 1.1rem; }
+.price-info strong { font-size: 1.6rem; color: #e67e22; }
 
 .btn-buy {
     background: var(--secondary-color);
     color: white;
     border: none;
-    padding: 10px 25px;
+    padding: 12px 30px;
     border-radius: 50px;
-    font-weight: bold;
+    font-size: 1.1rem;
+    font-weight: 700;
     cursor: pointer;
-    margin-left: 15px;
-    box-shadow: 0 4px 10px rgba(255,152,0,0.3);
+    box-shadow: 0 4px 15px rgba(255,152,0,0.3);
 }
 
-/* Responsive */
+/* --- Utilities --- */
+.unselectable {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
 @media (max-width: 992px) {
     .container { grid-template-columns: 1fr; }
-}
-/* জঙ্গল ব্যাকগ্রাউন্ড র‍্যাপার */
-.jungle-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; /* কন্টেন্টের পেছনে থাকবে */
-    overflow: hidden;
-    background: linear-gradient(#e1f5fe, #b9fbc0); /* হালকা আকাশী থেকে সবুজ গ্রাডিয়েন্ট */
-}
-
-.jungle-layer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 200%; /* দ্বিগুণ চওড়া যাতে লুপ করা যায় */
-    height: 100%;
-    background-repeat: repeat-x;
-    background-position: bottom;
-    animation: moveJungle linear infinite;
-}
-
-/* লেয়ার ১: দূরের পাহাড় (ধীরে চলবে) */
-.layer-1 {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300'%3E%3Cpath d='M0 300V150l100-50 150 80 200-100 250 120 200-80v130z' fill='%2381c784' fill-opacity='0.3'/%3E%3C/svg%3E");
-    background-size: 1000px 300px;
-    animation-duration: 60s;
-}
-
-/* লেয়ার ২: বড় গাছপালার ছায়া (মাঝারি গতি) */
-.layer-2 {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 400'%3E%3Cpath d='M50 400Q100 150 150 400M250 400Q300 100 350 400M550 400Q600 200 650 400' stroke='%234caf50' stroke-width='20' fill='none' opacity='0.4'/%3E%3C/svg%3E");
-    background-size: 800px 400px;
-    animation-duration: 40s;
-}
-
-/* লেয়ার ৩: সামনের লতাপাতা (দ্রুত চলবে) */
-.layer-3 {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 200'%3E%3Cpath d='M0 200Q50 100 100 200T200 200 300 200 400 200' fill='%232e7d32' fill-opacity='0.2'/%3E%3C/svg%3E");
-    background-size: 500px 150px;
-    animation-duration: 20s;
-}
-
-/* ইনফিনিট মুভমেন্ট অ্যানিমেশন */
-@keyframes moveJungle {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-}
-
-/* কন্টেন্ট বক্সকে একটু স্বচ্ছ করা যাতে ব্যাকগ্রাউন্ড হালকা দেখা যায় */
-.story-player, .sidebar {
-    background: rgba(255, 255, 255, 0.9) !important;
-    backdrop-filter: blur(5px); /* ঝাপসা ইফেক্ট */
+    .content-box { padding: 25px; }
+    .layer-3 { display: none; }
 }
