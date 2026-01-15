@@ -172,3 +172,58 @@ body {
 @media (max-width: 992px) {
     .container { grid-template-columns: 1fr; }
 }
+/* জঙ্গল ব্যাকগ্রাউন্ড র‍্যাপার */
+.jungle-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* কন্টেন্টের পেছনে থাকবে */
+    overflow: hidden;
+    background: linear-gradient(#e1f5fe, #b9fbc0); /* হালকা আকাশী থেকে সবুজ গ্রাডিয়েন্ট */
+}
+
+.jungle-layer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%; /* দ্বিগুণ চওড়া যাতে লুপ করা যায় */
+    height: 100%;
+    background-repeat: repeat-x;
+    background-position: bottom;
+    animation: moveJungle linear infinite;
+}
+
+/* লেয়ার ১: দূরের পাহাড় (ধীরে চলবে) */
+.layer-1 {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300'%3E%3Cpath d='M0 300V150l100-50 150 80 200-100 250 120 200-80v130z' fill='%2381c784' fill-opacity='0.3'/%3E%3C/svg%3E");
+    background-size: 1000px 300px;
+    animation-duration: 60s;
+}
+
+/* লেয়ার ২: বড় গাছপালার ছায়া (মাঝারি গতি) */
+.layer-2 {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 400'%3E%3Cpath d='M50 400Q100 150 150 400M250 400Q300 100 350 400M550 400Q600 200 650 400' stroke='%234caf50' stroke-width='20' fill='none' opacity='0.4'/%3E%3C/svg%3E");
+    background-size: 800px 400px;
+    animation-duration: 40s;
+}
+
+/* লেয়ার ৩: সামনের লতাপাতা (দ্রুত চলবে) */
+.layer-3 {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 200'%3E%3Cpath d='M0 200Q50 100 100 200T200 200 300 200 400 200' fill='%232e7d32' fill-opacity='0.2'/%3E%3C/svg%3E");
+    background-size: 500px 150px;
+    animation-duration: 20s;
+}
+
+/* ইনফিনিট মুভমেন্ট অ্যানিমেশন */
+@keyframes moveJungle {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+/* কন্টেন্ট বক্সকে একটু স্বচ্ছ করা যাতে ব্যাকগ্রাউন্ড হালকা দেখা যায় */
+.story-player, .sidebar {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(5px); /* ঝাপসা ইফেক্ট */
+}
