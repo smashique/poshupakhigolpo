@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>পশুপাখি গল্প - ছোটদের গল্পের ভুবন</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
 
@@ -19,58 +16,40 @@
     </div>
 
     <header class="navbar">
-        <div class="logo">
-            <svg width="45" height="45" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M180 256C180 158.8 258.8 80 356 80C400 80 440 96 470 122C440 220 360 380 180 432C120 410 80 340 180 256Z" fill="#FF9800"/>
-                <path d="M80 200C80 100 200 40 320 80C250 180 150 350 40 300C50 250 60 220 80 200Z" fill="#4CAF50" opacity="0.8"/>
-                <circle cx="380" cy="160" r="35" fill="#2196F3"/>
-            </svg>
-            <span>পশুপাখি গল্প</span>
-        </div>
+        <div class="logo"><span>পশুপাখি গল্প</span></div>
         <button id="installPwa" class="btn-install">অ্যাপ ডাউনলোড</button>
     </header>
 
     <main class="container">
         <section class="story-player">
-            
-            <div class="premium-banner">
+            <div id="premiumBanner" class="premium-banner">
                 <div class="premium-content">
                     <div class="promo-text">
-                        <span class="sparkle">✨</span> 
-                        <strong>আপনার সোনামণিকে দিন সেরা উপহার!</strong> 
+                        <strong>আপনার সোনামণিকে দিন সেরা উপহার! ✨</strong>
                         <p>সব জাদুকরী ও শিক্ষামূলক গল্প আনলক করুন আজই।</p>
                     </div>
                     <div class="price-action">
-                        <div class="price-tag">
-                            <del>৳৪৯৯</del> <strong>৳২৯৯</strong>
-                            <small>*(সীমিত সময়ের অফার)</small>
-                        </div>
-                        <button class="btn-buy-now" onclick="initPayment()">
-                            🎁 এখনই উপহার দিন
-                        </button>
+                        <div class="price-tag"><del>৳৪৯৯</del> <strong>৳২৯৯</strong></div>
+                        <button class="btn-buy-now" onclick="initPayment()">🎁 এখনই উপহার দিন</button>
                     </div>
                 </div>
             </div>
 
-            <div class="player-header">
-                <div class="lang-toggle">
-                    <button onclick="toggleLang('bn')" id="btnBn" class="active">বাংলা</button>
-                    <button onclick="toggleLang('en')" id="btnEn">English</button>
-                </div>
-                <button onclick="toggleFullscreen()" class="btn-fs">💻 পূর্ণ পর্দা</button>
-            </div>
-            
-            <div id="contentArea" class="content-box unselectable">
-                <h1 id="storyTitle">গল্প লোড হচ্ছে...</h1>
-                <div id="storyBody">
-                    গল্পের জাদুকরী ভুবনে আপনাকে স্বাগতম! ডাটাবেস থেকে গল্প লোড করার জন্য অপেক্ষা করুন...
+            <div class="player-container">
+                <iframe id="storyFrame" src="about:blank" frameborder="0" allowfullscreen></iframe>
+                <div id="lockOverlay" class="lock-overlay hidden">
+                    <div class="lock-content">
+                        <div class="animated-lock">🔒</div>
+                        <h2>গল্পটি পড়তে প্রিমিয়াম এক্সেস প্রয়োজন</h2>
+                        <button onclick="initPayment()" class="btn-unlock">এখনই আনলক করুন</button>
+                    </div>
                 </div>
             </div>
         </section>
 
         <aside class="sidebar">
-            <h3>আরও গল্প</h3>
-            <div id="storyList">
+            <h3>গল্পের তালিকা</h3>
+            <div id="storyList" class="thumbnail-list">
                 </div>
         </aside>
     </main>
