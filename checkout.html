@@ -3,73 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - PoshuPakhiGolpo</title>
+    <title>চেকআউট - পশুপাখি গল্প</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        .checkout-container { max-width: 500px; margin: 50px auto; padding: 30px; background: white; border-radius: 20px; box-shadow: var(--shadow); text-align: center; }
-        .benefit-list { text-align: left; margin: 20px 0; padding-left: 20px; }
-        .benefit-list li { margin: 10px 0; color: #444; font-size: 1.1rem; }
-        .wa-support { display: inline-flex; align-items: center; gap: 8px; color: #25D366; text-decoration: none; font-weight: bold; margin-top: 20px; border: 1px solid #25D366; padding: 8px 15px; border-radius: 50px; }
-        .lifetime-badge { background: #ffeb3b; color: #000; padding: 5px 15px; border-radius: 50px; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 15px; }
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #FF9800;
+        }
+        .checkout-container { max-width: 500px; margin: 40px auto; padding: 30px; background: white; border-radius: 25px; box-shadow: var(--shadow); text-align: center; border: 1px solid #eee; }
+        .benefit-list { text-align: left; margin: 25px 0; padding-left: 10px; list-style: none; }
+        .benefit-list li { margin: 12px 0; color: #333; font-size: 1.05rem; display: flex; align-items: flex-start; gap: 10px; }
+        .wa-support { display: inline-flex; align-items: center; gap: 8px; color: #25D366; text-decoration: none; font-weight: bold; margin-top: 20px; border: 2px solid #25D366; padding: 10px 20px; border-radius: 50px; transition: 0.3s; }
+        .wa-support:hover { background: #25D366; color: white; }
+        .lifetime-badge { background: #FFF9C4; color: #827717; padding: 6px 18px; border-radius: 50px; font-weight: bold; font-size: 0.85rem; display: inline-block; margin-bottom: 15px; border: 1px solid #FBC02D; }
+        .uid-box { background: #f8f9fa; padding: 12px; border-radius: 12px; margin: 20px 0; border: 1px dashed #ccc; font-size: 0.85rem; color: #666; }
+        .price-tag strong { color: var(--secondary-color); }
+        .btn-buy-now { width: 100%; font-size: 1.3rem; padding: 18px; border-radius: 15px; background: var(--secondary-color); color: white; border: none; font-weight: bold; cursor: pointer; box-shadow: 0 6px 15px rgba(255,152,0,0.3); transition: 0.3s; }
+        .btn-buy-now:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255,152,0,0.4); }
     </style>
 </head>
 <body>
     <div class="checkout-container">
-        <div class="lifetime-badge">♾️ LIFETIME UNLOCK</div>
-        <h2 style="color: var(--secondary-color);">আপনার সোনামণির হাসির জন্য মাত্র এক ধাপ দূরে!</h2>
+        <div class="lifetime-badge">♾️ আজীবনের জন্য আনলক (Lifetime)</div>
+        <h2 style="color: var(--primary-color);">সোনামণির নৈতিক শিক্ষার পথে মাত্র এক ধাপ...</h2>
         
         <div class="price-tag" style="margin: 20px 0;">
-            <span style="font-size: 1.2rem; color: #888;"><del>৳৪৯৯</del></span>
-            <span style="font-size: 2.5rem; color: var(--accent-red); font-weight: bold;"> ৳২৯৯</span>
+            <span style="font-size: 1.2rem; color: #999;"><del>৳৪৯৯</del></span>
+            <span style="font-size: 2.8rem; font-weight: bold;"> ৳২৯৯</span>
         </div>
 
         <ul class="benefit-list">
-            <li>✅ Unlimited Stream of Educational Stories.</li>
-            <li>✅ একবার কিনুন, আজীবন ব্যবহার করুন।</li>
-            <li>✅ কোনো Monthly চার্জ নেই।</li>
-            <li>✅ নিরাপদ পেমেন্ট (বিকাশ ও রকেট)।</li>
+            <li>✅ <strong>আপনার সন্তানের শৈশবকে আনন্দময় করতে:</strong> পশু-পাখিদের শিক্ষামূলক গল্পের ভাণ্ডার।</li>
+            <li>✅ <strong>ইংরেজি শেখার সুযোগ:</strong> প্রতিটি গল্প বাংলা ও A1 লেভেল ইংরেজিতে লেখা।</li>
+            <li>✅ <strong>স্মার্ট লার্নিং:</strong> গল্প শোনার সাথে সাথে শিশু ইংরেজি ভাষায় দক্ষ হবে।</li>
+            <li>✅ <strong>আজীবন এক্সেস:</strong> একবার কিনুন, কোনো মাসিক চার্জ নেই।</li>
+            <li>✅ <strong>নিরাপদ পেমেন্ট:</strong> বিকাশ বা রকেটে নিশ্চিন্তে পেমেন্ট করুন।</li>
         </ul>
 
-        <button class="btn-buy-now" id="payBtn" style="width: 100%; font-size: 1.3rem;">💳 পেমেন্ট সম্পন্ন করুন</button>
+        <div class="uid-box">
+            সাপোর্ট ভেরিফিকেশন আইডি:<br>
+            <strong id="displayUid" style="color: #333; font-family: monospace;">লোড হচ্ছে...</strong>
+        </div>
 
-        <p style="margin-top: 20px; font-size: 0.9rem; color: #666;">যেকোনো সমস্যায় আমাদের সাথে যোগাযোগ করুন:</p>
+        <button class="btn-buy-now" id="payBtn">💳 পেমেন্ট সম্পন্ন করুন</button>
+
+        <p style="margin-top: 25px; font-size: 0.9rem; color: #666;">পেমেন্টে সমস্যা হলে আমাদের জানান:</p>
         <a href="https://wa.me/8801303680618" class="wa-support" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20" alt="WA"> 
-            WhatsApp করুন
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22" alt="WA"> 
+            WhatsApp এ সহায়তা নিন
         </a>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // checkout.html এর ভেতরের স্ক্রিপ্ট
-document.getElementById('payBtn').onclick = async () => {
-    const deviceId = localStorage.getItem('device_uuid'); // ইউজারের আইডি
-    const btn = document.getElementById('payBtn');
-    
-    btn.innerText = "অপেক্ষা করুন...";
-    btn.disabled = true;
-
-    try {
-        const response = await fetch('/api/create-payment', {
-            method: 'POST',
-            body: JSON.stringify({ deviceId })
+        // পেজ লোড হওয়ার সাথে সাথে আইডি দেখানো
+        document.addEventListener('DOMContentLoaded', () => {
+            const uuid = localStorage.getItem('device_uuid');
+            document.getElementById('displayUid').innerText = uuid || "আইডি পাওয়া যায়নি";
         });
-        const data = await response.json();
-        
-        if (data.payment_url) {
-            window.location.href = data.payment_url; // পেমেন্ট গেটওয়েতে নিয়ে যাওয়া
-        } else {
-            alert('পেমেন্ট শুরু করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।');
-            btn.innerText = "💳 পেমেন্ট সম্পন্ন করুন";
-            btn.disabled = false;
-        }
-    } catch (err) {
-        alert('ইন্টারনেট কানেকশন চেক করুন।');
-        btn.innerText = "💳 পেমেন্ট সম্পন্ন করুন";
-        btn.disabled = false;
-    }
-};
+
+        document.getElementById('payBtn').onclick = async () => {
+            const deviceId = localStorage.getItem('device_uuid');
+            const btn = document.getElementById('payBtn');
+            
+            btn.innerText = "অপেক্ষা করুন...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/api/create-payment', {
+                    method: 'POST',
+                    body: JSON.stringify({ deviceId })
+                });
+                const data = await response.json();
+                
+                if (data.payment_url) {
+                    window.location.href = data.payment_url;
+                } else {
+                    alert('পেমেন্ট শুরু করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।');
+                    btn.innerText = "💳 পেমেন্ট সম্পন্ন করুন";
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                alert('ইন্টারনেট কানেকশন চেক করুন।');
+                btn.innerText = "💳 পেমেন্ট সম্পন্ন করুন";
+                btn.disabled = false;
+            }
+        };
     </script>
 </body>
 </html>
