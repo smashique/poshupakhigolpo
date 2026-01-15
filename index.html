@@ -4,52 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>পশুপাখি গল্প - ছোটদের গল্পের ভুবন</title>
-    
-    <meta name="theme-color" content="#2E7D32">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="/assets/icon-192.png">
-    
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
-
-    <div class="jungle-wrapper">
-        <div class="jungle-layer layer-1"></div>
-        <div class="jungle-layer layer-2"></div>
-        <div class="jungle-layer layer-3"></div>
-    </div>
-
     <header class="navbar">
         <div class="logo-wrapper" onclick="window.location.reload()">
-            <div class="css-logo">
-                <div class="animal bird"></div>
-                <div class="animal elephant"></div>
-                <div class="animal bear"></div>
-            </div>
+            <div class="css-logo"><div class="animal bird"></div><div class="animal elephant"></div><div class="animal bear"></div></div>
             <span class="logo-text">পশুপাখি গল্প</span>
         </div>
-        
-        <button id="installPwa" class="btn-install hidden">অ্যাপ ডাউনলোড</button>
+        <button id="installPwa" class="btn-install hidden">গল্পগুলো যেন হারিয়ে না যায়, অ্যাপটি ফোনে রাখুন! 📱</button>
     </header>
 
     <main class="container">
         <section class="story-player">
             <div id="premiumBanner" class="premium-banner">
-                <div class="premium-content">
-                    <div class="promo-text">
-                        <strong>আপনার সোনামণিকে দিন সেরা উপহার! ✨</strong>
-                        <p>সব জাদুকরী ও শিক্ষামূলক গল্প আনলক করুন আজই।</p>
-                    </div>
-                    <div class="price-action">
-                        <div class="price-tag"><del>৳৪৯৯</del> <strong>৳২৯৯</strong></div>
-                        <button class="btn-buy-now" onclick="initPayment()">🎁 এখনই উপহার দিন</button>
-                    </div>
+                <div class="promo-text">
+                    <strong>সোনামণির নৈতিক শিক্ষার শ্রেষ্ঠ উপহার! ✨</strong>
+                    <p>আমাদের গল্পব্যাংকে এখন <span id="totalCount">...</span>টি গল্প আছে।</p>
+                    <p style="color: #2E7D32; font-size: 0.9rem;">(গল্প না কিনলেও প্রতিদিন ১টি নতুন গল্প পড়ার সুযোগ!)</p>
                 </div>
+                <button class="btn-buy-now" onclick="initPayment()">🎁 এখনই উপহার দিন</button>
             </div>
 
-            <div class="player-container">
-                <iframe id="storyFrame" src="about:blank" frameborder="0" allowfullscreen></iframe>
+            <div class="player-container" id="playerArea">
+                <button id="fullscreenBtn" class="fs-pulse-btn">📺 বড় পর্দায় পড়ো</button>
+                <iframe id="storyFrame" src="about:blank" allowfullscreen></iframe>
                 <div id="lockOverlay" class="lock-overlay hidden">
                     <div class="lock-content">
                         <div class="animated-lock">🔒</div>
@@ -58,16 +39,16 @@
                     </div>
                 </div>
             </div>
+            <div id="uidDisplay" style="padding: 10px; font-size: 0.75rem; color: #aaa; text-align: center;">ইউনিক আইডি: ...</div>
         </section>
 
         <aside class="sidebar">
             <h3 class="sidebar-title">গল্পের তালিকা</h3>
-            <div id="storyList" class="thumbnail-list">
-                </div>
-            <button id="refreshStories" class="btn-refresh">✨ আরো জাদুর গল্প দেখুন</button>
+            <div id="storyList" class="thumbnail-list"></div>
+            <button id="refreshStories" class="btn-refresh">✨ আরো গল্প দেখুন</button>
         </aside>
     </main>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="icon.js"></script> <script src="app.js"></script>  </body>
+    <script src="icon.js"></script><script src="app.js"></script>
+</body>
 </html>
