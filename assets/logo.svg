@@ -1,16 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-  <defs>
-    <linearGradient id="wingGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#4CAF50"/> <stop offset="100%" stop-color="#8BC34A"/> </linearGradient>
-    <linearGradient id="bodyGrad" x1="1" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#FFC107"/> <stop offset="100%" stop-color="#FF9800"/> </linearGradient>
-     <linearGradient id="accentGrad" x1="0" y1="0.5" x2="1" y2="0.5">
-      <stop offset="0%" stop-color="#2196F3"/> <stop offset="100%" stop-color="#03A9F4"/> </linearGradient>
-  </defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350">
+  <path d="M50 50 Q80 20 110 50 T170 50" stroke="#7CB342" stroke-width="2" fill="none" opacity="0.2"/>
 
-  <path d="M180 256C180 158.8 258.8 80 356 80C400 80 440 96 470 122C440 220 360 380 180 432C120 410 80 340 180 256Z" fill="url(#bodyGrad)"/>
-  
-  <path d="M80 200C80 100 200 40 320 80C250 180 150 350 40 300C50 250 60 220 80 200Z" fill="url(#wingGrad)" style="mix-blend-mode: multiply;"/>
-  
-  <circle cx="380" cy="160" r="40" fill="url(#accentGrad)"/>
+  <g id="bird">
+    <path d="M120 120 C 150 80, 220 80, 250 130 C 230 150, 200 160, 160 150 Z" fill="#F47C20"/> <path d="M140 140 C 170 100, 240 100, 270 150 C 250 170, 220 180, 180 170 Z" fill="#FF9800"/> <path d="M240 130 Q270 110 290 140 Q270 170 240 150 Z" fill="#2E7D32"/> </g>
+
+  <path d="M260 280 C 260 200, 360 180, 380 230 C 400 280, 350 320, 280 310 C 270 290, 250 300, 260 280 Z" fill="#90B4CE"/>
+  <path d="M360 220 Q390 200 400 240 L390 260 Q380 230 360 220 Z" fill="#90B4CE" opacity="0.8"/> <path d="M390 310 C 390 230, 480 230, 480 310 Z" fill="#A67C52"/> <circle cx="435" cy="245" r="35" fill="#A67C52"/> <path d="M490 310 C 490 260, 550 260, 550 310 Z" fill="#F0E0C0"/>
+  <path d="M510 240 Q515 200 525 240 Z" fill="#F0E0C0"/> <path d="M535 240 Q540 200 550 240 Z" fill="#F0E0C0"/> <text x="300" y="340" font-family="'Hind Siliguri', sans-serif" font-size="48" font-weight="bold" fill="#2E7D32" text-anchor="middle">পশুপাখি গল্প</text>
 </svg>
