@@ -1,6 +1,9 @@
 // --- Supabase কনফিগারেশন ---
-const SUPABASE_URL = 'https://your-project-id.supabase.co'; 
-const SUPABASE_ANON_KEY = 'your-anon-key';
+// আপনার ছবির ড্যাশবোর্ড থেকে পাওয়া আসল URL এবং Key এখানে বসানো হয়েছে
+const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'; 
+const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-';
+
+// সুপাবেস ক্লায়েন্ট ইনিশিয়ালাইজেশন
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let userStatus = 'free'; 
@@ -12,23 +15,19 @@ window.initPayment = function() {
     window.location.href = "checkout.html"; 
 };
 
-/**
- * প্রিমিয়াম ইউজারদের জন্য UI পরিষ্কার করা (Neuro-UX)
- * ইউজার কিনে ফেললে প্রিমিয়াম ব্যানার ও লকগুলো লুকিয়ে ফেলা হয়
- */
 function hidePremiumUI() {
     const elementsToHide = document.querySelectorAll('.premium-banner, .lock-overlay, .banner-lock-icon');
     elementsToHide.forEach(el => el.style.display = 'none');
 }
 
-// --- ২. PWA ইন্সটল লজিক (FOMO ট্রিগার) ---
+// --- ২. PWA ইন্সটল লজিক ---
 const installBtn = document.getElementById('installPwa');
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     if (installBtn) {
-        installBtn.classList.remove('hidden'); // FOMO বাটনটি দেখাবে
+        installBtn.classList.remove('hidden');
     }
 });
 
@@ -43,26 +42,28 @@ if (installBtn) {
     };
 }
 
-// --- ৩. অ্যাপ ইনিশিয়ালাইজেশন ---
+// --- ৩. অ্যাপ ইনিশিয়ালাইজেশন ---
 async function initApp() {
-    // ইউজার শনাক্তকরণ
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
     localStorage.setItem('device_uuid', uuid);
     
-    // ইউনিক আইডি প্রদর্শন (মাঝখানে এবং একদম নিচে ফুটারে)
     const uidDisplay = document.getElementById('uidDisplay');
     const footerUid = document.getElementById('footerUid');
     if (uidDisplay) uidDisplay.innerText = `আইডি: ${uuid}`;
     if (footerUid) footerUid.innerText = uuid;
 
-    // ১. স্টোরিব্যাংক থেকে মোট গল্পের সংখ্যা দেখানো (Social Proof)
-    const { count } = await _supabase.from('stories').select('*', { count: 'exact', head: true });
+    // ১. স্টোরিব্যাংক থেকে মোট গল্পের সংখ্যা দেখানো
+    const { count, error: countError } = await _supabase.from('stories').select('*', { count: 'exact', head: true });
+    if (countError) console.error("Count Error:", countError);
+    
     const countDisplay = document.getElementById('totalCount');
     if (countDisplay) countDisplay.innerText = count || 0;
 
     // ২. ইউজার স্ট্যাটাস চেক
-    const { data } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
+    const { data, error: userError } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
     
+    if (userError) console.error("User Check Error:", userError);
+
     if (!data) {
         await _supabase.from('users').insert([{ device_uuid: uuid, status: 'free' }]);
     } else if (data.status === 'paid') {
@@ -75,25 +76,25 @@ async function initApp() {
 
 // --- ৪. গল্প লোড ও প্রদর্শন লজিক ---
 async function loadStories(isRefresh = false) {
-    const { data: allStories } = await _supabase.from('stories').select('*');
+    const { data: allStories, error: storiesError } = await _supabase.from('stories').select('*');
+    
+    if (storiesError) {
+        console.error("Stories Load Error:", storiesError);
+        return;
+    }
+
     if (allStories && allStories.length > 0) {
         if (!isRefresh) {
-            // প্রতিদিনের নতুন ফ্রি গল্প লজিক
             const todaySeed = new Date().toISOString().split('T')[0].replace(/-/g, '');
             const dailyIndex = parseInt(todaySeed) % allStories.length;
             playStory(allStories[dailyIndex]);
         }
         
-        // সাইডবারে ১০টি র‍্যান্ডম গল্প
         const shuffled = [...allStories].sort(() => 0.5 - Math.random()).slice(0, 10);
         renderSidebar(shuffled);
     }
 }
 
-/**
- * দ্বিভাষিক গল্প রেন্ডার করা (Bilingual Rendering)
- * বাংলা ও ইংরেজি কন্টেন্টকে আইফ্রেমের জন্য ফরম্যাট করা হয়
- */
 function playStory(story) {
     const frame = document.getElementById('storyFrame');
     const overlay = document.getElementById('lockOverlay');
@@ -154,18 +155,14 @@ function renderSidebar(stories) {
     });
 }
 
-// --- ৫. ফুলস্ক্রিন ও ইন্টারঅ্যাকশন (Fixed Logic) ---
+// --- ৫. ফুলস্ক্রিন ও রিফ্রেশ লজিক ---
 const fsBtn = document.getElementById('fullscreenBtn');
 if (fsBtn) {
     fsBtn.onclick = () => {
-        const elem = document.getElementById('playerArea'); // পুরো কন্টেইনার ফুলস্ক্রিন করা হচ্ছে
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) { /* Safari/iOS */
-            elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { /* IE11 */
-            elem.msRequestFullscreen();
-        }
+        const elem = document.getElementById('playerArea');
+        if (elem.requestFullscreen) elem.requestFullscreen();
+        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+        else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
     };
 }
 
