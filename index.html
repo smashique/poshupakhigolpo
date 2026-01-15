@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>পশুপাখি গল্প - ছোটদের গল্পের ভুবন</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
@@ -16,8 +17,13 @@
     </div>
 
     <header class="navbar">
-        <div class="logo"><span>পশুপাখি গল্প</span></div>
-        <button id="installPwa" class="btn-install">অ্যাপ ডাউনলোড</button>
+        <div class="logo">
+            <svg width="40" height="40" viewBox="0 0 100 100">
+                <path d="M20 80C20 80 40 20 80 20C80 20 60 80 20 80Z" fill="#4CAF50"/>
+            </svg>
+            <span>পশুপাখি গল্প</span>
+        </div>
+        <button id="installPwa" class="btn-install hidden">অ্যাপ ডাউনলোড</button>
     </header>
 
     <main class="container">
@@ -36,7 +42,7 @@
             </div>
 
             <div class="player-container">
-                <iframe id="storyFrame" src="about:blank" frameborder="0" allowfullscreen></iframe>
+                <iframe id="storyFrame" src="about:blank" allowfullscreen></iframe>
                 <div id="lockOverlay" class="lock-overlay hidden">
                     <div class="lock-content">
                         <div class="animated-lock">🔒</div>
@@ -51,6 +57,7 @@
             <h3>গল্পের তালিকা</h3>
             <div id="storyList" class="thumbnail-list">
                 </div>
+            <button id="refreshStories" class="btn-refresh">✨ আরো জাদুর গল্প দেখুন</button>
         </aside>
     </main>
 
