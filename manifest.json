@@ -1,0 +1,17 @@
+{
+  "name": "পশুপাখি গল্প",
+  "short_name": "গল্প",
+  "description": "ছোটদের প্রিয় গল্পের ভুবন",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4CAF50",
+  "icons": [
+    {
+      "src": "assets/logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
