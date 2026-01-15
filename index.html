@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পশুপাখি গল্প - ছোটদের গল্পের ভুবন</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body oncontextmenu="return false;"> <header class="navbar">
+        <div class="logo">
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 80C20 80 40 20 80 20C80 20 60 80 20 80Z" fill="#4CAF50"/>
+                <circle cx="70" cy="30" r="10" fill="#FFC107"/>
+            </svg>
+            <span>পশুপাখি গল্প</span>
+        </div>
+        <button id="installPwa" class="btn-install">অ্যাপ ডাউনলোড</button>
+    </header>
+
+    <main class="container">
+        <section class="story-player">
+            <div class="player-controls">
+                <div class="lang-toggle">
+                    <button onclick="toggleLang('bn')" id="btnBn" class="active">বাংলা</button>
+                    <button onclick="toggleLang('en')" id="btnEn">English</button>
+                </div>
+                <button onclick="toggleFullscreen()" class="btn-fs">💻 পূর্ণ পর্দা</button>
+            </div>
+            
+            <div id="contentArea" class="content-box unselectable">
+                <h1 id="storyTitle">গল্প লোড হচ্ছে...</h1>
+                <div id="storyBody">অপেক্ষা করুন...</div>
+            </div>
+
+            <div class="pricing-badge">
+                <span>প্রিমিয়াম এক্সেস: <del>৳৪৯৯</del> <strong>৳২৯৯</strong></span>
+                <button class="btn-buy">এখনই কিনুন</button>
+            </div>
+        </section>
+
+        <aside class="sidebar">
+            <h3>আরও গল্প</h3>
+            <div id="storyList">
+                </div>
+        </aside>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+</body>
+</html>
