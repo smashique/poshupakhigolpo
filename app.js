@@ -1,21 +1,19 @@
-// --- Supabase Configuration ---
+// --- Supabase কনফিগারেশন ---
 const SUPABASE_URL = 'https://your-project-id.supabase.co'; 
 const SUPABASE_ANON_KEY = 'your-anon-key';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// --- State Management ---
 let currentStory = null;
 let userStatus = 'free'; 
 let deferredPrompt; 
 
-// --- ১. পেমেন্ট রিডাইরেক্ট (গ্লোবাল ফিক্স) ---
-// এটি window অবজেক্টে রাখা হয়েছে যেন HTML সরাসরি খুঁজে পায়
+// --- ১. পেমেন্ট ফাংশন (গ্লোবাল স্কোপে রাখা হয়েছে) ---
 window.initPayment = function() {
     console.log("চেকআউট পেজে পাঠানো হচ্ছে...");
     window.location.href = "checkout.html"; 
 };
 
-// --- ২. PWA ইন্সটল লজিক (Force Visibility) ---
+// --- ২. PWA ইন্সটল বাটন লজিক ---
 const installBtn = document.getElementById('installPwa');
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -24,7 +22,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     console.log("PWA ইন্সটল করার সুযোগ পাওয়া গেছে।");
     if (installBtn) {
         installBtn.classList.remove('hidden'); // hidden ক্লাস সরাবে
-        installBtn.style.display = 'inline-block'; // সরাসরি শো করবে
+        installBtn.style.display = 'inline-block'; // ফোর্সবলি শো করবে
     }
 });
 
@@ -39,20 +37,26 @@ if (installBtn) {
     };
 }
 
-// --- ৩. ইউজার এবং গল্প লোড লজিক ---
-async function initUser() {
+// --- ৩. ইউজার এবং স্টোরি লোড লজিক ---
+async function initApp() {
+    // ইউজার শনাক্তকরণ
     let uuid = localStorage.getItem('device_uuid');
     if (!uuid) {
         uuid = self.crypto.randomUUID();
         localStorage.setItem('device_uuid', uuid);
         await _supabase.from('users').insert([{ device_uuid: uuid, status: 'free' }]);
     }
+
+    // স্ট্যাটাস চেক
     const { data } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
     if (data && data.status === 'paid') {
         userStatus = 'paid';
         const banner = document.getElementById('premiumBanner');
         if (banner) banner.style.display = 'none';
     }
+
+    // গল্প লোড করা
+    loadStories();
 }
 
 async function loadStories(isRefresh = false) {
@@ -71,9 +75,10 @@ async function loadStories(isRefresh = false) {
 function playStory(story) {
     const frame = document.getElementById('storyFrame');
     const overlay = document.getElementById('lockOverlay');
+    
     if (story.is_premium && userStatus === 'free') {
         frame.src = "about:blank";
-        overlay.classList.remove('hidden');
+        overlay.classList.remove('hidden'); // লক দেখাবে
     } else {
         overlay.classList.add('hidden');
         const blob = new Blob([story.webapp_html], { type: 'text/html' });
@@ -96,21 +101,12 @@ function renderSidebar(stories) {
     });
 }
 
-// --- ৪. রিফ্রেশ এবং প্রটেকশন ---
+// --- ৪. ইভেন্ট লিসেনার ---
 const refreshBtn = document.getElementById('refreshStories');
 if (refreshBtn) refreshBtn.onclick = () => loadStories(true);
 
-document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && ['c', 'u', 's', 'p'].includes(e.key)) e.preventDefault();
-});
+document.addEventListener('DOMContentLoaded', initApp);
 
-// --- ৫. ইনিশিয়ালাইজেশন ---
-document.addEventListener('DOMContentLoaded', async () => {
-    await initUser();
-    await loadStories();
-});
-
-// Service Worker Registration
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Registration Failed', err));
 }
