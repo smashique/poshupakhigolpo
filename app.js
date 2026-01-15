@@ -5,7 +5,8 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // --- State Management ---
 let currentStory = null;
-let userStatus = 'free'; // ডিফল্ট স্ট্যাটাস
+let userStatus = 'free';
+let deferredPrompt; // PWA ইন্সটলেশন প্রম্পটের জন্য
 
 // --- 1. User Identification & Status Check ---
 async function initUser() {
@@ -16,11 +17,9 @@ async function initUser() {
         await _supabase.from('users').insert([{ device_uuid: uuid, status: 'free' }]);
     }
     
-    // ডাটাবেস থেকে ইউজারের বর্তমান স্ট্যাটাস (free/paid) চেক করা
     const { data } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
     if (data) {
         userStatus = data.status;
-        // যদি ইউজার পেইড হয়, তবে টপ প্রিমিয়াম ব্যানারটি হাইড করে দেওয়া
         if (userStatus === 'paid') {
             const banner = document.getElementById('premiumBanner');
             if (banner) banner.classList.add('hidden');
@@ -29,58 +28,56 @@ async function initUser() {
     return uuid;
 }
 
-// --- 2. Story Fetching Logic ---
-async function loadStories() {
+// --- 2. Story Fetching & Sidebar Randomness ---
+async function loadStories(isRefresh = false) {
     const { data: allStories, error } = await _supabase.from('stories').select('*');
 
     if (error) {
-        console.error('গল্প লোড করতে সমস্যা হয়েছে:', error);
+        console.error('গল্প লোড করতে সমস্যা হয়েছে:', error);
         return;
     }
 
     if (allStories && allStories.length > 0) {
-        // ডেইলি ফিক্সড স্টোরি লজিক
-        const todaySeed = new Date().toISOString().split('T')[0].replace(/-/g, '');
-        const dailyIndex = parseInt(todaySeed) % allStories.length;
-        currentStory = allStories[dailyIndex];
-        
-        playStory(currentStory);
-        renderSidebar(allStories);
+        // প্রথমবার লোড হলে ডেইলি ফিক্সড স্টোরি দেখানো
+        if (!isRefresh) {
+            const todaySeed = new Date().toISOString().split('T')[0].replace(/-/g, '');
+            const dailyIndex = parseInt(todaySeed) % allStories.length;
+            currentStory = allStories[dailyIndex];
+            playStory(currentStory);
+        }
+
+        // র‍্যান্ডম ১০টি গল্প সাইডবারে (Variable Reward - নিউরোমার্কেটিং)
+        const shuffled = [...allStories].sort(() => 0.5 - Math.random()).slice(0, 10);
+        renderSidebar(shuffled);
     }
 }
 
-// --- 3. Iframe Player Logic ---
+// --- 3. Iframe Player & Blob Injection ---
 function playStory(story) {
     const frame = document.getElementById('storyFrame');
     const overlay = document.getElementById('lockOverlay');
 
-    // প্রিমিয়াম লজিক: যদি গল্প প্রিমিয়াম হয় এবং ইউজার ফ্রি হয়
     if (story.is_premium && userStatus === 'free') {
         frame.src = "about:blank";
-        overlay.classList.remove('hidden'); // লক ওভারলে দেখানো
+        overlay.classList.remove('hidden');
     } else {
         overlay.classList.add('hidden');
-        
-        // WebApp HTML কোডকে Blob-এ রূপান্তর করে Iframe-এ লোড করা
-        // এতে কোডটি আরও সিকিউর থাকে এবং ব্রাউজারে দ্রুত লোড হয়
         const blob = new Blob([story.webapp_html], { type: 'text/html' });
         const blobUrl = URL.createObjectURL(blob);
         frame.src = blobUrl;
     }
 }
 
-// --- 4. Sidebar Thumbnail Rendering ---
+// --- 4. Sidebar Thumbnail Rendering with Refresh Button ---
 function renderSidebar(stories) {
     const sidebarList = document.getElementById('storyList');
     sidebarList.innerHTML = '';
 
-    // গল্পের তালিকা থাম্বনেইল আকারে দেখানো
     stories.forEach(s => {
         const banner = document.createElement('div');
         banner.className = 'story-banner';
         banner.style.backgroundImage = `url('${s.thumbnail_url}')`;
         
-        // ফ্রি ইউজারদের জন্য প্রিমিয়াম থাম্বনেইলে লক আইকন
         if (userStatus === 'free' && s.is_premium) {
             banner.innerHTML = `<div class="banner-lock-icon">🔒</div>`;
         }
@@ -94,7 +91,27 @@ function renderSidebar(stories) {
     });
 }
 
-// --- 5. Controls & Protection ---
+// --- 5. PWA Installation Logic ---
+const installBtn = document.getElementById('installPwa');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (installBtn) installBtn.classList.remove('hidden'); // বাটন দেখানো
+});
+
+if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') installBtn.classList.add('hidden');
+            deferredPrompt = null;
+        }
+    });
+}
+
+// --- 6. Controls & Protection ---
 function toggleFullscreen() {
     const elem = document.getElementById('storyFrame');
     if (!document.fullscreenElement) {
@@ -104,7 +121,6 @@ function toggleFullscreen() {
     }
 }
 
-// কন্টেন্ট প্রোটেকশন: রাইট ক্লিক এবং কপি ডিজেবল
 document.addEventListener('keydown', (e) => {
     if (e.ctrlKey && (e.key === 'c' || e.key === 'u' || e.key === 's' || e.key === 'p')) {
         e.preventDefault();
@@ -112,18 +128,10 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// --- 6. Payment Logic ---
-async function initPayment() {
-    alert('আপনাকে পেমেন্ট গেটওয়েতে নিয়ে যাওয়া হচ্ছে... (UddoktaPay)');
-    // এখানে আপনার পেমেন্ট গেটওয়ে বা চেকআউট পেজের লিঙ্ক হবে
-    // window.location.href = "/checkout"; 
-}
-
-// --- PWA Service Worker ---
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Failed', err));
-    });
+// Refresh button trigger
+const refreshBtn = document.getElementById('refreshStories');
+if (refreshBtn) {
+    refreshBtn.onclick = () => loadStories(true);
 }
 
 // --- Initialize App ---
@@ -131,3 +139,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     await initUser();
     await loadStories();
 });
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Failed', err));
+    });
+}
