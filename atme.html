@@ -1,81 +1,17 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>এডমিন - পশুপাখি গল্প</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        .admin-container { max-width: 600px; margin: 50px auto; padding: 30px; background: white; border-radius: 20px; box-shadow: var(--shadow); }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary-color); }
-        input, textarea { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; font-family: inherit; }
-        textarea { height: 200px; }
-        .btn-publish { background: var(--secondary-color); color: white; border: none; padding: 15px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
-        #status { margin-top: 15px; text-align: center; font-weight: bold; display: none; padding: 10px; border-radius: 5px; }
-    </style>
-</head>
-<body>
-    <div class="admin-container">
-        <h2 style="text-align: center; color: var(--primary-color);">🚀 নতুন গল্প যোগ করুন</h2>
-        <form id="uploadForm">
-            <div class="form-group">
-                <label>গোপন পাসওয়ার্ড (Vercel Key):</label>
-                <input type="password" id="adminPass" required>
-            </div>
-            <div class="form-group">
-                <label>গল্পের নাম:</label>
-                <input type="text" id="storyTitle" placeholder="গল্পের নাম লিখুন..." required>
-            </div>
-            <div class="form-group">
-                <label>গল্পের HTML কোড (Webapp HTML):</label>
-                <textarea id="storyHtml" placeholder="HTML কোড এখানে পেস্ট করুন..." required></textarea>
-            </div>
-            <button type="submit" class="btn-publish" id="submitBtn">📤 পাবলিশ করুন</button>
-        </form>
-        <div id="status"></div>
-    </div>
-
-    <script>
-        document.getElementById('uploadForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            const status = document.getElementById('status');
-            
-            btn.innerText = "আপলোড হচ্ছে...";
-            btn.disabled = true;
-
-            const payload = {
-                password: document.getElementById('adminPass').value,
-                title: document.getElementById('storyTitle').value,
-                webapp_html: document.getElementById('storyHtml').value
-            };
-
-            try {
-                const response = await fetch('/api/admin-upload', {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-
-                status.style.display = "block";
-                if (response.ok) {
-                    status.innerText = "✅ " + result.message;
-                    status.style.background = "#C8E6C9";
-                    document.getElementById('uploadForm').reset();
-                } else {
-                    status.innerText = "❌ " + result.error;
-                    status.style.background = "#FFCDD2";
-                }
-            } catch (err) {
-                status.innerText = "❌ কানেকশন এরর!";
-                status.style.background = "#FFCDD2";
-            } finally {
-                btn.innerText = "📤 পাবলিশ করুন";
-                btn.disabled = false;
-            }
-        };
-    </script>
-</body>
-</html>
+<div class="admin-container">
+    <h2 style="text-align: center; color: var(--primary-color);">🚀 নতুন গল্প পাবলিশ করুন</h2>
+    <form id="uploadForm">
+        <input type="password" id="adminPass" placeholder="Vercel Secret Key" required>
+        <input type="text" id="storyTitle" placeholder="গল্পের শিরোনাম (Bilingual)" required>
+        <textarea id="storyContent" placeholder="গল্পের মূল টেক্সট এখানে পেস্ট করুন (বাংলা ও ইংরেজি লাইনসহ)..." required></textarea>
+        <div class="form-group">
+            <label>এক্সেস:</label>
+            <select id="isPremium">
+                <option value="false">ফ্রি (Daily Free Story)</option>
+                <option value="true">প্রিমিয়াম (🔒 Unlock Required)</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-publish" id="submitBtn">📤 স্টোরি আপলোড করুন</button>
+    </form>
+    <div id="status"></div>
+</div>
