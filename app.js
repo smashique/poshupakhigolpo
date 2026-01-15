@@ -1,5 +1,4 @@
-// --- Supabase কনফিগারেশন ---
-// সরাসরি আপনার ছবির আসল তথ্য এখানে বসানো হলো
+// আপনার ড্যাশবোর্ড থেকে পাওয়া আসল তথ্য সরাসরি এখানে বসানো হলো
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'; 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-';
 
