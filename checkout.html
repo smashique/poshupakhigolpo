@@ -18,6 +18,7 @@
         .uid-box { background: #f8f9fa; padding: 12px; border-radius: 12px; margin: 20px 0; border: 1px dashed #ccc; font-size: 0.85rem; color: #666; }
         .btn-buy-now { width: 100%; font-size: 1.3rem; padding: 18px; border-radius: 15px; background: var(--secondary-color); color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .wa-support { display: inline-flex; align-items: center; gap: 8px; color: #25D366; text-decoration: none; font-weight: bold; margin-top: 20px; border: 2px solid #25D366; padding: 10px 20px; border-radius: 50px; }
+        #verifyMsg { display: none; margin-top: 15px; color: var(--primary-color); font-weight: bold; }
     </style>
 </head>
 <body>
@@ -33,13 +34,18 @@
         </ul>
 
         <div class="uid-box">সাপোর্ট আইডি: <strong id="displayUid">লোড হচ্ছে...</strong></div>
-        <button class="btn-buy-now" id="payBtn">💳 পেমেন্ট সম্পন্ন করুন</button>
+        
+        <div id="paymentSection">
+            <button class="btn-buy-now" id="payBtn">💳 পেমেন্ট সম্পন্ন করুন</button>
+        </div>
+
+        <div id="verifyMsg">🔄 পেমেন্ট ভেরিফাই করা হচ্ছে, দয়া করে অপেক্ষা করুন...</div>
+
         <a href="https://wa.me/8801303680618" class="wa-support" target="_blank">WhatsApp এ সহায়তা নিন</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // --- সুপাবেস কনফিগারেশন ---
         const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
         const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -48,30 +54,41 @@
             const uuid = localStorage.getItem('device_uuid');
             document.getElementById('displayUid').innerText = uuid || "আইডি পাওয়া যায়নি";
 
-            // ইউআরএল থেকে স্ট্যাটাস চেক করা
             const urlParams = new URLSearchParams(window.location.search);
+            // যদি ইউআরএল এ status=success থাকে, তবে ভেরিফিকেশন শুরু করো
             if (urlParams.get('status') === 'success' && uuid) {
-                unlockPremium(uuid);
+                startVerification(uuid);
             }
         });
 
-        async function unlockPremium(uuid) {
-            const btn = document.getElementById('payBtn');
-            btn.innerText = "আনলক হচ্ছে...";
-            btn.disabled = true;
+        // পেমেন্ট ভেরিফিকেশন শুরু (শুধুমাত্র চেক করবে, আপডেট করবে না)
+        async function startVerification(uuid) {
+            document.getElementById('paymentSection').style.display = 'none';
+            document.getElementById('verifyMsg').style.display = 'block';
 
-            try {
-                // ডাটাবেসে স্ট্যাটাস আপডেট
-                const { error } = await _supabase.from('users').update({ status: 'paid' }).eq('device_uuid', uuid);
-                if (error) throw error;
+            let attempts = 0;
+            const checkInterval = setInterval(async () => {
+                attempts++;
                 
-                alert("AlHamdulillah! পেমেন্ট সফল হয়েছে। সব গল্প আনলক করা হয়েছে।");
-                window.location.href = "index.html"; 
-            } catch (err) {
-                alert("পেমেন্ট সফল হলেও আনলক করতে সমস্যা হয়েছে। দয়া করে হোয়াটসঅ্যাপে যোগাযোগ করুন।");
-                btn.disabled = false;
-                btn.innerText = "💳 পেমেন্ট সম্পন্ন করুন";
-            }
+                // ডাটাবেস থেকে ইউজারের বর্তমান স্ট্যাটাস রিড করো
+                const { data, error } = await _supabase
+                    .from('users')
+                    .select('status')
+                    .eq('device_uuid', uuid)
+                    .maybeSingle();
+
+                if (data && data.status === 'paid') {
+                    clearInterval(checkInterval);
+                    alert("AlHamdulillah! পেমেন্ট সফল হয়েছে। আপনার সব গল্প আনলক করা হয়েছে।");
+                    window.location.href = "index.html";
+                }
+
+                // ১০ বার চেষ্টার পর (৩০ সেকেন্ড) যদি আনলক না হয়
+                if (attempts > 10) {
+                    clearInterval(checkInterval);
+                    document.getElementById('verifyMsg').innerText = "⚠️ অটো-ভেরিফিকেশনে দেরি হচ্ছে। দয়া করে একটু পর মেইন পেজ চেক করুন অথবা হোয়াটসঅ্যাপে জানান।";
+                }
+            }, 3000); // প্রতি ৩ সেকেন্ড পরপর চেক করবে
         }
 
         document.getElementById('payBtn').onclick = async () => {
@@ -84,7 +101,7 @@
                 const response = await fetch('/api/create-payment', { method: 'POST', body: JSON.stringify({ deviceId }) });
                 const data = await response.json();
                 if (data.payment_url) window.location.href = data.payment_url;
-            } catch (err) { alert('ইন্টারনেট কানেকশন চেক করুন।'); btn.disabled = false; }
+            } catch (err) { alert('ইন্টারনেট কানেকশন চেক করুন।'); btn.disabled = false; btn.innerText = "💳 পেমেন্ট সম্পন্ন করুন"; }
         };
     </script>
 </body>
