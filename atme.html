@@ -14,8 +14,8 @@
         label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--primary-color); }
         input, textarea, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
         textarea { height: 250px; }
-        .btn-submit { background: var(--secondary-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
-        .btn-submit:disabled { background: #ccc; }
+        .btn-submit { background: var(--secondary-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: 0.3s; }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
         #status { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; text-align: center; font-weight: bold; line-height: 1.5; }
     </style>
 </head>
@@ -56,7 +56,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ইউআরএল এবং কী সরাসরি বসানো হয়েছে ক্যাশ বা এনভায়রনমেন্ট সমস্যা এড়াতে
+        // ইউআরএল এবং কি সরাসরি বসানো হয়েছে ক্যাশ সমস্যা এড়াতে
         const URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
         const KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
         const _supabase = supabase.createClient(URL, KEY);
@@ -70,7 +70,7 @@
             const status = document.getElementById('status');
             const enteredPass = document.getElementById('pass').value;
 
-            // ১. পাসওয়ার্ড ভ্যালিডেশন
+            // ১. পাসওয়ার্ড চেক
             if (enteredPass !== ADMIN_PASS) {
                 status.style.display = "block";
                 status.innerText = "failed: পাসওয়ার্ড ভুল!";
@@ -83,6 +83,7 @@
             btn.innerText = "পাবলিশ হচ্ছে...";
             status.style.display = "none";
 
+            // ডাটাবেস কলাম অনুযায়ী ডাটা তৈরি
             const storyData = {
                 title: document.getElementById('title').value.trim(),
                 content: document.getElementById('content').value.trim(),
@@ -90,17 +91,17 @@
             };
 
             try {
-                // ২. ডাটাবেস টেবিল 'stories' এ ইনসার্ট করা
+                // ২. ডাটাবেসে গল্প ইনসার্ট করা
                 const { error } = await _supabase.from('stories').insert([storyData]);
 
                 status.style.display = "block";
                 if (error) {
-                    // ব্যর্থ হলে কারণসহ মেসেজ
+                    // ব্যর্থ হলে আপনার চাওয়া মেসেজ এবং কারণ
                     status.innerText = "failed: " + error.message;
                     status.style.background = "#ffebee";
                     status.style.color = "#c62828";
                 } else {
-                    // সফল হলে কাঙ্ক্ষিত মেসেজ
+                    // সফল হলে আপনার চাওয়া মেসেজ
                     status.innerText = "AlHamdulillah published Successfully";
                     status.style.background = "#e8f5e9";
                     status.style.color = "#2e7d32";
@@ -110,6 +111,7 @@
                 status.style.display = "block";
                 status.innerText = "failed: নেটওয়ার্ক কানেকশন এরর!";
                 status.style.background = "#ffebee";
+                status.style.color = "#c62828";
             } finally {
                 btn.disabled = false;
                 btn.innerText = "পাবলিশ করুন";
