@@ -3,95 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>অ্যাডমিন - পশুপাখি গল্প</title>
+    <title>অ্যাডমিন প্যানেল - পশুপাখি গল্প</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        .admin-container { max-width: 650px; margin: 40px auto; padding: 30px; background: white; border-radius: 20px; box-shadow: var(--shadow); }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary-color); }
-        input, textarea, select { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; font-family: inherit; font-size: 1rem; }
-        textarea { height: 350px; resize: vertical; }
-        .btn-publish { background: var(--secondary-color); color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; font-size: 1.2rem; transition: 0.3s; }
-        .btn-publish:hover { background: #e68a00; transform: translateY(-2px); }
-        #status { margin-top: 20px; text-align: center; font-weight: bold; display: none; padding: 15px; border-radius: 10px; }
+        :root { --primary-color: #2E7D32; --secondary-color: #FB8C00; }
+        body { font-family: 'Hind Siliguri', sans-serif; background: #f4f7f6; padding: 20px; }
+        .admin-box { max-width: 600px; margin: 30px auto; padding: 25px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--primary-color); }
+        input, textarea, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
+        textarea { height: 250px; }
+        .btn-submit { background: var(--secondary-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
+        #status { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; text-align: center; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="admin-container">
-        <h2 style="text-align: center; color: var(--primary-color);">🚀 নতুন গল্প পাবলিশ করুন</h2>
-        <p style="text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 25px;">(সরাসরি বাংলা ও ইংরেজি মিশ্রিত টেক্সট পেস্ট করুন)</p>
 
-        <form id="uploadForm">
-            <div class="form-group" style="background: #fff3e0; padding: 15px; border-radius: 10px;">
-                <label>🔑 Admin Secret Key:</label>
-                <input type="password" id="adminPass" placeholder="Vercel-এ সেট করা পাসওয়ার্ড দিন..." required>
+    <div class="admin-box">
+        <h2 style="text-align: center; color: var(--primary-color);">📖 নতুন গল্প পাবলিশ করুন</h2>
+        
+        <form id="storyForm">
+            <div class="input-group">
+                <label>অ্যাডমিন পাসওয়ার্ড:</label>
+                <input type="password" id="pass" placeholder="পাসওয়ার্ড দিন" required>
             </div>
-            
-            <div class="form-group">
+
+            <div class="input-group">
                 <label>গল্পের শিরোনাম:</label>
-                <input type="text" id="storyTitle" placeholder="যেমন: বিজ্ঞ ময়না ও দুই বন্ধুর ঝগড়া" required>
+                <input type="text" id="title" placeholder="গল্পের নাম লিখুন" required>
             </div>
 
-            <div class="form-group">
-                <label>গল্পের কন্টেন্ট (Bilingual Text):</label>
-                <textarea id="storyContent" placeholder="গল্পের বাংলা এবং ইংরেজি লাইনগুলো এখানে পেস্ট করুন..." required></textarea>
+            <div class="input-group">
+                <label>গল্পের বিষয়বস্তু:</label>
+                <textarea id="content" placeholder="পুরো গল্পটি এখানে লিখুন..." required></textarea>
             </div>
 
-            <div class="form-group">
-                <label>এক্সেস টাইপ:</label>
-                <select id="isPremium">
-                    <option value="false">ফ্রি প্ল্যান (Daily Story)</option>
-                    <option value="true">প্রিমিয়াম এক্সেস (🔒 Unlock Required)</option>
+            <div class="input-group">
+                <label>গল্পের ধরন:</label>
+                <select id="premium">
+                    <option value="false">ফ্রি (Free)</option>
+                    <option value="true">প্রিমিয়াম (Premium)</option>
                 </select>
             </div>
 
-            <button type="submit" class="btn-publish" id="submitBtn">📤 স্টোরি পাবলিশ করুন</button>
+            <button type="submit" class="btn-submit" id="btn">পাবলিশ করুন</button>
         </form>
+
         <div id="status"></div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        document.getElementById('uploadForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            const status = document.getElementById('status');
-            
-            btn.innerText = "আপলোড হচ্ছে, দয়া করে অপেক্ষা করুন...";
-            btn.disabled = true;
+        // আপনার আসল সুপাবেস তথ্য
+        const URL = 'https://xptwwlrcygimfislsutz.supabase.co'; 
+        const KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-';
+        const _supabase = supabase.createClient(URL, KEY);
 
-            const payload = {
-                password: document.getElementById('adminPass').value,
-                title: document.getElementById('storyTitle').value,
-                story_content: document.getElementById('storyContent').value,
-                is_premium: document.getElementById('isPremium').value === "true"
+        const ADMIN_PASS = "আপনার_পাসওয়ার্ড"; // এখানে আপনার গোপন পাসওয়ার্ডটি লিখুন
+
+        document.getElementById('storyForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn');
+            const status = document.getElementById('status');
+            const pass = document.getElementById('pass').value;
+
+            if (pass !== ADMIN_PASS) {
+                status.style.display = "block";
+                status.innerText = "failed: পাসওয়ার্ড ভুল!";
+                status.style.background = "#ffebee";
+                status.style.color = "#c62828";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "পাবলিশ হচ্ছে...";
+
+            const storyData = {
+                title: document.getElementById('title').value,
+                content: document.getElementById('content').value,
+                is_premium: document.getElementById('premium').value === "true"
             };
 
             try {
-                // api/admin-upload.js ফাইলে রিকোয়েস্ট পাঠানো হচ্ছে
-                const response = await fetch('/api/admin-upload', {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
+                // ডাটাবেসে গল্প পাঠানো
+                const { error } = await _supabase.from('stories').insert([storyData]);
 
                 status.style.display = "block";
-                if (response.ok) {
-                    status.innerText = "✅ " + result.message;
-                    status.style.background = "#C8E6C9";
-                    status.style.color = "#2E7D32";
-                    document.getElementById('uploadForm').reset();
+                if (error) {
+                    // ব্যর্থ হলে আপনার দেওয়া মেসেজ ও কারণ
+                    status.innerText = "failed: " + error.message;
+                    status.style.background = "#ffebee";
+                    status.style.color = "#c62828";
                 } else {
-                    status.innerText = "❌ " + result.error;
-                    status.style.background = "#FFCDD2";
-                    status.style.color = "#D32F2F";
+                    // সফল হলে আপনার দেওয়া মেসেজ
+                    status.innerText = "AlHamdulillah published Successfully";
+                    status.style.background = "#e8f5e9";
+                    status.style.color = "#2e7d32";
+                    document.getElementById('storyForm').reset();
                 }
             } catch (err) {
-                status.innerText = "❌ সার্ভারের সাথে কানেকশন এরর!";
-                status.style.background = "#FFCDD2";
+                status.style.display = "block";
+                status.innerText = "failed: কানেকশন সমস্যা!";
             } finally {
-                btn.innerText = "📤 স্টোরি পাবলিশ করুন";
                 btn.disabled = false;
+                btn.innerText = "পাবলিশ করুন";
             }
         };
     </script>
