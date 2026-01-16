@@ -7,145 +7,44 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #2E7D32;
-            --secondary-color: #FF9800;
-        }
-
-        .checkout-container { 
-            max-width: 500px; 
-            margin: 40px auto; 
-            padding: 30px; 
-            background: white; 
-            border-radius: 25px; 
-            box-shadow: var(--shadow); 
-            text-align: center; 
-            border: 1px solid #eee; 
-        }
-
-        .lifetime-badge { 
-            background: #FFF9C4; 
-            color: #827717; 
-            padding: 6px 18px; 
-            border-radius: 50px; 
-            font-weight: bold; 
-            font-size: 0.85rem; 
-            display: inline-block; 
-            margin-bottom: 15px; 
-            border: 1px solid #FBC02D; 
-        }
-
+        :root { --primary-color: #2E7D32; --secondary-color: #FF9800; }
+        .checkout-container { max-width: 500px; margin: 40px auto; padding: 30px; background: white; border-radius: 25px; box-shadow: var(--shadow); text-align: center; border: 1px solid #eee; }
+        .lifetime-badge { background: #FFF9C4; color: #827717; padding: 6px 18px; border-radius: 50px; font-weight: bold; font-size: 0.85rem; display: inline-block; margin-bottom: 15px; border: 1px solid #FBC02D; }
         .price-tag { margin: 20px 0; }
         .price-tag del { font-size: 1.2rem; color: #999; }
         .price-tag strong { font-size: 2.8rem; font-weight: bold; color: #333; }
-
-        .benefit-list { 
-            text-align: left; 
-            margin: 25px 0; 
-            padding-left: 10px; 
-            list-style: none; 
-        }
-
-        .benefit-list li { 
-            margin: 12px 0; 
-            color: #333; 
-            font-size: 1.05rem; 
-            display: flex; 
-            align-items: flex-start; 
-            gap: 10px; 
-        }
-
-        .uid-box { 
-            background: #f8f9fa; 
-            padding: 12px; 
-            border-radius: 12px; 
-            margin: 20px 0; 
-            border: 1px dashed #ccc; 
-            font-size: 0.85rem; 
-            color: #666; 
-        }
-
-        .btn-buy-now { 
-            width: 100%; 
-            font-size: 1.3rem; 
-            padding: 18px; 
-            border-radius: 15px; 
-            background: var(--secondary-color); 
-            color: white; 
-            border: none; 
-            font-weight: bold; 
-            cursor: pointer; 
-            box-shadow: 0 6px 15px rgba(255,152,0,0.3); 
-            transition: 0.3s; 
-        }
-
-        .btn-buy-now:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 8px 20px rgba(255,152,0,0.4); 
-        }
-
-        .wa-support { 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 8px; 
-            color: #25D366; 
-            text-decoration: none; 
-            font-weight: bold; 
-            margin-top: 20px; 
-            border: 2px solid #25D366; 
-            padding: 10px 20px; 
-            border-radius: 50px; 
-            transition: 0.3s; 
-        }
-
-        .wa-support:hover { background: #25D366; color: white; }
+        .benefit-list { text-align: left; margin: 25px 0; padding-left: 10px; list-style: none; }
+        .benefit-list li { margin: 12px 0; color: #333; font-size: 1.05rem; display: flex; align-items: flex-start; gap: 10px; }
+        .uid-box { background: #f8f9fa; padding: 12px; border-radius: 12px; margin: 20px 0; border: 1px dashed #ccc; font-size: 0.85rem; color: #666; }
+        .btn-buy-now { width: 100%; font-size: 1.3rem; padding: 18px; border-radius: 15px; background: var(--secondary-color); color: white; border: none; font-weight: bold; cursor: pointer; box-shadow: 0 6px 15px rgba(255,152,0,0.3); transition: 0.3s; }
+        .wa-support { display: inline-flex; align-items: center; gap: 8px; color: #25D366; text-decoration: none; font-weight: bold; margin-top: 20px; border: 2px solid #25D366; padding: 10px 20px; border-radius: 50px; }
     </style>
 </head>
 <body>
     <div class="checkout-container">
         <div class="lifetime-badge">♾️ আজীবনের জন্য আনলক (Lifetime)</div>
         <h2 style="color: var(--primary-color);">সোনামণির নৈতিক শিক্ষার পথে মাত্র এক ধাপ...</h2>
-        
-        <div class="price-tag">
-            <span><del>৳৪৯৯</del></span>
-            <strong> ৳২৯৯</strong>
-        </div>
-
+        <div class="price-tag"><del>৳৪৯৯</del> <strong> ৳২৯৯</strong></div>
         <ul class="benefit-list">
-            <li>✅ <strong>আপনার সন্তানের শৈশবকে আনন্দময় করতে:</strong> পশু-পাখিদের শিক্ষামূলক গল্পের ভাণ্ডার।</li>
-            <li>✅ <strong>ইংরেজি শেখার সুযোগ:</strong> প্রতিটি গল্প বাংলা ও A1 লেভেল ইংরেজিতে লেখা।</li>
-            <li>✅ <strong>স্মার্ট লার্নিং:</strong> গল্প শোনার সাথে সাথে শিশু ইংরেজি ভাষায় দক্ষ হবে।</li>
+            <li>✅ <strong>সন্তানের শৈশবকে আনন্দময় করতে:</strong> পশু-পাখিদের গল্পের ভাণ্ডার।</li>
+            <li>✅ <strong>ইংরেজি শেখার সুযোগ:</strong> প্রতিটি গল্প বাংলা ও ইংরেজিতে লেখা।</li>
             <li>✅ <strong>আজীবন এক্সেস:</strong> একবার কিনুন, কোনো মাসিক চার্জ নেই।</li>
-            <li>✅ <strong>নিরাপদ পেমেন্ট:</strong> বিকাশ বা রকেটে নিশ্চিন্তে পেমেন্ট করুন।</li>
         </ul>
-
-        <div class="uid-box">
-            সাপোর্ট ভেরিফিকেশন আইডি:<br>
-            <strong id="displayUid" style="color: #333; font-family: monospace;">লোড হচ্ছে...</strong>
-        </div>
-
+        <div class="uid-box">সাপোর্ট আইডি: <strong id="displayUid">লোড হচ্ছে...</strong></div>
         <button class="btn-buy-now" id="payBtn">💳 পেমেন্ট সম্পন্ন করুন</button>
-
-        <p style="margin-top: 25px; font-size: 0.9rem; color: #666;">পেমেন্টে সমস্যা হলে আমাদের জানান:</p>
-        <a href="https://wa.me/8801303680618" class="wa-support" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22" alt="WA"> 
-            WhatsApp এ সহায়তা নিন
-        </a>
+        <a href="https://wa.me/8801303680618" class="wa-support" target="_blank">WhatsApp এ সহায়তা নিন</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // --- সুপাবেস কনফিগারেশন ---
         const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
         const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // পেজ লোড হওয়ার সাথে সাথে আইডি দেখানো এবং পেমেন্ট স্ট্যাটাস চেক করা
         document.addEventListener('DOMContentLoaded', () => {
             const uuid = localStorage.getItem('device_uuid');
             document.getElementById('displayUid').innerText = uuid || "আইডি পাওয়া যায়নি";
 
-            // পেমেন্ট গেটওয়ে থেকে ফেরার পর স্ট্যাটাস চেক করা
             const urlParams = new URLSearchParams(window.location.search);
             const status = urlParams.get('status'); 
 
@@ -154,27 +53,18 @@
             }
         });
 
-        // প্রিমিয়াম আনলক ফাংশন
         async function unlockPremium(uuid) {
             const btn = document.getElementById('payBtn');
             btn.innerText = "আনলক হচ্ছে...";
             btn.disabled = true;
 
             try {
-                // 'users' টেবিলের স্ট্যাটাস 'paid' এ আপডেট করা হচ্ছে
-                const { error } = await _supabase
-                    .from('users')
-                    .update({ status: 'paid' })
-                    .eq('device_uuid', uuid);
-
+                const { error } = await _supabase.from('users').update({ status: 'paid' }).eq('device_uuid', uuid);
                 if (error) throw error;
-
                 alert("AlHamdulillah! পেমেন্ট সফল হয়েছে এবং সব গল্প আনলক করা হয়েছে।");
-                window.location.href = "index.html"; // মেইন পেজে রিডাইরেক্ট
+                window.location.href = "index.html"; 
             } catch (err) {
-                console.error("আনলক করতে সমস্যা হয়েছে:", err.message);
-                alert("পেমেন্ট সফল হলেও আনলক করতে সমস্যা হয়েছে। অনুগ্রহ করে সাপোর্ট আইডি দিয়ে হোয়াটসঅ্যাপে যোগাযোগ করুন।");
-                btn.innerText = "💳 পেমেন্ট সম্পন্ন করুন";
+                alert("পেমেন্ট সফল হলেও আনলক করতে সমস্যা হয়েছে। অনুগ্রহ করে সাপোর্ট আইডি দিয়ে হোয়াটসঅ্যাপে যোগাযোগ করুন।");
                 btn.disabled = false;
             }
         }
@@ -182,29 +72,13 @@
         document.getElementById('payBtn').onclick = async () => {
             const deviceId = localStorage.getItem('device_uuid');
             const btn = document.getElementById('payBtn');
-            
             btn.innerText = "অপেক্ষা করুন...";
             btn.disabled = true;
-
             try {
-                const response = await fetch('/api/create-payment', {
-                    method: 'POST',
-                    body: JSON.stringify({ deviceId })
-                });
+                const response = await fetch('/api/create-payment', { method: 'POST', body: JSON.stringify({ deviceId }) });
                 const data = await response.json();
-                
-                if (data.payment_url) {
-                    window.location.href = data.payment_url;
-                } else {
-                    alert('পেমেন্ট শুরু করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।');
-                    btn.innerText = "💳 পেমেন্ট সম্পন্ন করুন";
-                    btn.disabled = false;
-                }
-            } catch (err) {
-                alert('ইন্টারনেট কানেকশন চেক করুন।');
-                btn.innerText = "💳 পেমেন্ট সম্পন্ন করুন";
-                btn.disabled = false;
-            }
+                if (data.payment_url) window.location.href = data.payment_url;
+            } catch (err) { alert('ইন্টারনেট কানেকশন চেক করুন।'); btn.disabled = false; }
         };
     </script>
 </body>
