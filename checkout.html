@@ -129,16 +129,55 @@
         <p style="margin-top: 25px; font-size: 0.9rem; color: #666;">পেমেন্টে সমস্যা হলে আমাদের জানান:</p>
         <a href="https://wa.me/8801303680618" class="wa-support" target="_blank">
             <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22" alt="WA"> 
-            WhatsApp এ সহায়তা নিন
+            WhatsApp এ সহায়তা নিন
         </a>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // পেজ লোড হওয়ার সাথে সাথে আইডি দেখানো
+        // --- সুপাবেস কনফিগারেশন ---
+        const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
+        const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // পেজ লোড হওয়ার সাথে সাথে আইডি দেখানো এবং পেমেন্ট স্ট্যাটাস চেক করা
         document.addEventListener('DOMContentLoaded', () => {
             const uuid = localStorage.getItem('device_uuid');
-            document.getElementById('displayUid').innerText = uuid || "আইডি পাওয়া যায়নি";
+            document.getElementById('displayUid').innerText = uuid || "আইডি পাওয়া যায়নি";
+
+            // পেমেন্ট গেটওয়ে থেকে ফেরার পর স্ট্যাটাস চেক করা
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status'); 
+
+            if (status === 'success' && uuid) {
+                unlockPremium(uuid);
+            }
         });
+
+        // প্রিমিয়াম আনলক ফাংশন
+        async function unlockPremium(uuid) {
+            const btn = document.getElementById('payBtn');
+            btn.innerText = "আনলক হচ্ছে...";
+            btn.disabled = true;
+
+            try {
+                // 'users' টেবিলের স্ট্যাটাস 'paid' এ আপডেট করা হচ্ছে
+                const { error } = await _supabase
+                    .from('users')
+                    .update({ status: 'paid' })
+                    .eq('device_uuid', uuid);
+
+                if (error) throw error;
+
+                alert("AlHamdulillah! পেমেন্ট সফল হয়েছে এবং সব গল্প আনলক করা হয়েছে।");
+                window.location.href = "index.html"; // মেইন পেজে রিডাইরেক্ট
+            } catch (err) {
+                console.error("আনলক করতে সমস্যা হয়েছে:", err.message);
+                alert("পেমেন্ট সফল হলেও আনলক করতে সমস্যা হয়েছে। অনুগ্রহ করে সাপোর্ট আইডি দিয়ে হোয়াটসঅ্যাপে যোগাযোগ করুন।");
+                btn.innerText = "💳 পেমেন্ট সম্পন্ন করুন";
+                btn.disabled = false;
+            }
+        }
 
         document.getElementById('payBtn').onclick = async () => {
             const deviceId = localStorage.getItem('device_uuid');
@@ -157,7 +196,7 @@
                 if (data.payment_url) {
                     window.location.href = data.payment_url;
                 } else {
-                    alert('পেমেন্ট শুরু করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।');
+                    alert('পেমেন্ট শুরু করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।');
                     btn.innerText = "💳 পেমেন্ট সম্পন্ন করুন";
                     btn.disabled = false;
                 }
