@@ -1,9 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
-// ১. সুপাবেস ইনিশিয়ালাইজেশন (সরাসরি এনভায়রনমেন্ট ভেরিয়েবল থেকে)
+// ১. সুপাবেস ইনিশিয়ালাইজেশন (service_role key ব্যবহার করা হয়েছে যাতে RLS বাইপাস করে আপডেট করা যায়)
+// এটি একটি গোপন কী, তাই এটি কখনোই পাবলিক ফাইল (যেমন index.html বা app.js) এ ব্যবহার করবেন না।
 const _supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL, 
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    process.env.SUPABASE_SERVICE_ROLE_KEY // anon key নয়, এখানে service_role key ব্যবহার করা হয়েছে
 );
 
 export default async function handler(req, res) {
@@ -13,7 +14,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        // গেটওয়ে থেকে আসা ডাটা রিসিভ করা (Vercel সাধারণত অটো-পার্স করে)
+        // গেটওয়ে থেকে আসা ডাটা রিসিভ করা (UddoktaPay/Paymently ফরম্যাট অনুযায়ী)
         const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
         const { status, metadata } = body;
 
@@ -22,8 +23,8 @@ export default async function handler(req, res) {
 
         if (!deviceId) {
             console.error("Webhook Error: No Device ID found in metadata");
-            return res.status(200).json({ status: 'ignored', message: 'No device ID' }); 
-            // নোট: এখানে ৪০০ না দিয়ে ২০০ দেওয়া ভালো যাতে গেটওয়ে বারবার রিকোয়েস্ট না পাঠায়
+            // গেটওয়্যুকে ২০০ রেসপন্স দেওয়াই নিরাপদ যাতে তারা বারবার রিকোয়েস্ট না পাঠায়
+            return res.status(200).json({ status: 'ignored', message: 'No device ID found' }); 
         }
 
         // ২. পেমেন্ট সফল হয়েছে কি না যাচাই করা
@@ -32,6 +33,7 @@ export default async function handler(req, res) {
             console.log(`Payment Success for Device: ${deviceId}`);
 
             // ৩. ডাটাবেসে ইউজার স্ট্যাটাস আপডেট করা
+            // service_role ব্যবহারের ফলে এটি কোনো পাবলিক পলিসি ছাড়াই ডাটা আপডেট করতে পারবে।
             const { error } = await _supabase
                 .from('users')
                 .update({ status: 'paid' })
@@ -48,8 +50,9 @@ export default async function handler(req, res) {
             });
         }
 
-        // পেমেন্ট ফেইল করলে
-        return res.status(200).json({ message: 'Payment not successful' });
+        // পেমেন্ট ফেইল করলে বা অন্য কোনো স্ট্যাটাস থাকলে
+        console.warn(`Payment Status: ${status} for Device: ${deviceId}`);
+        return res.status(200).json({ message: 'Payment incomplete or failed' });
 
     } catch (err) {
         console.error("Webhook Handler Error:", err.message);
