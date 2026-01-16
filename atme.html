@@ -56,12 +56,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ইউআরএল এবং কি সরাসরি বসানো হয়েছে ক্যাশ সমস্যা এড়াতে
+        // ইউআরএল এবং কি থেকে অদৃশ্য স্পেস সরাতে .trim() ব্যবহার করা হয়েছে
         const URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
         const KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
-        const _supabase = supabase.createClient(URL, KEY);
+        
+        let _supabase;
+        try {
+            // ক্লায়েন্ট তৈরি (এটি এরর দিলে নিচের কোনো বাটন কাজ করবে না)
+            _supabase = supabase.createClient(URL, KEY);
+        } catch (e) {
+            console.error("সুপাবেস সেটআপ এরর:", e.message);
+        }
 
-        // Vercel-এ সেট করা আপনার আসল পাসওয়ার্ড
+        // Vercel-এ আপনার সেট করা আসল পাসওয়ার্ড
         const ADMIN_PASS = "AIMe2025to30"; 
 
         document.getElementById('storyForm').onsubmit = async (e) => {
@@ -83,7 +90,7 @@
             btn.innerText = "পাবলিশ হচ্ছে...";
             status.style.display = "none";
 
-            // ডাটাবেস কলাম অনুযায়ী ডাটা তৈরি
+            // ডাটাবেস টেবিল কলাম অনুযায়ী ডাটা তৈরি
             const storyData = {
                 title: document.getElementById('title').value.trim(),
                 content: document.getElementById('content').value.trim(),
@@ -91,17 +98,17 @@
             };
 
             try {
-                // ২. ডাটাবেসে গল্প ইনসার্ট করা
+                // ২. সুপাবেস stories টেবিলে ইনসার্ট করা
                 const { error } = await _supabase.from('stories').insert([storyData]);
 
                 status.style.display = "block";
                 if (error) {
-                    // ব্যর্থ হলে আপনার চাওয়া মেসেজ এবং কারণ
+                    // ব্যর্থ হলে নির্দিষ্ট মেসেজ এবং কারণ
                     status.innerText = "failed: " + error.message;
                     status.style.background = "#ffebee";
                     status.style.color = "#c62828";
                 } else {
-                    // সফল হলে আপনার চাওয়া মেসেজ
+                    // সফল হলে কাঙ্ক্ষিত মেসেজ
                     status.innerText = "AlHamdulillah published Successfully";
                     status.style.background = "#e8f5e9";
                     status.style.color = "#2e7d32";
