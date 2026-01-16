@@ -56,26 +56,22 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ইউআরএল এরর বন্ধ করতে .trim() ব্যবহার করা হয়েছে
-        const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
-        const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
-        
-        let _supabase;
-        try {
-            _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        } catch (e) {
-            console.error("সুপাবেস সেটআপ এরর:", e.message);
-        }
+        // ইউআরএল এবং কী সরাসরি বসানো হয়েছে ক্যাশ বা এনভায়রনমেন্ট সমস্যা এড়াতে
+        const URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
+        const KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
+        const _supabase = supabase.createClient(URL, KEY);
 
-        const ADMIN_PASS = "আপনার_পাসওয়ার্ড"; // আপনার পাসওয়ার্ডটি এখানে লিখুন
+        // Vercel-এ সেট করা আপনার আসল পাসওয়ার্ড
+        const ADMIN_PASS = "AIMe2025to30"; 
 
         document.getElementById('storyForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn');
             const status = document.getElementById('status');
-            const pass = document.getElementById('pass').value;
+            const enteredPass = document.getElementById('pass').value;
 
-            if (pass !== ADMIN_PASS) {
+            // ১. পাসওয়ার্ড ভ্যালিডেশন
+            if (enteredPass !== ADMIN_PASS) {
                 status.style.display = "block";
                 status.innerText = "failed: পাসওয়ার্ড ভুল!";
                 status.style.background = "#ffebee";
@@ -87,7 +83,6 @@
             btn.innerText = "পাবলিশ হচ্ছে...";
             status.style.display = "none";
 
-            // ডাটাবেস কলাম অনুযায়ী ডাটা তৈরি
             const storyData = {
                 title: document.getElementById('title').value.trim(),
                 content: document.getElementById('content').value.trim(),
@@ -95,7 +90,7 @@
             };
 
             try {
-                // stories টেবিলে ডাটা পাঠানো
+                // ২. ডাটাবেস টেবিল 'stories' এ ইনসার্ট করা
                 const { error } = await _supabase.from('stories').insert([storyData]);
 
                 status.style.display = "block";
@@ -105,7 +100,7 @@
                     status.style.background = "#ffebee";
                     status.style.color = "#c62828";
                 } else {
-                    // সফল হলে আপনার চাওয়া মেসেজ
+                    // সফল হলে কাঙ্ক্ষিত মেসেজ
                     status.innerText = "AlHamdulillah published Successfully";
                     status.style.background = "#e8f5e9";
                     status.style.color = "#2e7d32";
@@ -113,7 +108,7 @@
                 }
             } catch (err) {
                 status.style.display = "block";
-                status.innerText = "failed: নেটওয়ার্ক কানেকশন এরর!";
+                status.innerText = "failed: নেটওয়ার্ক কানেকশন এরর!";
                 status.style.background = "#ffebee";
             } finally {
                 btn.disabled = false;
