@@ -15,7 +15,8 @@
         input, textarea, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
         textarea { height: 250px; }
         .btn-submit { background: var(--secondary-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
-        #status { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; text-align: center; font-weight: bold; }
+        .btn-submit:disabled { background: #ccc; }
+        #status { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; text-align: center; font-weight: bold; line-height: 1.5; }
     </style>
 </head>
 <body>
@@ -25,8 +26,8 @@
         
         <form id="storyForm">
             <div class="input-group">
-                <label>অ্যাডমিন পাসওয়ার্ড:</label>
-                <input type="password" id="pass" placeholder="পাসওয়ার্ড দিন" required>
+                <label>অ্যাডমিন পাসওয়ার্ড:</label>
+                <input type="password" id="pass" placeholder="পাসওয়ার্ড দিন" required>
             </div>
 
             <div class="input-group">
@@ -35,7 +36,7 @@
             </div>
 
             <div class="input-group">
-                <label>গল্পের বিষয়বস্তু:</label>
+                <label>গল্পের বিষয়বস্তু:</label>
                 <textarea id="content" placeholder="পুরো গল্পটি এখানে লিখুন..." required></textarea>
             </div>
 
@@ -55,12 +56,18 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // আপনার আসল সুপাবেস তথ্য
-        const URL = 'https://xptwwlrcygimfislsutz.supabase.co'; 
-        const KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-';
-        const _supabase = supabase.createClient(URL, KEY);
+        // ইউআরএল এরর বন্ধ করতে .trim() ব্যবহার করা হয়েছে
+        const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
+        const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
+        
+        let _supabase;
+        try {
+            _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } catch (e) {
+            console.error("সুপাবেস সেটআপ এরর:", e.message);
+        }
 
-        const ADMIN_PASS = "আপনার_পাসওয়ার্ড"; // এখানে আপনার গোপন পাসওয়ার্ডটি লিখুন
+        const ADMIN_PASS = "আপনার_পাসওয়ার্ড"; // আপনার পাসওয়ার্ডটি এখানে লিখুন
 
         document.getElementById('storyForm').onsubmit = async (e) => {
             e.preventDefault();
@@ -70,7 +77,7 @@
 
             if (pass !== ADMIN_PASS) {
                 status.style.display = "block";
-                status.innerText = "failed: পাসওয়ার্ড ভুল!";
+                status.innerText = "failed: পাসওয়ার্ড ভুল!";
                 status.style.background = "#ffebee";
                 status.style.color = "#c62828";
                 return;
@@ -78,25 +85,27 @@
 
             btn.disabled = true;
             btn.innerText = "পাবলিশ হচ্ছে...";
+            status.style.display = "none";
 
+            // ডাটাবেস কলাম অনুযায়ী ডাটা তৈরি
             const storyData = {
-                title: document.getElementById('title').value,
-                content: document.getElementById('content').value,
+                title: document.getElementById('title').value.trim(),
+                content: document.getElementById('content').value.trim(),
                 is_premium: document.getElementById('premium').value === "true"
             };
 
             try {
-                // ডাটাবেসে গল্প পাঠানো
+                // stories টেবিলে ডাটা পাঠানো
                 const { error } = await _supabase.from('stories').insert([storyData]);
 
                 status.style.display = "block";
                 if (error) {
-                    // ব্যর্থ হলে আপনার দেওয়া মেসেজ ও কারণ
+                    // ব্যর্থ হলে কারণসহ মেসেজ
                     status.innerText = "failed: " + error.message;
                     status.style.background = "#ffebee";
                     status.style.color = "#c62828";
                 } else {
-                    // সফল হলে আপনার দেওয়া মেসেজ
+                    // সফল হলে আপনার চাওয়া মেসেজ
                     status.innerText = "AlHamdulillah published Successfully";
                     status.style.background = "#e8f5e9";
                     status.style.color = "#2e7d32";
@@ -104,7 +113,8 @@
                 }
             } catch (err) {
                 status.style.display = "block";
-                status.innerText = "failed: কানেকশন সমস্যা!";
+                status.innerText = "failed: নেটওয়ার্ক কানেকশন এরর!";
+                status.style.background = "#ffebee";
             } finally {
                 btn.disabled = false;
                 btn.innerText = "পাবলিশ করুন";
