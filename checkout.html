@@ -16,7 +16,7 @@
         .benefit-list { text-align: left; margin: 25px 0; padding-left: 10px; list-style: none; }
         .benefit-list li { margin: 12px 0; color: #333; font-size: 1.05rem; display: flex; align-items: flex-start; gap: 10px; }
         .uid-box { background: #f8f9fa; padding: 12px; border-radius: 12px; margin: 20px 0; border: 1px dashed #ccc; font-size: 0.85rem; color: #666; }
-        .btn-buy-now { width: 100%; font-size: 1.3rem; padding: 18px; border-radius: 15px; background: var(--secondary-color); color: white; border: none; font-weight: bold; cursor: pointer; box-shadow: 0 6px 15px rgba(255,152,0,0.3); transition: 0.3s; }
+        .btn-buy-now { width: 100%; font-size: 1.3rem; padding: 18px; border-radius: 15px; background: var(--secondary-color); color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .wa-support { display: inline-flex; align-items: center; gap: 8px; color: #25D366; text-decoration: none; font-weight: bold; margin-top: 20px; border: 2px solid #25D366; padding: 10px 20px; border-radius: 50px; }
     </style>
 </head>
@@ -25,11 +25,13 @@
         <div class="lifetime-badge">♾️ আজীবনের জন্য আনলক (Lifetime)</div>
         <h2 style="color: var(--primary-color);">সোনামণির নৈতিক শিক্ষার পথে মাত্র এক ধাপ...</h2>
         <div class="price-tag"><del>৳৪৯৯</del> <strong> ৳২৯৯</strong></div>
+        
         <ul class="benefit-list">
             <li>✅ <strong>সন্তানের শৈশবকে আনন্দময় করতে:</strong> পশু-পাখিদের গল্পের ভাণ্ডার।</li>
             <li>✅ <strong>ইংরেজি শেখার সুযোগ:</strong> প্রতিটি গল্প বাংলা ও ইংরেজিতে লেখা।</li>
             <li>✅ <strong>আজীবন এক্সেস:</strong> একবার কিনুন, কোনো মাসিক চার্জ নেই।</li>
         </ul>
+
         <div class="uid-box">সাপোর্ট আইডি: <strong id="displayUid">লোড হচ্ছে...</strong></div>
         <button class="btn-buy-now" id="payBtn">💳 পেমেন্ট সম্পন্ন করুন</button>
         <a href="https://wa.me/8801303680618" class="wa-support" target="_blank">WhatsApp এ সহায়তা নিন</a>
@@ -37,6 +39,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // --- সুপাবেস কনফিগারেশন ---
         const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
         const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -45,10 +48,9 @@
             const uuid = localStorage.getItem('device_uuid');
             document.getElementById('displayUid').innerText = uuid || "আইডি পাওয়া যায়নি";
 
+            // ইউআরএল থেকে স্ট্যাটাস চেক করা
             const urlParams = new URLSearchParams(window.location.search);
-            const status = urlParams.get('status'); 
-
-            if (status === 'success' && uuid) {
+            if (urlParams.get('status') === 'success' && uuid) {
                 unlockPremium(uuid);
             }
         });
@@ -59,13 +61,16 @@
             btn.disabled = true;
 
             try {
+                // ডাটাবেসে স্ট্যাটাস আপডেট
                 const { error } = await _supabase.from('users').update({ status: 'paid' }).eq('device_uuid', uuid);
                 if (error) throw error;
-                alert("AlHamdulillah! পেমেন্ট সফল হয়েছে এবং সব গল্প আনলক করা হয়েছে।");
+                
+                alert("AlHamdulillah! পেমেন্ট সফল হয়েছে। সব গল্প আনলক করা হয়েছে।");
                 window.location.href = "index.html"; 
             } catch (err) {
-                alert("পেমেন্ট সফল হলেও আনলক করতে সমস্যা হয়েছে। অনুগ্রহ করে সাপোর্ট আইডি দিয়ে হোয়াটসঅ্যাপে যোগাযোগ করুন।");
+                alert("পেমেন্ট সফল হলেও আনলক করতে সমস্যা হয়েছে। দয়া করে হোয়াটসঅ্যাপে যোগাযোগ করুন।");
                 btn.disabled = false;
+                btn.innerText = "💳 পেমেন্ট সম্পন্ন করুন";
             }
         }
 
@@ -74,6 +79,7 @@
             const btn = document.getElementById('payBtn');
             btn.innerText = "অপেক্ষা করুন...";
             btn.disabled = true;
+
             try {
                 const response = await fetch('/api/create-payment', { method: 'POST', body: JSON.stringify({ deviceId }) });
                 const data = await response.json();
