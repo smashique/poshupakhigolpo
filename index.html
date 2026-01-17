@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>পশুপাখি গল্প - ছোটদের জাদুকরী ভুবন</title>
-    <meta name="theme-color" content="#2E7D32">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="/assets/icon-192.png">
+    
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -19,14 +17,14 @@
         
         <div class="header-action-area">
             <div class="fomo-badge"> 
-                 ব্যাংকে জমেছে <span id="totalCount">...</span>টি গল্প। ইনশাআল্লাহ আরো আসছে। প্রতিদিন ১টি ফ্রি 🎁 গল্প মিস করবেন না! 
+              ব্যাংকে জমেছে <span id="totalCount">...</span>টি গল্প। ইনশাআল্লাহ আরো আসছে। প্রতিদিন ১টি ফ্রি 🎁 গল্প মিস করবেন না! 
                 <button id="installPwa" class="btn-install hidden">অ্যাপটি ইন্সটল করে রাখুন 📱</button>
     </header>
 
     <main class="container">
         <section class="story-player">
             <div class="player-container" id="playerArea">
-                <button id="fullscreenBtn" class="fs-pulse-btn">📺 বড় পর্দা</button>
+                <button id="fullscreenBtn" class="fs-pulse-btn">📺 বড় পর্দায় পড়ো</button>
                 <iframe id="storyFrame" src="about:blank" allowfullscreen></iframe>
                 
                 <div id="lockOverlay" class="lock-overlay hidden">
@@ -38,7 +36,7 @@
                 </div>
             </div>
 
-            <div class="action-footer">
+            <div class="player-footer">
                 <button onclick="shareApp()" class="btn-share">📤 বন্ধুদের সাথে শেয়ার করুন</button>
             </div>
         </section>
@@ -51,11 +49,11 @@
         <div id="premiumBanner" class="premium-banner">
             <div class="premium-content">
                 <div class="promo-text">
-                    <h2 class="promo-title">সোনামণিকে উপহার দিন নৈতিক শিক্ষা ✨</h2>
+                    <h2 class="promo-title">সোনামণির উজ্জ্বল ভবিষ্যৎ গড়ি নৈতিক গল্পে! ✨</h2>
                     <ul class="benefit-list">
                         <li>✅ আজীবনের জন্য <strong>সব গল্প</strong> আনলক।</li>
-                        <li>✅ কোনো মাসিক চার্জ নেই, একবারই পেমেন্ট।</li>
-                        <li>✅ নিরাপদ ও জাদুকরী ইন্টারফেস।</li>
+                        <li>✅ প্রতিদিন ১টি করে ফ্রি গল্প পড়ার সুযোগ।</li>
+                        <li>✅ নিরাপদ ও বিজ্ঞাপনমুক্ত জাদুকরী ভুবন।</li>
                     </ul>
                 </div>
                 <div class="price-action">
@@ -67,10 +65,10 @@
     </main>
 
     <footer class="site-footer">
-        <p>সাপোর্ট ইউনিক আইডি: <strong id="footerUid">...</strong></p>
+        <p>সাপোর্ট আইডি: <strong id="footerUid">...</strong></p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js?v=17.0"></script>
+    <script src="app.js?v=18.0"></script>
 </body>
 </html>
