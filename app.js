@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Performance Logic v17.0 --- */
+/* --- PoshuPakhi Golpo - Clean Logic v18.0 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -7,6 +7,25 @@ let userStatus = 'free';
 let dailyStoryId = null;
 let deferredPrompt; 
 
+// ১. গ্লোবাল ফাংশন ডিফাইন (Error Fix)
+window.initPayment = () => {
+    window.location.href = "checkout.html";
+};
+
+window.shareApp = async () => {
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: 'পشুপাখি গল্প',
+                text: 'আমার সোনামণি এখান থেকে নৈতিক গল্প শুনছে। আপনিও আপনার সোনামণিকে উপহার দিন!',
+                url: window.location.origin
+            });
+        } catch (err) { console.log('Share failed'); }
+    } else {
+        alert('লিঙ্কটি কপি করে বন্ধুদের পাঠান: ' + window.location.origin);
+    }
+};
+
 async function initApp() {
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
     localStorage.setItem('device_uuid', uuid);
@@ -14,9 +33,7 @@ async function initApp() {
 
     try {
         const { count } = await _supabase.from('stories').select('*', { count: 'exact', head: true });
-        if (document.getElementById('totalCount')) {
-            document.querySelectorAll('#totalCount').forEach(el => el.innerText = count || 0);
-        }
+        document.querySelectorAll('#totalCount').forEach(el => el.innerText = count || 0);
 
         const { data: user } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
         if (user?.status === 'paid') {
@@ -24,7 +41,7 @@ async function initApp() {
             document.querySelectorAll('.premium-banner, .lock-overlay').forEach(el => el.style.display = 'none');
         }
         loadStories();
-    } catch (err) { console.error("Init Error:", err.message); }
+    } catch (err) { console.error(err); }
 }
 
 async function loadStories() {
@@ -48,16 +65,15 @@ async function fetchAndPlay(storyId, isDailyFree = false) {
         const { data: story } = await _supabase.from('stories').select('*').eq('id', storyId).single();
         if (!story) return;
 
-        // আইফ্রেমের ভেতরে শান্ত ল্যান্ডস্কেপ (অ্যানিমেশন ছাড়া)
         const storyHtml = `
         <html>
         <head>
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&display=swap');
-                body { margin:0; background:#FDFBF7; font-family:'Hind Siliguri', sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; padding: 20px; box-sizing: border-box; }
-                .card { background:white; padding:40px; border-radius:35px; width:90%; box-shadow:0 15px 40px rgba(0,0,0,0.05); border:1px solid #eee; }
+                body { margin:0; background:#FDFBF7; font-family:'Hind Siliguri', sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; padding: 25px; box-sizing: border-box; }
+                .card { background:white; padding:40px; border-radius:35px; width:100%; max-width: 800px; box-shadow:0 10px 30px rgba(0,0,0,0.05); }
                 h1 { color:#2E7D32; text-align:center; font-size:2rem; margin-top:0; }
-                .text { line-height:2; font-size:1.4rem; color:#333; text-align:justify; }
+                .text { line-height:2; font-size:1.45rem; color:#333; text-align:justify; }
             </style>
         </head>
         <body>
@@ -93,5 +109,30 @@ function renderSidebar(stories) {
     });
 }
 
-// Fullscreen, Share, PWA লজিক এখানে বহাল থাকবে...
+// Fullscreen & PWA Logic
+document.getElementById('fullscreenBtn')?.addEventListener('click', () => {
+    const playerArea = document.getElementById('playerArea');
+    if (!document.fullscreenElement) {
+        playerArea.requestFullscreen?.() || playerArea.webkitRequestFullscreen?.();
+    } else { document.exitFullscreen?.(); }
+});
+
+const installBtn = document.getElementById('installPwa');
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (installBtn) installBtn.classList.remove('hidden');
+});
+
+if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') installBtn.classList.add('hidden');
+            deferredPrompt = null;
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', initApp);
