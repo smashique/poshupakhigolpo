@@ -3,153 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>পশুপাখি গল্প - ছোটদের জাদুকরী গল্পের ভুবন</title>
-    
-    <meta name="theme-color" content="#2E7D32">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="/assets/icon-192.png">
+    <title>পশুপাখি গল্প - ছোটদের জাদুকরী ভুবন</title>
     
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* ১০টি গল্পের জন্য ফিক্সড হাইট সাইডবার (পিক্সেল ফিক্সড করা হয়েছে) */
-        .thumbnail-list {
-            height: 650px; /* ১০টি গল্প দেখানোর জন্য আদর্শ উচ্চতা */
-            overflow-y: auto;
-            padding: 10px;
-            scroll-behavior: smooth;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 20px;
+        /* --- এক্সপার্ট লেআউট ও স্পেসিং ফিক্স --- */
+        
+        body { margin: 0; padding: 0; }
+
+        /* উপরের বিশাল গ্যাপ কমানো */
+        .navbar { 
+            padding: 10px 20px; 
+            min-height: 60px;
+            margin-bottom: 0; 
         }
 
-        .thumbnail-list::-webkit-scrollbar { width: 5px; }
-        .thumbnail-list::-webkit-scrollbar-thumb { background: #C8E6C9; border-radius: 10px; }
+        .container { 
+            margin-top: 10px !important; /* উপরের গ্যাপ কমানো হয়েছে */
+            padding-top: 0 !important;
+            gap: 20px;
+        }
 
-        /* গল্পের রঙিন বক্স স্টাইল */
+        /* ১০টি গল্পের জন্য নিখুঁত সাইডবার */
+        .sidebar {
+            padding: 15px !important;
+            border-radius: 30px !important;
+            max-height: 80vh;
+        }
+
+        .thumbnail-list {
+            height: 550px; /* ১০টি গল্পের জন্য আইডিয়াল হাইট */
+            overflow-y: auto;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* বক্সগুলোর মাঝে গ্যাপ */
+        }
+
+        /* গল্পের রঙিন বক্স (টেক্সট ওভারল্যাপ ফিক্স) */
         .story-banner {
-            height: 55px !important; /* প্রতিটি বক্সের উচ্চতা ফিক্সড */
-            margin-bottom: 10px;
-            border-radius: 15px !important;
+            min-height: 50px !important; 
+            height: auto !important; /* টেক্সট বড় হলে বক্স বড় হবে */
+            padding: 10px 15px;
+            border-radius: 12px !important;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border: none !important;
-            background-image: none !important; /* ইমেজ সরিয়ে দেওয়া হয়েছে */
+            cursor: pointer;
         }
-
-        .story-banner:hover { transform: scale(1.03); }
 
         .story-banner div {
-            background: transparent !important;
-            color: #333 !important;
-            font-weight: 700 !important;
-            font-size: 1.1rem !important;
-            text-align: center;
+            font-size: 1rem !important;
+            line-height: 1.3;
+            color: #2c3e50 !important;
+            font-weight: 600 !important;
+            word-wrap: break-word; /* লম্বা নাম বক্সের ভেতর রাখবে */
         }
 
-        /* ড্রিম ক্লাউড ও অন্যান্য স্টাইল আগের মতোই থাকবে... */
+        .story-banner:hover { transform: scale(1.02); }
+
+        /* স্ক্রলবার হাইড করে ক্লিন লুক দেওয়া */
+        .thumbnail-list::-webkit-scrollbar { width: 4px; }
+        .thumbnail-list::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
-
-    <div class="dream-cloud" style="top: 10%; font-size: 5rem; animation-duration: 45s;">☁️</div>
-    <div class="dream-cloud" style="top: 40%; font-size: 7rem; animation-duration: 60s; animation-delay: -10s;">☁️</div>
-    <div class="dream-cloud" style="top: 70%; font-size: 4rem; animation-duration: 55s; animation-delay: -20s;">☁️</div>
-    <div class="dream-cloud" style="top: 20%; right: 0; font-size: 3rem; animation-duration: 50s;">🎈</div>
+    <div class="dream-cloud" style="top: 5%; font-size: 4rem;">☁️</div>
+    <div class="dream-cloud" style="top: 15%; right: 10%; font-size: 2rem;">🎈</div>
 
     <header class="navbar">
-        <div class="logo-wrapper" onclick="window.location.reload()">
-            <div class="css-logo">
-                <div class="animal bird"></div>
-                <div class="animal elephant"></div>
-                <div class="animal bear"></div>
-            </div>
-            <span class="logo-text">পশুপাখি গল্প</span>
-        </div>
-        
-        <div class="header-action-area">
-            <div class="fomo-badge"> 
-                <span style="color: #2E7D32; font-weight: bold;">
-                    🎁 ব্যাংকে গল্প জমেছে <span id="totalCount">...</span> টি। ইনশাআল্লাহ আরো আসছে।
-                </span>
-            </div>
-            <button id="installPwa" class="btn-install hidden">অ্যাপটি ইন্সটল করুন 📱</button>
-        </div>
-    </header>
+        </header>
 
     <main class="container">
         <section class="story-player">
             <div class="player-container" id="playerArea">
-                <button id="fullscreenBtn" class="fs-pulse-btn">📺 বড় পর্দায় পড়ো</button>
-                <iframe id="storyFrame" src="about:blank" allowfullscreen></iframe>
-                
-                <div id="lockOverlay" class="lock-overlay hidden">
-                    <div class="lock-content">
-                        <div class="animated-lock">🔒</div>
-                        <h2>গল্পটি পড়তে প্রিমিয়াম এক্সেস প্রয়োজন</h2>
-                        <button onclick="initPayment()" class="btn-unlock">এখনই আনলক করো</button>
-                    </div>
-                </div>
+                <iframe id="storyFrame" src="about:blank"></iframe>
             </div>
-
             <div class="player-footer-actions">
-                <button onclick="shareApp()" class="btn-share">
-                    <span>📤 সোনামণির বন্ধুদের সাথে শেয়ার করুন</span>
-                </button>
+                <button onclick="shareApp()" class="btn-share">📤 বন্ধুদের সাথে শেয়ার করুন</button>
             </div>
         </section>
 
         <aside class="sidebar">
-            <h3 class="sidebar-title">গল্পের তালিকা</h3>
-            <div id="storyList" class="thumbnail-list">
-                </div>
-            <button id="refreshStories" class="btn-refresh" onclick="window.location.reload()">✨ আরও নতুন গল্প দেখো</button>
+            <h3 style="margin-top:0; text-align:center; color:#2E7D32;">গল্পের তালিকা</h3>
+            <div id="storyList" class="thumbnail-list"></div>
         </aside>
-
-        <div id="premiumBanner" class="premium-banner">
-            <div class="premium-content">
-                <div class="promo-text">
-                    <h2 class="promo-title">সোনামণির উজ্জ্বল ভবিষ্যৎ গড়ি নৈতিক গল্পে! ✨</h2>
-                    <ul class="benefit-list">
-                        <li>✅ পশু-পাখির শিক্ষামূলক গল্প </li>
-                        <li>✅ বাংলা ও ইংরেজি - গল্পের আসরে শিখবে ভাষা </li>
-                        <li>✅ আজীবনের জন্য সব গল্প আনলক!</li>
-                    </ul>
-                </div>
-                <div class="price-action">
-                    <div class="price-tag"><del>৳৪৯৯</del> <strong>৳২৯৯</strong></div>
-                    <button class="btn-buy-now pulse" onclick="initPayment()">🎁 সোনামণিকে উপহার দিন</button>
-                </div>
-            </div>
-        </div>
     </main>
 
-    <footer class="site-footer">
-        <p>সাপোর্ট আইডি: <strong id="footerUid">লোড হচ্ছে...</strong></p>
-    </footer>
-
-    <script>
-        async function shareApp() {
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: 'পশুপাখি গল্প',
-                        text: 'আমার সোনামণি এখান থেকে নৈতিক গল্প শুনছে। আপনিও আপনার সোনামণিকে উপহার দিন!',
-                        url: window.location.href
-                    });
-                } catch (err) { console.log('Share failed:', err); }
-            } else {
-                alert('আপনার ব্রাউজারে শেয়ার অপশনটি সরাসরি কাজ করছে না। লিঙ্কটি কপি করে শেয়ার করুন!');
-            }
-        }
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="icon.js"></script>
-    <script src="app.js?v=13.0"></script>
-</body>
+    </body>
 </html>
