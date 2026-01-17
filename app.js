@@ -129,18 +129,26 @@ async function fetchAndPlay(storyId, isDailyFree = false) {
         overlay.classList.remove('hidden');
     }
 }
-
-// ৪. সাইডবার রেন্ডারিং (ফিক্সড ফ্রেম ও স্ক্রলিং সাপোর্ট)
+// ৪. সাইডবার রেন্ডারিং (Kid-friendly Colors & No Icons)
 function renderSidebar(stories) {
     const list = document.getElementById('storyList');
     if(!list) return;
     list.innerHTML = '';
-    stories.forEach(s => {
+
+    // বাচ্চাদের পছন্দের একগুচ্ছ উজ্জ্বল রঙ
+    const colors = ['#FFADAD', '#FFD6A5', '#FDFFB6', '#CAFFBF', '#9BF6FF', '#A0C4FF', '#BDB2FF', '#FFC6FF', '#FFFFFC', '#C0FDFF'];
+
+    stories.forEach((s, index) => {
         const banner = document.createElement('div');
         banner.className = 'story-banner';
-        banner.style.backgroundImage = `url('${s.thumbnail_url || 'assets/logo.svg'}')`;
-        const lock = (userStatus === 'free' && s.id !== dailyStoryId) ? '🔒 ' : '';
-        banner.innerHTML = `<div style="background:rgba(255,255,255,0.9); color:#333; padding:12px; width:100%; font-weight:600; font-size:0.95rem;">${lock}${s.title}</div>`;
+        
+        // সিরিয়াল অনুযায়ী বা র‍্যান্ডমলি রঙ সেট করা
+        const bgColor = colors[index % colors.length];
+        banner.style.backgroundColor = bgColor;
+
+        // কোনো আইকন থাকবে না, শুধু গল্পের নাম
+        banner.innerHTML = `<div>${s.title}</div>`;
+        
         banner.onclick = () => { fetchAndPlay(s.id); window.scrollTo(0,0); };
         list.appendChild(banner);
     });
