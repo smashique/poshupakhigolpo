@@ -4,6 +4,7 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let userStatus = 'free'; 
 let dailyStoryId = null;
+let deferredPrompt; // PWA ইন্সটল প্রম্পটের জন্য
 
 // ১. অ্যাপ শুরু এবং ইউজার চেক
 async function initApp() {
@@ -12,7 +13,7 @@ async function initApp() {
     if(document.getElementById('footerUid')) document.getElementById('footerUid').innerText = uuid;
 
     try {
-        // --- গল্পের মোট সংখ্যা দেখানোর নতুন লজিক ---
+        // গল্পের মোট সংখ্যা দেখানোর লজিক
         const { count, error: countError } = await _supabase
             .from('stories')
             .select('*', { count: 'exact', head: true });
@@ -20,7 +21,6 @@ async function initApp() {
         if (!countError && document.getElementById('totalCount')) {
             document.getElementById('totalCount').innerText = count || 0;
         }
-        // -------------------------------------------
 
         const { data: user } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
         if (!user) {
@@ -67,6 +67,7 @@ function playStory(story, isDailyFree = false) {
 // ৪. সাইডবার রেন্ডারিং
 function renderSidebar(stories) {
     const list = document.getElementById('storyList');
+    if(!list) return;
     list.innerHTML = '';
     stories.forEach(s => {
         const banner = document.createElement('div');
@@ -87,9 +88,45 @@ document.getElementById('fullscreenBtn').addEventListener('click', () => {
         document.getElementById('fullscreenBtn').innerText = "❌ ছোট করো";
     } else {
         document.exitFullscreen?.();
-        document.getElementById('fullscreenBtn').innerText = "📺 বড় পর্দায় পড়ো";
+        document.getElementById('fullscreenBtn').innerText = "📺 বড় পর্দায় পড়ো";
     }
 });
+
+// ৬. PWA ইন্সটলেশন লজিক
+const installBtn = document.getElementById('installPwa');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (installBtn) {
+        installBtn.classList.remove('hidden');
+    }
+});
+
+if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                installBtn.classList.add('hidden');
+            }
+            deferredPrompt = null;
+        }
+    });
+}
+
+window.addEventListener('appinstalled', () => {
+    if (installBtn) installBtn.classList.add('hidden');
+    deferredPrompt = null;
+});
+
+// সার্ভিস ওয়ার্কার রেজিস্ট্রেশন
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Error:', err));
+    });
+}
 
 window.initPayment = () => window.location.href = "checkout.html";
 document.addEventListener('DOMContentLoaded', initApp);
