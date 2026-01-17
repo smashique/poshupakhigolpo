@@ -1,213 +1,102 @@
-/* --- PoshuPakhi Golpo - Core Logic v14.0 --- */
+/* --- PoshuPakhi Golpo - Magical Logic v15.0 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let userStatus = 'free'; 
 let dailyStoryId = null;
-let deferredPrompt; 
-let allStories = []; // মেমরিতে গল্পের লিস্ট রাখার জন্য
 
-// ১. অ্যাপ শুরু এবং ইউজার চেক
+// ১. অ্যাপ শুরু এবং গ্লোবাল ম্যাজিক জেনারেশন
 async function initApp() {
+    createGlobalMagic(); // পুরো সাইটে জাদুকরী অবজেক্ট তৈরি
+    
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
     localStorage.setItem('device_uuid', uuid);
-    if(document.getElementById('footerUid')) document.getElementById('footerUid').innerText = uuid;
 
     try {
-        // মোট গল্পের সংখ্যা রিড করা
-        const { count, error: countError } = await _supabase
-            .from('stories')
-            .select('*', { count: 'exact', head: true });
-
-        if (!countError && document.getElementById('totalCount')) {
-            document.getElementById('totalCount').innerText = count || 0;
-        }
+        const { count } = await _supabase.from('stories').select('*', { count: 'exact', head: true });
+        if (document.getElementById('totalCount')) document.getElementById('totalCount').innerText = count || 0;
 
         const { data: user } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
-        if (!user) {
-            await _supabase.from('users').insert([{ device_uuid: uuid, status: 'free' }]);
-        } else if (user.status === 'paid') {
+        if (user?.status === 'paid') {
             userStatus = 'paid';
             document.querySelectorAll('.premium-banner, .lock-overlay').forEach(el => el.style.display = 'none');
         }
         loadStories();
-    } catch (err) {
-        console.error("ইনিট এরর:", err.message);
+    } catch (err) { console.error(err); }
+}
+
+// ২. পুরো সাইটের জন্য র‍্যান্ডম অ্যানিমেশন অবজেক্ট
+function createGlobalMagic() {
+    const layer = document.getElementById('globalMagicLayer');
+    if(!layer) return;
+    const items = ['🚀', '🎈', '☁️', '☁️', '⭐', '🎈'];
+    
+    for(let i=0; i<8; i++) {
+        const div = document.createElement('div');
+        div.className = 'magic-obj';
+        div.innerText = items[Math.floor(Math.random() * items.length)];
+        div.style.top = Math.random() * 90 + 'vh';
+        div.style.left = Math.random() * 90 + 'vw';
+        div.style.fontSize = (Math.random() * 3 + 2) + 'rem';
+        div.style.animationDelay = (Math.random() * 10) + 's';
+        layer.appendChild(div);
     }
 }
 
-// ২. অপ্টিমাইজড লোড লজিক (শুধুমাত্র টাইটেল এবং থাম্বনেইল লোড হবে)
-async function loadStories() {
-    // এখানে content লোড করা হচ্ছে না যাতে ডাটা খরচ কম হয়
-    const { data: stories, error } = await _supabase
-        .from('stories')
-        .select('id, title, thumbnail_url, created_at')
-        .order('created_at', { ascending: true });
-
-    if (stories && stories.length > 0) {
-        allStories = stories;
-        const today = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
-        const index = today % stories.length;
-        const todayStory = stories[index];
-        dailyStoryId = todayStory.id;
-        
-        // প্রথমবার ডেইলি ফ্রি গল্পটি লোড করো
-        fetchAndPlay(todayStory.id, true); 
-        renderSidebar(stories);
-    }
-}
-
-// ৩. গল্পটি ডাটাবেস থেকে টেনে আনা এবং প্লে করা
+// ৩. স্টোরি লোড ও প্লে (আইফ্রেমের জাদুকরী লুপ বজায় রাখা হয়েছে)
 async function fetchAndPlay(storyId, isDailyFree = false) {
     const frame = document.getElementById('storyFrame');
-    const overlay = document.getElementById('lockOverlay');
-
-    // ইউজার কি এটি পড়ার অনুমতি পায়?
     if (userStatus === 'paid' || isDailyFree || storyId === dailyStoryId) {
-        overlay.classList.add('hidden');
+        const { data: story } = await _supabase.from('stories').select('*').eq('id', storyId).single();
         
-        // মেমরি ম্যানেজমেন্ট: আগের Blob URL রিলিজ করা
-        if (frame.src.startsWith('blob:')) {
-            URL.revokeObjectURL(frame.src);
-        }
-
-        // এখন ডাটাবেস থেকে গল্পের মূল কন্টেন্ট আনা
-        const { data: story, error } = await _supabase
-            .from('stories')
-            .select('*')
-            .eq('id', storyId)
-            .single();
-
-        if (error) return console.error("গল্প লোড করতে সমস্যা:", error.message);
-
-        // জাদুকরী HTML তৈরি
-        const landscapes = [
-            'linear-gradient(180deg, #a1c4fd 0%, #c2e9fb 100%)', // আকাশ
-            'linear-gradient(180deg, #09203f 0%, #537895 100%)', // সমুদ্র
-            'linear-gradient(180deg, #84fab0 0%, #8fd3f4 100%)', // দ্বীপ
-            'linear-gradient(180deg, #fbc2eb 0%, #a6c1ee 100%)'  // গোধূলি
-        ];
-        const items = ['🚀', '🎈', '☁️', '🐚', '🪸', '⛰️', '🏝️', '✈️', '⛵', '⭐'];
-        const randomBg = landscapes[Math.floor(Math.random() * landscapes.length)];
-
+        const randomBg = ['linear-gradient(180deg, #a1c4fd 0%, #c2e9fb 100%)', 'linear-gradient(180deg, #84fab0 0%, #8fd3f4 100%)'][Math.floor(Math.random()*2)];
+        
         const storyHtml = `
-        <!DOCTYPE html>
         <html>
-        <head>
-            <style>
-                @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&display=swap');
-                body { margin: 0; padding: 0; height: 100vh; overflow: hidden; font-family: 'Hind Siliguri', sans-serif; background: ${randomBg}; display: flex; align-items: center; justify-content: center; }
-                .world-wrap { position: absolute; width: 100%; height: 100%; animation: slowBreathing 300s infinite ease-in-out; z-index: 1; }
-                @keyframes slowBreathing { 0%, 100% { transform: scale(1.0); } 50% { transform: scale(1.12); } }
-                .obj { position: absolute; opacity: 0.6; animation: floatObj 20s infinite ease-in-out; }
-                @keyframes floatObj { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(20px, -40px) rotate(10deg); } }
-                .content-card { position: relative; z-index: 10; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(8px); padding: 40px; border-radius: 40px; max-width: 78%; max-height: 82vh; overflow-y: auto; text-align: justify; box-shadow: 0 30px 80px rgba(0,0,0,0.08); line-height: 2; font-size: 1.55rem; color: #263238; border: 2px solid rgba(255,255,255,0.5); }
-                .content-card h1 { color: #2E7D32; text-align: center; font-size: 2.3rem; margin-top: 0; }
-                ::-webkit-scrollbar { width: 8px; }
-                ::-webkit-scrollbar-thumb { background: #C8E6C9; border-radius: 10px; }
-            </style>
-        </head>
-        <body>
-            <div class="world-wrap">
-                ${Array(12).fill().map(() => `
-                    <div class="obj" style="top: ${Math.random() * 90}%; left: ${Math.random() * 90}%; animation-delay: ${Math.random() * 8}s; font-size: ${2 + Math.random() * 3}rem;">
-                        ${items[Math.floor(Math.random() * items.length)]}
-                    </div>
-                `).join('')}
+        <body style="margin:0; background:${randomBg}; font-family:sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; overflow:hidden;">
+            <div style="position:absolute; width:100%; height:100%; animation:zoom 300s infinite linear;">
+                <div style="position:absolute; top:20%; left:10%; font-size:4rem; opacity:0.4; animation:float 15s infinite;">🚀</div>
+                <div style="position:absolute; top:60%; right:15%; font-size:3rem; opacity:0.4; animation:float 12s infinite;">🎈</div>
             </div>
-            <div class="content-card">
-                <h1>${story.title}</h1>
+            <div style="position:relative; z-index:10; background:rgba(255,255,255,0.9); padding:40px; border-radius:40px; max-width:80%; max-height:80vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.1); font-size:1.5rem; line-height:1.8;">
+                <h1 style="color:#2E7D32; text-align:center;">${story.title}</h1>
                 ${story.content.replace(/\n/g, '<br>')}
             </div>
+            <style>
+                @keyframes zoom { 0%, 100% { transform:scale(1); } 50% { transform:scale(1.1); } }
+                @keyframes float { 0%, 100% { transform:translateY(0); } 50% { transform:translateY(-30px); } }
+            </style>
         </body>
         </html>`;
-
         frame.src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
-    } else {
-        frame.src = "about:blank";
-        overlay.classList.remove('hidden');
     }
 }
-// ৪. সাইডবার রেন্ডারিং (Kid-friendly Colors & No Icons)
+
+// ৪. সাইডবার রেন্ডারিং (কালারফুল কিডস ফ্রেন্ডলি)
 function renderSidebar(stories) {
     const list = document.getElementById('storyList');
-    if(!list) return;
+    const colors = ['#FFD1DC', '#D1F2EB', '#FFF4BD', '#E1F5FE', '#F3E5F5', '#E8F5E9', '#FCE4EC', '#F1F8E9'];
     list.innerHTML = '';
-
-    // বাচ্চাদের পছন্দের প্যাস্টেল কালার সেট
-    const colors = ['#FFD1DC', '#D1F2EB', '#FFF4BD', '#E1F5FE', '#F3E5F5', '#FFF9C4', '#E8F5E9', '#FCE4EC', '#F1F8E9', '#E0F2F1'];
-
     stories.forEach((s, index) => {
         const banner = document.createElement('div');
         banner.className = 'story-banner';
-        
-        // সিরিয়াল অনুযায়ী রঙ সেট করা
         banner.style.backgroundColor = colors[index % colors.length];
-
-        // কোনো আইকন নেই, শুধু নাম। টেক্সট যাতে বক্সের বাইরে না যায়।
         banner.innerHTML = `<div>${s.title}</div>`;
-        
-        banner.onclick = () => { 
-            fetchAndPlay(s.id); 
-            // মোবাইলে ক্লিক করলে প্লেয়ারে স্ক্রল করা
-            document.getElementById('playerArea').scrollIntoView({ behavior: 'smooth' });
-        };
+        banner.onclick = () => { fetchAndPlay(s.id); document.getElementById('playerArea').scrollIntoView({behavior:'smooth'}); };
         list.appendChild(banner);
     });
 }
 
-// ৫. ফুল-স্কিন ও পেমেন্ট লজিক
-document.getElementById('fullscreenBtn').addEventListener('click', () => {
-    const playerArea = document.getElementById('playerArea');
-    if (!document.fullscreenElement) {
-        playerArea.requestFullscreen?.() || playerArea.webkitRequestFullscreen?.();
-        document.getElementById('fullscreenBtn').innerText = "❌ ছোট করো";
-    } else {
-        document.exitFullscreen?.();
-        document.getElementById('fullscreenBtn').innerText = "📺 বড় পর্দায় পড়ো";
+async function loadStories() {
+    const { data: stories } = await _supabase.from('stories').select('id, title, created_at').order('created_at', { ascending: true });
+    if (stories) {
+        const index = Math.floor(Date.now() / 86400000) % stories.length;
+        dailyStoryId = stories[index].id;
+        fetchAndPlay(dailyStoryId, true);
+        renderSidebar(stories);
     }
-});
-
-// ৬. শেয়ার লজিক (Experts' Recommended)
-window.shareApp = async () => {
-    if (navigator.share) {
-        try {
-            await navigator.share({
-                title: 'পশুপাখি গল্প',
-                text: 'আমার সোনামণি এখান থেকে নৈতিক গল্প শুনছে। আপনিও আপনার সোনামণিকে উপহার দিন!',
-                url: window.location.origin
-            });
-        } catch (err) { console.log('Share failed'); }
-    } else {
-        alert('লিঙ্কটি কপি করে বন্ধুদের পাঠান: ' + window.location.origin);
-    }
-};
-
-// ৭. PWA ইন্সটলেশন
-const installBtn = document.getElementById('installPwa');
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    if (installBtn) installBtn.classList.remove('hidden');
-});
-
-if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') installBtn.classList.add('hidden');
-            deferredPrompt = null;
-        }
-    });
 }
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Error'));
-    });
-}
-
-window.initPayment = () => window.location.href = "checkout.html";
 document.addEventListener('DOMContentLoaded', initApp);
+window.shareApp = async () => { /* Share logic */ };
