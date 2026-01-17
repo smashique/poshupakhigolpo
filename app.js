@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Final Logic v20.0 --- */
+/* --- PoshuPakhi Golpo - Final Logic v21.0 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -7,7 +7,6 @@ let userStatus = 'free';
 let dailyStoryId = null;
 let deferredPrompt; 
 
-// গ্লোবাল ফাংশন
 window.initPayment = () => window.location.href = "checkout.html";
 window.shareApp = async () => {
     if (navigator.share) {
@@ -46,8 +45,9 @@ async function fetchAndPlay(storyId, isDailyFree = false) {
     const frame = document.getElementById('storyFrame');
     const overlay = document.getElementById('lockOverlay');
 
+    // পেমেন্ট করা থাকলে অথবা আজকের ফ্রি গল্প হলে
     if (userStatus === 'paid' || isDailyFree || storyId === dailyStoryId) {
-        if (overlay) overlay.classList.add('hidden');
+        if (overlay) overlay.classList.add('hidden'); // লক মেসেজ লুকিয়ে ফেলা
         const { data: story } = await _supabase.from('stories').select('*').eq('id', storyId).single();
         
         const storyHtml = `
@@ -72,8 +72,9 @@ async function fetchAndPlay(storyId, isDailyFree = false) {
         if (frame.src.startsWith('blob:')) URL.revokeObjectURL(frame.src);
         frame.src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
     } else {
-        frame.src = "about:blank";
-        if (overlay) overlay.classList.remove('hidden');
+        // গল্প লক করা থাকলে
+        frame.src = "about:blank"; // সাদা স্ক্রিন
+        if (overlay) overlay.classList.remove('hidden'); // সাদা স্ক্রিনের ওপর লক মেসেজ দেখানো
     }
 }
 
@@ -87,7 +88,12 @@ function renderSidebar(stories) {
         const banner = document.createElement('div');
         banner.className = 'story-banner';
         banner.style.backgroundColor = colors[index % colors.length];
-        banner.innerHTML = `<div>${s.title}</div>`;
+        
+        // লক চিহ্ন যুক্ত করার লজিক
+        const isLocked = (userStatus === 'free' && s.id !== dailyStoryId);
+        const lockIcon = isLocked ? '🔒 ' : '';
+        
+        banner.innerHTML = `<div>${lockIcon}${s.title}</div>`;
         banner.onclick = () => { 
             fetchAndPlay(s.id); 
             if(window.innerWidth < 1100) document.getElementById('playerArea').scrollIntoView({ behavior: 'smooth' });
@@ -96,23 +102,16 @@ function renderSidebar(stories) {
     });
 }
 
-// ফুলস্ক্রিন বাটন লজিক (নতুন যুক্ত করা হয়েছে)
 document.getElementById('fullscreenBtn')?.addEventListener('click', () => {
     const playerArea = document.getElementById('playerArea');
     if (!document.fullscreenElement) {
-        if (playerArea.requestFullscreen) {
-            playerArea.requestFullscreen();
-        } else if (playerArea.webkitRequestFullscreen) { /* Safari */
-            playerArea.webkitRequestFullscreen();
-        } else if (playerArea.msRequestFullscreen) { /* IE11 */
-            playerArea.msRequestFullscreen();
-        }
+        if (playerArea.requestFullscreen) playerArea.requestFullscreen();
+        else if (playerArea.webkitRequestFullscreen) playerArea.webkitRequestFullscreen();
     } else {
         document.exitFullscreen();
     }
 });
 
-// ডাউনলোড বাটন লজিক (PWA)
 const installBtn = document.getElementById('installPwa');
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -127,8 +126,6 @@ if (installBtn) {
             const { outcome } = await deferredPrompt.userChoice;
             if (outcome === 'accepted') installBtn.classList.add('hidden');
             deferredPrompt = null;
-        } else {
-            alert("আপনার ব্রাউজারে অ্যাপটি ইতিমধ্যেই ইন্সটল আছে অথবা ব্রাউজারটি এটি সাপোর্ট করছে না।");
         }
     });
 }
