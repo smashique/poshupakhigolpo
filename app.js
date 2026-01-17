@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Final Logic v19.0 --- */
+/* --- PoshuPakhi Golpo - Final Logic v20.0 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -50,7 +50,6 @@ async function fetchAndPlay(storyId, isDailyFree = false) {
         if (overlay) overlay.classList.add('hidden');
         const { data: story } = await _supabase.from('stories').select('*').eq('id', storyId).single();
         
-        // আইফ্রেম স্ক্রলিং ফিক্স: window.scrollTo(0,0) ইনজেক্ট করা হয়েছে
         const storyHtml = `
         <html>
         <head>
@@ -96,6 +95,22 @@ function renderSidebar(stories) {
         list.appendChild(banner);
     });
 }
+
+// ফুলস্ক্রিন বাটন লজিক (নতুন যুক্ত করা হয়েছে)
+document.getElementById('fullscreenBtn')?.addEventListener('click', () => {
+    const playerArea = document.getElementById('playerArea');
+    if (!document.fullscreenElement) {
+        if (playerArea.requestFullscreen) {
+            playerArea.requestFullscreen();
+        } else if (playerArea.webkitRequestFullscreen) { /* Safari */
+            playerArea.webkitRequestFullscreen();
+        } else if (playerArea.msRequestFullscreen) { /* IE11 */
+            playerArea.msRequestFullscreen();
+        }
+    } else {
+        document.exitFullscreen();
+    }
+});
 
 // ডাউনলোড বাটন লজিক (PWA)
 const installBtn = document.getElementById('installPwa');
