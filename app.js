@@ -135,21 +135,24 @@ function renderSidebar(stories) {
     if(!list) return;
     list.innerHTML = '';
 
-    // বাচ্চাদের পছন্দের একগুচ্ছ উজ্জ্বল রঙ
-    const colors = ['#FFADAD', '#FFD6A5', '#FDFFB6', '#CAFFBF', '#9BF6FF', '#A0C4FF', '#BDB2FF', '#FFC6FF', '#FFFFFC', '#C0FDFF'];
+    // বাচ্চাদের পছন্দের প্যাস্টেল কালার সেট
+    const colors = ['#FFD1DC', '#D1F2EB', '#FFF4BD', '#E1F5FE', '#F3E5F5', '#FFF9C4', '#E8F5E9', '#FCE4EC', '#F1F8E9', '#E0F2F1'];
 
     stories.forEach((s, index) => {
         const banner = document.createElement('div');
         banner.className = 'story-banner';
         
-        // সিরিয়াল অনুযায়ী বা র‍্যান্ডমলি রঙ সেট করা
-        const bgColor = colors[index % colors.length];
-        banner.style.backgroundColor = bgColor;
+        // সিরিয়াল অনুযায়ী রঙ সেট করা
+        banner.style.backgroundColor = colors[index % colors.length];
 
-        // কোনো আইকন থাকবে না, শুধু গল্পের নাম
+        // কোনো আইকন নেই, শুধু নাম। টেক্সট যাতে বক্সের বাইরে না যায়।
         banner.innerHTML = `<div>${s.title}</div>`;
         
-        banner.onclick = () => { fetchAndPlay(s.id); window.scrollTo(0,0); };
+        banner.onclick = () => { 
+            fetchAndPlay(s.id); 
+            // মোবাইলে ক্লিক করলে প্লেয়ারে স্ক্রল করা
+            document.getElementById('playerArea').scrollIntoView({ behavior: 'smooth' });
+        };
         list.appendChild(banner);
     });
 }
