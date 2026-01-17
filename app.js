@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Final Logic v22.0 --- */
+/* --- PoshuPakhi Golpo - Final Logic v22.1 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -6,21 +6,18 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let userStatus = 'free'; 
 let dailyStoryId = null;
 let deferredPrompt; 
+let scrollInterval; // অটো-স্ক্রোলিংয়ের জন্য
 
-// ১. পেমেন্ট সিস্টেম: হোয়াটসঅ্যাপ ইন্টিগ্রেশন (আপডেটেড)
+// ১. পেমেন্ট সিস্টেম: হোয়াটসঅ্যাপ ইন্টিগ্রেশন
 window.initPayment = () => {
     const userId = localStorage.getItem('device_uuid') || 'Unknown';
     const phoneNumber = "8801303680618";
-    
-    const message = `আসসালামু আলাইকুম। আমি 'পশুপাখি গল্প' অ্যাপটির আজীবনের জন্য প্রিমিয়াম এক্সেস নিতে চাই। 
+    const message = `আসসালামু আলাইকুম। আমি 'পশুপাখি গল্প' অ্যাপটির আজীবনের জন্য প্রিমিয়াম এক্সেস নিতে চাই। 
 
 সাপোর্ট আইডি: ${userId}
 এই ইউজার আইডির জন্য বাচ্চাদের পশু-পাখির গল্পগুলো আনলক করতে চাচ্ছি।`;
-    
     const encodedMessage = encodeURIComponent(message);
-    const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    
-    window.open(whatsappLink, '_blank');
+    window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
 };
 
 window.shareApp = async () => {
@@ -53,7 +50,26 @@ async function loadStories() {
         dailyStoryId = stories[Math.floor(Date.now() / 86400000) % stories.length].id;
         fetchAndPlay(dailyStoryId, true);
         renderSidebar(stories);
+        startAutoScroll(); // অটো-স্ক্রোল শুরু
     }
+}
+
+// অটো-স্ক্রোলিং ফাংশন (হালকা গতি)
+function startAutoScroll() {
+    const list = document.getElementById('storyList');
+    if(!list) return;
+    
+    let speed = 0.4; // গতি নিয়ন্ত্রণ
+    function scroll() {
+        if (!list.matches(':hover')) { // মাউস ওপর থাকলে স্ক্রোল থামবে
+            list.scrollTop += speed;
+            if (list.scrollTop >= list.scrollHeight - list.clientHeight) {
+                list.scrollTop = 0; // একদম নিচে গেলে আবার শুরু থেকে
+            }
+        }
+        scrollInterval = requestAnimationFrame(scroll);
+    }
+    scrollInterval = requestAnimationFrame(scroll);
 }
 
 async function fetchAndPlay(storyId, isDailyFree = false) {
@@ -69,18 +85,14 @@ async function fetchAndPlay(storyId, isDailyFree = false) {
         <head>
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri&display=swap');
-                body { margin:0; background:#FDFBF7; font-family:'Hind Siliguri', sans-serif; display:flex; justify-content:center; padding:30px; }
-                .card { background:white; padding:40px; border-radius:30px; width:100%; max-width:800px; box-shadow:0 10px 30px rgba(0,0,0,0.05); }
-                h1 { color:#2E7D32; text-align:center; }
-                p { line-height:2; font-size:1.4rem; text-align:justify; color:#333; }
+                body { margin:0; background:#FDFBF7; font-family:'Hind Siliguri', sans-serif; display:flex; justify-content:center; padding:20px; }
+                .card { background:white; padding:30px; border-radius:25px; width:100%; box-shadow:0 5px 15px rgba(0,0,0,0.03); }
+                h1 { color:#2E7D32; text-align:center; font-size:1.8rem; }
+                p { line-height:1.8; font-size:1.2rem; text-align:justify; color:#333; }
             </style>
-            <script>window.onload = () => window.scrollTo(0,0);</script>
         </head>
         <body>
-            <div class="card">
-                <h1>${story.title}</h1>
-                <p>${story.content.replace(/\n/g, '<br>')}</p>
-            </div>
+            <div class="card"><h1>${story.title}</h1><p>${story.content.replace(/\n/g, '<br>')}</p></div>
         </body>
         </html>`;
         if (frame.src.startsWith('blob:')) URL.revokeObjectURL(frame.src);
@@ -101,11 +113,8 @@ function renderSidebar(stories) {
         const banner = document.createElement('div');
         banner.className = 'story-banner';
         banner.style.backgroundColor = colors[index % colors.length];
-        
         const isLocked = (userStatus === 'free' && s.id !== dailyStoryId);
-        const lockIcon = isLocked ? '🔒 ' : '';
-        
-        banner.innerHTML = `<div>${lockIcon}${s.title}</div>`;
+        banner.innerHTML = `<div>${isLocked ? '🔒 ' : ''}${s.title}</div>`;
         banner.onclick = () => { 
             fetchAndPlay(s.id); 
             if(window.innerWidth < 1100) document.getElementById('playerArea').scrollIntoView({ behavior: 'smooth' });
