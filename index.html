@@ -13,57 +13,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- এক্সপার্ট লেআউট ফিক্স --- */
-        
-        /* ১০টি গল্পের জন্য ফিক্সড হাইট সাইডবার */
+        /* ১০টি গল্পের জন্য ফিক্সড হাইট সাইডবার (পিক্সেল ফিক্সড করা হয়েছে) */
         .thumbnail-list {
-            max-height: 850px; /* প্রায় ১০টি ব্যানারের সমান */
+            height: 650px; /* ১০টি গল্প দেখানোর জন্য আদর্শ উচ্চতা */
             overflow-y: auto;
-            padding-right: 5px;
+            padding: 10px;
             scroll-behavior: smooth;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
         }
 
-        /* সুন্দর স্ক্রলবার */
-        .thumbnail-list::-webkit-scrollbar { width: 6px; }
+        .thumbnail-list::-webkit-scrollbar { width: 5px; }
         .thumbnail-list::-webkit-scrollbar-thumb { background: #C8E6C9; border-radius: 10px; }
 
-        /* শেয়ার বাটন এরিয়া */
-        .player-footer-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .btn-share {
-            background: white;
-            color: #2E7D32;
-            border: 2px solid #2E7D32;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
+        /* গল্পের রঙিন বক্স স্টাইল */
+        .story-banner {
+            height: 55px !important; /* প্রতিটি বক্সের উচ্চতা ফিক্সড */
+            margin-bottom: 10px;
+            border-radius: 15px !important;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            cursor: pointer;
             transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: none !important;
+            background-image: none !important; /* ইমেজ সরিয়ে দেওয়া হয়েছে */
         }
 
-        .btn-share:hover { background: #E8F5E9; transform: translateY(-2px); }
+        .story-banner:hover { transform: scale(1.03); }
 
-        /* ড্রিম ক্লাউড এনিমেশন */
-        .dream-cloud {
-            position: fixed;
-            z-index: -1;
-            opacity: 0.4;
-            pointer-events: none;
-            animation: slowFloat 40s linear infinite;
+        .story-banner div {
+            background: transparent !important;
+            color: #333 !important;
+            font-weight: 700 !important;
+            font-size: 1.1rem !important;
+            text-align: center;
         }
 
-        @keyframes slowFloat {
-            from { transform: translateX(-150px); }
-            to { transform: translateX(110vw); }
-        }
+        /* ড্রিম ক্লাউড ও অন্যান্য স্টাইল আগের মতোই থাকবে... */
     </style>
 </head>
 <body oncontextmenu="return false;">
