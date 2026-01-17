@@ -1,154 +1,78 @@
-/* --- PoshuPakhi Golpo - Final Logic v22.1 --- */
-const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
-const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* --- style.css - Manual & Auto-Scroll Enabled --- */
 
-let userStatus = 'free'; 
-let dailyStoryId = null;
-let deferredPrompt; 
-let scrollInterval; // অটো-স্ক্রোলিংয়ের জন্য
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap');
 
-// ১. পেমেন্ট সিস্টেম: হোয়াটসঅ্যাপ ইন্টিগ্রেশন
-window.initPayment = () => {
-    const userId = localStorage.getItem('device_uuid') || 'Unknown';
-    const phoneNumber = "8801303680618";
-    const message = `আসসালামু আলাইকুম। আমি 'পশুপাখি গল্প' অ্যাপটির আজীবনের জন্য প্রিমিয়াম এক্সেস নিতে চাই। 
-
-সাপোর্ট আইডি: ${userId}
-এই ইউজার আইডির জন্য বাচ্চাদের পশু-পাখির গল্পগুলো আনলক করতে চাচ্ছি।`;
-    const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
-};
-
-window.shareApp = async () => {
-    if (navigator.share) {
-        try { await navigator.share({ title: 'পশুপাখি গল্প', url: window.location.origin }); } catch (e) {}
-    } else { alert("লিঙ্ক কপি করুন: " + window.location.origin); }
-};
-
-async function initApp() {
-    let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
-    localStorage.setItem('device_uuid', uuid);
-    if(document.getElementById('footerUid')) document.getElementById('footerUid').innerText = uuid;
-
-    try {
-        const { count } = await _supabase.from('stories').select('*', { count: 'exact', head: true });
-        document.querySelectorAll('#totalCount').forEach(el => el.innerText = count || 0);
-
-        const { data: user } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
-        if (user?.status === 'paid') {
-            userStatus = 'paid';
-            document.querySelectorAll('.premium-banner, .lock-overlay').forEach(el => el.style.display = 'none');
-        }
-        loadStories();
-    } catch (err) { console.error(err); }
+:root {
+    --primary-green: #2E7D32;
+    --bg-light: #F1F8E9;
+    --text-main: #263238;
 }
 
-async function loadStories() {
-    const { data: stories } = await _supabase.from('stories').select('id, title').order('created_at', { ascending: true });
-    if (stories) {
-        dailyStoryId = stories[Math.floor(Date.now() / 86400000) % stories.length].id;
-        fetchAndPlay(dailyStoryId, true);
-        renderSidebar(stories);
-        startAutoScroll(); // অটো-স্ক্রোল শুরু
-    }
+body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg-light); color: var(--text-main); line-height: 1.5; }
+
+.navbar { padding: 10px 20px; background: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 1000; }
+.logo-text { font-weight: 700; color: var(--primary-green); font-size: 1.25rem; cursor: pointer; }
+
+.container { display: grid; grid-template-columns: 1fr 340px; gap: 20px; max-width: 1350px; margin: 15px auto; padding: 0 15px; }
+
+.player-container {
+    position: relative;
+    width: 100%;
+    height: 402px; 
+    background: white;
+    border-radius: 35px;
+    border: 8px solid white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    overflow: hidden;
 }
 
-// অটো-স্ক্রোলিং ফাংশন (হালকা গতি)
-function startAutoScroll() {
-    const list = document.getElementById('storyList');
-    if(!list) return;
-    
-    let speed = 0.4; // গতি নিয়ন্ত্রণ
-    function scroll() {
-        if (!list.matches(':hover')) { // মাউস ওপর থাকলে স্ক্রোল থামবে
-            list.scrollTop += speed;
-            if (list.scrollTop >= list.scrollHeight - list.clientHeight) {
-                list.scrollTop = 0; // একদম নিচে গেলে আবার শুরু থেকে
-            }
-        }
-        scrollInterval = requestAnimationFrame(scroll);
-    }
-    scrollInterval = requestAnimationFrame(scroll);
+.lock-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    z-index: 100;
+    display: flex; align-items: center; justify-content: center; text-align: center;
 }
 
-async function fetchAndPlay(storyId, isDailyFree = false) {
-    const frame = document.getElementById('storyFrame');
-    const overlay = document.getElementById('lockOverlay');
+.lock-content h2 { color: var(--text-main); margin-bottom: 20px; padding: 0 15px; }
+.btn-unlock { background: var(--primary-green); color: white; border: none; padding: 12px 30px; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 1.1rem; }
 
-    if (userStatus === 'paid' || isDailyFree || storyId === dailyStoryId) {
-        if (overlay) overlay.classList.add('hidden');
-        const { data: story } = await _supabase.from('stories').select('*').eq('id', storyId).single();
-        
-        const storyHtml = `
-        <html>
-        <head>
-            <style>
-                @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri&display=swap');
-                body { margin:0; background:#FDFBF7; font-family:'Hind Siliguri', sans-serif; display:flex; justify-content:center; padding:20px; }
-                .card { background:white; padding:30px; border-radius:25px; width:100%; box-shadow:0 5px 15px rgba(0,0,0,0.03); }
-                h1 { color:#2E7D32; text-align:center; font-size:1.8rem; }
-                p { line-height:1.8; font-size:1.2rem; text-align:justify; color:#333; }
-            </style>
-        </head>
-        <body>
-            <div class="card"><h1>${story.title}</h1><p>${story.content.replace(/\n/g, '<br>')}</p></div>
-        </body>
-        </html>`;
-        if (frame.src.startsWith('blob:')) URL.revokeObjectURL(frame.src);
-        frame.src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
-    } else {
-        frame.src = "about:blank";
-        if (overlay) overlay.classList.remove('hidden');
-    }
+#storyFrame { width: 100%; height: 100%; border: none; }
+
+.sidebar { 
+    background: white; 
+    border-radius: 35px; 
+    padding: 20px; 
+    height: 402px; 
+    display: flex; flex-direction: column; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+    box-sizing: border-box;
 }
 
-function renderSidebar(stories) {
-    const list = document.getElementById('storyList');
-    if(!list) return;
-    list.innerHTML = '';
-    const colors = ['#FFD1DC', '#D1F2EB', '#FFF4BD', '#E1F5FE', '#F3E5F5', '#FFF9C4', '#E8F5E9', '#FCE4EC', '#F1F8E9', '#E0F2F1'];
-
-    stories.forEach((s, index) => {
-        const banner = document.createElement('div');
-        banner.className = 'story-banner';
-        banner.style.backgroundColor = colors[index % colors.length];
-        const isLocked = (userStatus === 'free' && s.id !== dailyStoryId);
-        banner.innerHTML = `<div>${isLocked ? '🔒 ' : ''}${s.title}</div>`;
-        banner.onclick = () => { 
-            fetchAndPlay(s.id); 
-            if(window.innerWidth < 1100) document.getElementById('playerArea').scrollIntoView({ behavior: 'smooth' });
-        };
-        list.appendChild(banner);
-    });
+.thumbnail-list { 
+    flex-grow: 1; 
+    overflow-y: auto; /* 'hidden' theke 'auto' kora hoyeche manual scroll er jonno */
+    display: flex; flex-direction: column; gap: 10px; 
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Scrollbar hide rakha hoyeche clean look er jonno */
 }
 
-document.getElementById('fullscreenBtn')?.addEventListener('click', () => {
-    const playerArea = document.getElementById('playerArea');
-    if (!document.fullscreenElement) {
-        if (playerArea.requestFullscreen) playerArea.requestFullscreen();
-        else if (playerArea.webkitRequestFullscreen) playerArea.webkitRequestFullscreen();
-    } else {
-        document.exitFullscreen();
-    }
-});
+.thumbnail-list::-webkit-scrollbar { display: none; }
 
-const installBtn = document.getElementById('installPwa');
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    if (installBtn) installBtn.classList.remove('hidden');
-});
+.story-banner { min-height: 55px; border-radius: 15px; display: flex; align-items: center; justify-content: center; padding: 10px; cursor: pointer; font-weight: 700; text-align: center; font-size: 0.95rem; }
 
-if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') installBtn.classList.add('hidden');
-            deferredPrompt = null;
-        }
-    });
+.fomo-badge { background: #E8F5E9; padding: 8px 15px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; color: var(--primary-green); }
+.btn-install { background: var(--primary-green); color: white; border: none; padding: 8px 15px; border-radius: 50px; cursor: pointer; font-weight: 600; margin: 5px; }
+
+.premium-banner { 
+    grid-column: 1 / -1; 
+    background: white; border-radius: 30px; padding: 20px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
-document.addEventListener('DOMContentLoaded', initApp);
+.hidden { display: none !important; }
+
+@media (max-width: 1000px) {
+    .container { grid-template-columns: 1fr; }
+    .player-container, .sidebar { height: 380px; }
+}
