@@ -9,82 +9,112 @@
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- Global Dreamy Animation (Expert Fix) --- */
-        body { 
-            margin: 0; padding: 0;
-            background: linear-gradient(135deg, #E3F2FD, #E8F5E9, #F3E5F5, #FFF9C4);
-            background-size: 400% 400%;
-            animation: globalDreamyFlow 25s ease infinite; /* পুরো সাইটের ব্যাকগ্রাউন্ড লুপ */
-            overflow-x: hidden;
+        /* --- লেআউট ও গ্যাপ ফিক্স --- */
+        body { margin: 0; padding: 0; background: #fdfbf7; }
+        
+        /* উপরের বিশাল গ্যাপ কমানো */
+        .navbar { 
+            padding: 10px 20px; 
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
         }
 
-        @keyframes globalDreamyFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .container { 
+            margin-top: 15px !important; /* উপরের গ্যাপ ফিক্স */
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
         }
 
-        /* স্পেসিং ও লেআউট ফিক্স */
-        .navbar { padding: 5px 20px; min-height: 50px; margin-bottom: 0; background: rgba(255,255,255,0.3); backdrop-filter: blur(5px); }
-        .container { margin-top: 5px !important; gap: 15px !important; display: grid; grid-template-columns: 1fr 350px; }
+        /* ১০টি গল্পের জন্য ফিক্সড সাইডবার */
+        .sidebar {
+            background: white;
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
 
-        /* সাইডবার ফিক্স (১০টি গল্প) */
-        .sidebar { padding: 15px; border-radius: 30px; background: rgba(255, 255, 255, 0.6) !important; backdrop-filter: blur(10px); }
-        .thumbnail-list { 
-            height: 580px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; 
+        .thumbnail-list {
+            height: 580px; /* ১০টি গল্পের জন্য ফিক্সড উচ্চতা */
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             padding-right: 5px;
         }
 
+        /* গল্পের রঙিন বক্স (লেখা ওভারল্যাপ ফিক্স) */
         .story-banner {
-            min-height: 50px; padding: 10px; border-radius: 15px;
-            display: flex; align-items: center; justify-content: center;
-            text-align: center; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-        .story-banner div { font-weight: 700; font-size: 1rem; color: #333; }
-
-        /* গ্লোবাল ফ্লোটিং অবজেক্টস */
-        .magic-obj {
-            position: fixed; pointer-events: none; z-index: -1; opacity: 0.5;
-            animation: globalFloat 20s infinite ease-in-out;
-        }
-        @keyframes globalFloat {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            50% { transform: translate(30px, -50px) rotate(10deg); }
+            min-height: 55px; 
+            padding: 10px 15px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
         }
 
-        /* প্লেয়ার এরিয়া */
-        .player-container { border-radius: 35px; border: 8px solid white; box-shadow: 0 20px 50px rgba(0,0,0,0.05); height: 75vh; }
-        #storyFrame { width: 100%; height: 100%; border: none; border-radius: 25px; }
+        .story-banner div {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #333;
+            line-height: 1.3;
+        }
 
-        @media (max-width: 1000px) { .container { grid-template-columns: 1fr; } }
+        /* FOMO Badge ও বাটন স্টাইল */
+        .fomo-badge { background: #e8f5e9; padding: 8px 15px; border-radius: 50px; font-size: 0.9rem; }
+        .btn-install { background: #2e7d32; color: white; border: none; padding: 8px 15px; border-radius: 50px; cursor: pointer; }
+        .hidden { display: none !important; }
+
+        @media (max-width: 1000px) {
+            .container { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
-<body oncontextmenu="return false;">
-
-    <div id="globalMagicLayer"></div>
+<body>
 
     <header class="navbar">
-        <div style="font-weight: 700; color: #2E7D32; font-size: 1.2rem;">পশুপাখি গল্প</div>
+        <div class="logo-area" style="font-weight:bold; color:#2e7d32; font-size:1.2rem;">পশুপাখি গল্প</div>
+        
+        <div class="header-action-area" style="display:flex; gap:10px; align-items:center;">
+            <div class="fomo-badge">
+                🎁 ব্যাংকে গল্প জমেছে <span id="totalCount">17</span> টি। ইনশাআল্লাহ আরো আসছে।
+            </div>
+            <button id="installPwa" class="btn-install hidden">ইন্সটল করুন 📱</button>
+        </div>
     </header>
 
     <main class="container">
         <section class="story-player">
-            <div class="player-container" id="playerArea">
-                <iframe id="storyFrame" src="about:blank"></iframe>
+            <div class="player-container" id="playerArea" style="position:relative; border-radius:30px; overflow:hidden; height:75vh; border:8px solid white; box-shadow:0 20px 50px rgba(0,0,0,0.1);">
+                <button id="fullscreenBtn" style="position:absolute; bottom:20px; right:20px; z-index:100; background:#2e7d32; color:white; border:none; padding:10px 20px; border-radius:50px; cursor:pointer; font-weight:bold;">📺 বড় পর্দায় পড়ো</button>
+                
+                <iframe id="storyFrame" src="about:blank" style="width:100%; height:100%; border:none;"></iframe>
             </div>
+
             <div style="text-align:center; margin-top:15px;">
-                <button onclick="shareApp()" style="padding:10px 20px; border-radius:50px; border:2px solid #2E7D32; background:white; color:#2E7D32; font-weight:700; cursor:pointer;">📤 বন্ধুদের সাথে শেয়ার করুন</button>
+                <button onclick="shareApp()" style="background:white; border:2px solid #2e7d32; padding:10px 25px; border-radius:50px; color:#2e7d32; font-weight:bold; cursor:pointer;">📤 বন্ধুদের সাথে শেয়ার করুন</button>
             </div>
         </section>
 
         <aside class="sidebar">
-            <h3 style="text-align:center; color:#2E7D32; margin-top:0;">গল্পের তালিকা</h3>
+            <h3 style="margin-top:0; color:#2e7d32; text-align:center;">গল্পের তালিকা</h3>
             <div id="storyList" class="thumbnail-list"></div>
         </aside>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js?v=15.0"></script>
+    <script src="app.js"></script>
 </body>
 </html>
