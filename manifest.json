@@ -1,23 +1,31 @@
 {
-  "name": "পশুপাখি গল্প",
+  "name": "পশুপাখি গল্প - ছোটদের জাদুকরী ভুবন",
   "short_name": "পশুপাখি",
-  "description": "ছোটদের প্রিয় জাদুকরী গল্পের ভুবন",
-  "start_url": "/",
+  "description": "ছোটদের প্রিয় নৈতিক ও শিক্ষামূলক গল্পের জাদুকরী ভুবন।",
+  "start_url": "/index.html",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#F1F8E9",
   "theme_color": "#2E7D32",
   "icons": [
     {
-      "src": "assets/logo.svg",
+      "src": "assets/icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "assets/logo.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ]
 }
