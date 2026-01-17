@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Final Logic v21.0 --- */
+/* --- PoshuPakhi Golpo - Final Logic v22.0 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -7,7 +7,22 @@ let userStatus = 'free';
 let dailyStoryId = null;
 let deferredPrompt; 
 
-window.initPayment = () => window.location.href = "checkout.html";
+// ১. পেমেন্ট সিস্টেম: হোয়াটসঅ্যাপ ইন্টিগ্রেশন (আপডেটেড)
+window.initPayment = () => {
+    const userId = localStorage.getItem('device_uuid') || 'Unknown';
+    const phoneNumber = "8801303680618";
+    
+    const message = `আসসালামু আলাইকুম। আমি 'পশুপাখি গল্প' অ্যাপটির আজীবনের জন্য প্রিমিয়াম এক্সেস নিতে চাই। 
+
+সাপোর্ট আইডি: ${userId}
+এই ইউজার আইডির জন্য বাচ্চাদের পশু-পাখির গল্পগুলো আনলক করতে চাচ্ছি।`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    
+    window.open(whatsappLink, '_blank');
+};
+
 window.shareApp = async () => {
     if (navigator.share) {
         try { await navigator.share({ title: 'পশুপাখি গল্প', url: window.location.origin }); } catch (e) {}
@@ -45,9 +60,8 @@ async function fetchAndPlay(storyId, isDailyFree = false) {
     const frame = document.getElementById('storyFrame');
     const overlay = document.getElementById('lockOverlay');
 
-    // পেমেন্ট করা থাকলে অথবা আজকের ফ্রি গল্প হলে
     if (userStatus === 'paid' || isDailyFree || storyId === dailyStoryId) {
-        if (overlay) overlay.classList.add('hidden'); // লক মেসেজ লুকিয়ে ফেলা
+        if (overlay) overlay.classList.add('hidden');
         const { data: story } = await _supabase.from('stories').select('*').eq('id', storyId).single();
         
         const storyHtml = `
@@ -72,9 +86,8 @@ async function fetchAndPlay(storyId, isDailyFree = false) {
         if (frame.src.startsWith('blob:')) URL.revokeObjectURL(frame.src);
         frame.src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
     } else {
-        // গল্প লক করা থাকলে
-        frame.src = "about:blank"; // সাদা স্ক্রিন
-        if (overlay) overlay.classList.remove('hidden'); // সাদা স্ক্রিনের ওপর লক মেসেজ দেখানো
+        frame.src = "about:blank";
+        if (overlay) overlay.classList.remove('hidden');
     }
 }
 
@@ -89,7 +102,6 @@ function renderSidebar(stories) {
         banner.className = 'story-banner';
         banner.style.backgroundColor = colors[index % colors.length];
         
-        // লক চিহ্ন যুক্ত করার লজিক
         const isLocked = (userStatus === 'free' && s.id !== dailyStoryId);
         const lockIcon = isLocked ? '🔒 ' : '';
         
