@@ -12,6 +12,16 @@ async function initApp() {
     if(document.getElementById('footerUid')) document.getElementById('footerUid').innerText = uuid;
 
     try {
+        // --- গল্পের মোট সংখ্যা দেখানোর নতুন লজিক ---
+        const { count, error: countError } = await _supabase
+            .from('stories')
+            .select('*', { count: 'exact', head: true });
+
+        if (!countError && document.getElementById('totalCount')) {
+            document.getElementById('totalCount').innerText = count || 0;
+        }
+        // -------------------------------------------
+
         const { data: user } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
         if (!user) {
             await _supabase.from('users').insert([{ device_uuid: uuid, status: 'free' }]);
@@ -77,7 +87,7 @@ document.getElementById('fullscreenBtn').addEventListener('click', () => {
         document.getElementById('fullscreenBtn').innerText = "❌ ছোট করো";
     } else {
         document.exitFullscreen?.();
-        document.getElementById('fullscreenBtn').innerText = "📺 বড় পর্দায় পড়ো";
+        document.getElementById('fullscreenBtn').innerText = "📺 বড় পর্দায় পড়ো";
     }
 });
 
