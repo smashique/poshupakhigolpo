@@ -1,4 +1,4 @@
-/* --- style.css - Optimized for Visibility & Auto-Scroll --- */
+/* --- style.css - Manual & Auto-Scroll Enabled --- */
 
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap');
 
@@ -15,7 +15,6 @@ body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background-color: va
 
 .container { display: grid; grid-template-columns: 1fr 340px; gap: 20px; max-width: 1350px; margin: 15px auto; padding: 0 15px; }
 
-/* প্লেয়ার কন্টেইনার - সাইজ কমানো হয়েছে (৪০২ পিক্সেল) */
 .player-container {
     position: relative;
     width: 100%;
@@ -27,7 +26,6 @@ body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background-color: va
     overflow: hidden;
 }
 
-/* লক ওভারলে */
 .lock-overlay {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -41,7 +39,6 @@ body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background-color: va
 
 #storyFrame { width: 100%; height: 100%; border: none; }
 
-/* সাইডবার - প্লেয়ারের সাথে হাইট ম্যাচ করা হয়েছে */
 .sidebar { 
     background: white; 
     border-radius: 35px; 
@@ -54,18 +51,19 @@ body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background-color: va
 
 .thumbnail-list { 
     flex-grow: 1; 
-    overflow-y: hidden; /* অটো স্ক্রোলিংয়ের জন্য হাইড */
+    overflow-y: auto; /* 'hidden' theke 'auto' kora hoyeche manual scroll er jonno */
     display: flex; flex-direction: column; gap: 10px; 
     scroll-behavior: smooth;
+    scrollbar-width: none; /* Scrollbar hide rakha hoyeche clean look er jonno */
 }
 
-.story-banner { min-height: 55px; border-radius: 15px; display: flex; align-items: center; justify-content: center; padding: 10px; cursor: pointer; font-weight: 700; text-align: center; font-size: 0.95rem; transition: transform 0.2s; }
-.story-banner:hover { transform: scale(0.98); }
+.thumbnail-list::-webkit-scrollbar { display: none; }
+
+.story-banner { min-height: 55px; border-radius: 15px; display: flex; align-items: center; justify-content: center; padding: 10px; cursor: pointer; font-weight: 700; text-align: center; font-size: 0.95rem; }
 
 .fomo-badge { background: #E8F5E9; padding: 8px 15px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; color: var(--primary-green); }
 .btn-install { background: var(--primary-green); color: white; border: none; padding: 8px 15px; border-radius: 50px; cursor: pointer; font-weight: 600; margin: 5px; }
 
-/* প্রিমিয়াম ব্যানার ফিক্স - প্যাডিং কমানো হয়েছে */
 .premium-banner { 
     grid-column: 1 / -1; 
     background: white; border-radius: 30px; padding: 20px; 
