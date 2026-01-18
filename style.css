@@ -1,4 +1,4 @@
-/* --- style.css - Manual & Auto-Scroll Enabled --- */
+/* --- style.css - Manual/Auto-Scroll & Bird Animation Enabled --- */
 
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap');
 
@@ -51,10 +51,10 @@ body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background-color: va
 
 .thumbnail-list { 
     flex-grow: 1; 
-    overflow-y: auto; /* 'hidden' theke 'auto' kora hoyeche manual scroll er jonno */
+    overflow-y: auto; 
     display: flex; flex-direction: column; gap: 10px; 
     scroll-behavior: smooth;
-    scrollbar-width: none; /* Scrollbar hide rakha hoyeche clean look er jonno */
+    scrollbar-width: none; 
 }
 
 .thumbnail-list::-webkit-scrollbar { display: none; }
@@ -71,6 +71,47 @@ body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background-color: va
 }
 
 .hidden { display: none !important; }
+
+/* --- পাখি অ্যানিমেশন CSS (নতুন যুক্ত করা হয়েছে) --- */
+
+.flying-bird {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none; /* যাতে পাখির ওপর টাচ পড়লে বাটন ক্লিক ব্যাহত না হয় */
+    
+    width: 80px;  /* একটি ফ্রেমের প্রস্থ */
+    height: 60px; /* পাখির উচ্চতা */
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    /* ওড়া এবং পাখা ঝাপটানোর অ্যানিমেশন */
+    animation: 
+        flyAcross 3s linear forwards,
+        flapWings 0.4s steps(3) infinite; /* steps(3) মানে আপনার ইমেজে ৩টি ফ্রেম আছে */
+}
+
+/* একপাশ থেকে অন্যপাশে উড়ে যাওয়া */
+@keyframes flyAcross {
+    0% {
+        transform: translateX(0) scale(0.8);
+        left: -100px;
+        opacity: 0.8;
+    }
+    20% {
+         transform: translateY(-30px) scale(1); /* শুরুতে একটু উপরে উঠবে */
+         opacity: 1;
+    }
+    100% {
+        transform: translateX(110vw) translateY(10px) scale(0.9);
+        left: 100%;
+    }
+}
+
+/* পাখা ঝাপটানোর অ্যানিমেশন (স্প্রাইট শিট অনুযায়ী) */
+@keyframes flapWings {
+   from { background-position: 0px; }
+   to { background-position: -240px; } /* ৩টি ফ্রেম x ৮০ পিক্সেল = ২৪০ পিক্সেল */
+}
 
 @media (max-width: 1000px) {
     .container { grid-template-columns: 1fr; }
