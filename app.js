@@ -1,64 +1,62 @@
-/* --- PoshuPakhi Golpo - Pro Logic v23.0 --- */
+/* --- PoshuPakhi Golpo - Nuromarketers Edition v24.0 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let userStatus = 'free'; 
 let dailyStoryId = null;
-let currentStoryText = ""; // 60% share er jonno content store korar variable
+let currentStoryText = ""; 
 let currentStoryTitle = "";
 
-const birdData = [
-    { sprite: 'assets/bird1_sprite.png', sound: 'assets/chirp1.mp3' },
-    { sprite: 'assets/bird2_sprite.png', sound: 'assets/chirp2.mp3' },
-    { sprite: 'assets/bird3_sprite.png', sound: 'assets/chirp3.mp3' }
-];
-
-// 1. Payment & Bird Trigger on Button Click
+// ১. পেমেন্ট সিস্টেম: হোয়াটসঅ্যাপ ইন্টিগ্রেশন
 window.initPayment = () => {
-    createFlyingBird(window.innerHeight / 2); // Button-e click korle pakhi urbe
     const userId = localStorage.getItem('device_uuid') || 'Unknown';
     const phoneNumber = "8801303680618";
     const message = `আসসালামু আলাইকুম। আমি 'পশুপাখি গল্প' অ্যাপটির আজীবনের জন্য প্রিমিয়াম এক্সেস নিতে চাই। \n\nসাপোর্ট আইডি: ${userId}\nএই ইউজার আইডির জন্য বাচ্চাদের পশু-পাখির গল্পগুলো আনলক করতে চাচ্ছি।`;
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
 };
 
-// 4. Smart Share (60% Content + Link)
+// ২. স্মার্ট শেয়ার (৬০% কন্টেন্ট + সাইট লিঙ্ক) - FIXED
 window.shareApp = async () => {
-    createFlyingBird(window.innerHeight / 3);
+    if (!currentStoryText) {
+        alert("আগে একটি গল্প সিলেক্ট করুন!");
+        return;
+    }
     
-    // 60% content calculate kora
     const shareLength = Math.floor(currentStoryText.length * 0.6);
     const shortText = currentStoryText.substring(0, shareLength);
+    const siteLink = window.location.origin; // আপনার সাইটের মেইন লিঙ্ক
     
-    const shareMessage = `📖 ${currentStoryTitle}\n\n${shortText}...\n\nবাকি গল্পটি পড়তে ভিজিট করুন: ${window.location.origin}`;
+    const shareMessage = `📖 ${currentStoryTitle}\n\n${shortText}...\n\nবাকি গল্পটি পড়তে ভিজিট করুন: ${siteLink}`;
 
     if (navigator.share) {
-        try { await navigator.share({ title: 'পশুপাখি গল্প', text: shareMessage }); } catch (e) {}
+        try { 
+            await navigator.share({ 
+                title: 'পশুপাখি গল্প', 
+                text: shareMessage,
+                url: siteLink // সরাসরি লিঙ্ক প্যারামিটার যুক্ত করা হয়েছে
+            }); 
+        } catch (e) { console.log("Share failed"); }
     } else { 
-        navigator.clipboard.writeText(shareMessage);
-        alert("গল্পের ৬০% কপি হয়েছে! বন্ধুদের পাঠিয়ে দিন।"); 
+        navigator.clipboard.writeText(shareMessage + "\n" + siteLink);
+        alert("গল্পের ৬০% এবং সাইট লিঙ্ক কপি হয়েছে! বন্ধুদের পাঠিয়ে দিন।"); 
     }
 };
 
-// Bird Animation Function
-function createFlyingBird(yPos) {
-    const randomBird = birdData[Math.floor(Math.random() * birdData.length)];
-    const audio = new Audio(randomBird.sound);
-    audio.volume = 0.3;
-    audio.play().catch(() => {});
+// ৩. ফুল-স্ক্রিন লজিক - FIXED
+document.getElementById('fullscreenBtn')?.addEventListener('click', () => {
+    const playerArea = document.getElementById('playerArea');
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (playerArea.requestFullscreen) playerArea.requestFullscreen();
+        else if (playerArea.webkitRequestFullscreen) playerArea.webkitRequestFullscreen();
+        else if (playerArea.msRequestFullscreen) playerArea.msRequestFullscreen();
+    } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }
+});
 
-    const bird = document.createElement('div');
-    bird.className = 'flying-bird sprite-animated';
-    bird.style.backgroundImage = `url(${randomBird.sprite})`;
-    bird.style.top = `${yPos || Math.random() * (window.innerHeight - 100)}px`;
-    bird.style.left = `-100px`;
-
-    document.body.appendChild(bird);
-    bird.addEventListener('animationend', (e) => { if(e.animationName === 'flyAcross') bird.remove(); });
-}
-
-// 2 & 3. Iframe Font Fix & Copy Protection
+// ৪. গল্প প্লে করার লজিক
 async function fetchAndPlay(storyId, isDailyFree = false) {
     const frame = document.getElementById('storyFrame');
     const overlay = document.getElementById('lockOverlay');
@@ -67,7 +65,7 @@ async function fetchAndPlay(storyId, isDailyFree = false) {
         if (overlay) overlay.classList.add('hidden');
         const { data: story } = await _supabase.from('stories').select('*').eq('id', storyId).single();
         
-        currentStoryText = story.content; // Share er jonno save rakha
+        currentStoryText = story.content; 
         currentStoryTitle = story.title;
 
         const storyHtml = `
@@ -75,26 +73,13 @@ async function fetchAndPlay(storyId, isDailyFree = false) {
         <head>
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri&display=swap');
-                body { 
-                    margin:0; background:#FDFBF7; font-family:'Hind Siliguri', sans-serif; 
-                    padding:20px; 
-                    user-select: none; /* 3. Copy bondho kora */
-                    -webkit-user-select: none;
-                }
+                body { margin:0; background:#FDFBF7; font-family:'Hind Siliguri', sans-serif; padding:20px; user-select: none; -webkit-user-select: none; }
                 .card { background:white; padding:30px; border-radius:25px; box-shadow:0 5px 15px rgba(0,0,0,0.03); }
-                h1 { 
-                    color:#2E7D32; text-align:center; 
-                    font-size: 1.5rem; /* 2. Heading font size komanu hoyeche */
-                    margin-bottom: 15px;
-                }
+                h1 { color:#2E7D32; text-align:center; font-size: 1.4rem; margin-bottom: 15px; }
                 p { line-height:1.8; font-size:1.2rem; text-align:justify; color:#333; }
             </style>
-            <script>
-                document.addEventListener('copy', (e) => e.preventDefault()); // Copy block JS
-                document.addEventListener('contextmenu', (e) => e.preventDefault());
-            </script>
         </head>
-        <body>
+        <body oncontextmenu="return false;">
             <div class="card"><h1>${story.title}</h1><p>${story.content.replace(/\n/g, '<br>')}</p></div>
         </body>
         </html>`;
@@ -106,7 +91,7 @@ async function fetchAndPlay(storyId, isDailyFree = false) {
     }
 }
 
-// Sidebar Render & Auto-Scroll
+// ৫. সাইডবার রেন্ডার ও অটো-স্ক্রোল
 function renderSidebar(stories) {
     const list = document.getElementById('storyList');
     if(!list) return;
@@ -119,7 +104,7 @@ function renderSidebar(stories) {
         banner.style.backgroundColor = colors[index % colors.length];
         const isLocked = (userStatus === 'free' && s.id !== dailyStoryId);
         banner.innerHTML = `<div>${isLocked ? '🔒 ' : ''}${s.title}</div>`;
-        banner.onclick = () => { fetchAndPlay(s.id); };
+        banner.onclick = () => fetchAndPlay(s.id);
         list.appendChild(banner);
     });
 }
@@ -143,13 +128,11 @@ function startAutoScroll() {
     requestAnimationFrame(scroll);
 }
 
-// 1. Initial Bird (2 second delay after load)
+// অ্যাপ শুরু
 async function initApp() {
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
     localStorage.setItem('device_uuid', uuid);
     if(document.getElementById('footerUid')) document.getElementById('footerUid').innerText = uuid;
-
-    setTimeout(() => { createFlyingBird(); }, 2000); // Site load hobar 2s por auto pakhi
 
     try {
         const { count } = await _supabase.from('stories').select('*', { count: 'exact', head: true });
