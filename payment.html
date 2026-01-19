@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>প্রিমিয়াম আনলক করুন - পশুপাখি গল্প</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .payment-card { background: white; border-radius: 25px; padding: 25px; margin-bottom: 20px; border: 2px solid #e0e0e0; }
+        .method-title { font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .number-box { background: #f5f5f5; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; border: 1px dashed #ccc; text-align: center; }
+        .form-group { margin-top: 20px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; }
+        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ccc; box-sizing: border-box; font-family: 'Hind Siliguri'; }
+        .btn-send { background: #25D366; color: white; border: none; padding: 15px; width: 100%; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.1rem; margin-top: 20px; }
+        .instruction { font-size: 0.85rem; color: #666; margin-top: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 500px; text-align: center;">
+        <h2 style="color: var(--primary-green);">প্রিমিয়াম মেম্বারশিপ</h2>
+        <p>নিচের যেকোনো একটি মাধ্যমে ৳২৯৯ পাঠিয়ে তথ্য দিন।</p>
+
+        <div class="payment-card">
+            <div class="method-title"><span style="color:#d12053">■</span> বিকাশ (পার্সোনাল)</div>
+            <div class="number-box">017XXXXXXXX</div>
+        </div>
+
+        <div class="payment-card">
+            <div class="method-title"><span style="color:#8b2c8a">■</span> ডাচ-বাংলা / রকেট</div>
+            <div class="number-box">019XXXXXXXX</div>
+        </div>
+
+        <div class="payment-card">
+            <div class="form-group">
+                <label>পেমেন্ট মেথড</label>
+                <select id="method">
+                    <option value="bKash">বিকাশ</option>
+                    <option value="Rocket">রকেট/ডাচ-বাংলা</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>TrxID অথবা লাস্ট ৪ ডিজিট</label>
+                <input type="text" id="trxInfo" placeholder="উদা: T9X2... অথবা ৪৩২১">
+            </div>
+            <button class="btn-send" onclick="sendToWhatsApp()">হোয়াটসঅ্যাপে ডিটেইলস পাঠান</button>
+            <p class="instruction">বাটনে ক্লিক করার পর আপনার হোয়াটসঅ্যাপ ওপেন হবে, সেখানে <b>পেমেন্টের স্ক্রিনশটটি</b> এটাচ করে পাঠিয়ে দিন।</p>
+        </div>
+        
+        <a href="index.html" style="text-decoration:none; color: #666; font-size: 0.9rem;">← ফিরে যান</a>
+    </div>
+
+    <script>
+        function sendToWhatsApp() {
+            const uuid = localStorage.getItem('device_uuid') || 'Unknown';
+            const method = document.getElementById('method').value;
+            const trxInfo = document.getElementById('trxInfo').value;
+
+            if(!trxInfo) { alert('পেমেন্ট ডিটেইলস লিখুন!'); return; }
+
+            const phoneNumber = "8801303680618";
+            const message = `আসসালামু আলাইকুম। আমি পেমেন্ট করেছি।\n\n🆔 ইউজার আইডি: ${uuid}\n💳 মেথড: ${method}\n🔢 ট্রাঞ্জেকশন/লাস্ট ডিজিট: ${trxInfo}\n\n(আমি নিচে পেমেন্টের স্ক্রিনশটটি এটাচ করে দিচ্ছি)`;
+            
+            const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappLink, '_blank');
+        }
+    </script>
+</body>
+</html>
