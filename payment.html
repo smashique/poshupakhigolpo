@@ -3,73 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>প্রিমিয়াম আনলক করুন - পশুপাখি গল্প</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <title>প্রিমিয়াম আনলক - পশুপাখি গল্প</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Quicksand:wght@500;700&display=swap');
         :root { --primary-green: #2E7D32; --bg-light: #F1F8E9; --text-main: #263238; }
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg-light); display: flex; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        body { font-family: 'Quicksand', 'Hind Siliguri', sans-serif; background-color: var(--bg-light); margin: 0; padding: 10px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; box-sizing: border-box; }
         
-        .container { max-width: 600px; text-align: center; width: 100%; }
-        .payment-card { background: white; border-radius: 25px; padding: 20px; border: 2px solid #e0e0e0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .container { max-width: 450px; width: 100%; text-align: center; }
+        .card { background: white; border-radius: 20px; padding: 15px; border: 1.5px solid #E8F5E9; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 12px; }
         
-        /* Social Proof Banner */
-        .fomo-live { background: #e6fffa; border: 1px solid #81e6d9; padding: 12px; border-radius: 15px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1rem; color: #234e52; font-weight: 700; }
-        .dot { height: 10px; width: 10px; background-color: #38b2ac; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 178, 172, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(56, 178, 172, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 178, 172, 0); } }
+        /* ফোমো ব্যানার স্লিম */
+        .fomo-live { background: #e6fffa; border: 1px solid #81e6d9; padding: 8px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.9rem; color: #234e52; font-weight: 700; }
+        .dot { height: 8px; width: 8px; background: #38b2ac; border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(0.9); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.5; } 100% { transform: scale(0.9); opacity: 1; } }
 
-        .offer-text { font-size: 1.5rem; font-weight: 700; margin-bottom: 25px; color: #333; line-height: 1.6; }
-        .old-price { text-decoration: line-through; color: #888; font-size: 1.2rem; margin: 0 5px; }
-        .new-price { color: #d32f2f; font-size: 2rem; font-weight: 800; background: #fff9c4; padding: 2px 12px; border-radius: 10px; border: 2px solid #ffd600; }
+        .price-box { margin: 10px 0; }
+        .old-price { text-decoration: line-through; color: #888; font-size: 1rem; }
+        .new-price { color: #d32f2f; font-size: 1.6rem; font-weight: 800; background: #fff9c4; padding: 2px 10px; border-radius: 8px; border: 1.5px solid #ffd600; }
 
-        .number-box { background: #f5f5f5; padding: 10px; border-radius: 12px; font-weight: bold; font-size: 1.2rem; border: 1px dashed #ccc; color: var(--primary-green); letter-spacing: 1px; }
-        .acc-name { font-size: 0.95rem; color: #555; margin-bottom: 5px; font-weight: 700; }
-        
-        .form-group { margin-top: 15px; text-align: left; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; color: #444; }
-        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #ccc; font-family: 'Hind Siliguri'; box-sizing: border-box; font-size: 1rem; outline: none; }
-        
-        .btn-send { background: #25D366; color: white; border: none; padding: 18px; width: 100%; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-top: 20px; transition: 0.3s; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
-        .btn-send:hover { background: #1da851; transform: translateY(-2px); }
-        
-        .back-link { display: inline-block; margin-top: 20px; text-decoration: none; color: #666; font-size: 0.9rem; }
+        /* পেমেন্ট নম্বর কম্প্রেসড */
+        .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        .method-item { background: #f9f9f9; padding: 8px; border-radius: 12px; border: 1px solid #eee; text-align: center; }
+        .method-item span { font-size: 0.8rem; color: #666; font-weight: bold; }
+        .num { display: block; font-weight: 800; color: var(--primary-green); font-size: 1rem; margin-top: 2px; }
+
+        .form-group { margin-top: 10px; text-align: left; }
+        label { font-size: 0.85rem; font-weight: 600; color: #555; margin-left: 5px; }
+        select, input { width: 100%; padding: 10px; border-radius: 10px; border: 1.2px solid #ddd; font-family: inherit; font-size: 0.95rem; margin-top: 4px; box-sizing: border-box; }
+
+        .btn-send { background: #25D366; color: white; border: none; padding: 14px; width: 100%; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.1rem; margin-top: 15px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2); }
+        .back-link { display: inline-block; margin-top: 12px; text-decoration: none; color: #888; font-size: 0.85rem; font-weight: 600; }
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
     <div class="container">
         <div id="socialProof" class="fomo-live hidden">
-            <span class="dot"></span> <span id="paidCount">...</span> জন সচেতন অভিভাবক ইতিমধ্যে মেম্বারশিপ নিয়েছেন!
+            <span class="dot"></span> <span id="paidCount">...</span> জন অভিভাবক মেম্বারশিপ নিয়েছেন!
         </div>
 
-        <h2 style="color: var(--primary-green);">✨ প্রিমিয়াম মেম্বারশিপ</h2>
+        <h3 style="color: var(--primary-green); margin: 5px 0;">✨ আজীবনের জন্য আনলক করুন</h3>
         
-        <p class="offer-text">
-            নিচের যেকোনো একটি মাধ্যমে <br>
-            <span class="old-price">৳৪৯৯</span> <span class="new-price">৳২৯৯</span> পাঠিয়ে তথ্য দিন।
-        </p>
+        <div class="price-box">
+            <span class="old-price">৳৪৯৯</span> <span class="new-price">৳২৯৯</span>
+        </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
-            <div class="payment-card" style="margin-bottom:0;">
-                <div style="font-weight: bold; margin-bottom: 5px;">বিকাশ (পার্সোনাল)</div>
-                <div class="number-box">01969344088</div>
+        <div class="pay-grid">
+            <div class="method-item">
+                <span>বিকাশ (Personal)</span>
+                <strong class="num">01969344088</strong>
             </div>
-            <div class="payment-card" style="margin-bottom:0;">
-                <div style="font-weight: bold; margin-bottom: 5px;">রকেট (পার্সোনাল)</div>
-                <div class="number-box">019693440884</div>
+            <div class="method-item">
+                <span>রকেট (Personal)</span>
+                <strong class="num">019693440884</strong>
             </div>
         </div>
 
-        <div class="payment-card">
-            <div style="font-weight: bold; margin-bottom: 5px;">ডাচ-বাংলা ব্যাংক অ্যাকাউন্ট</div>
-            <div class="acc-name">A/C Name: S M ASHIQUE</div>
-            <div class="number-box" style="font-size: 1.1rem;">AC: 2701030006565</div>
+        <div class="card" style="padding: 10px;">
+            <div style="font-size: 0.85rem; font-weight: bold; color: #444;">ডাচ-বাংলা ব্যাংক (DBBL)</div>
+            <div style="font-size: 0.8rem; color: #666;">A/C: S M ASHIQUE | 2701030006565</div>
         </div>
 
-        <div class="payment-card">
+        <div class="card">
             <div class="form-group">
-                <label>পেমেন্ট মেথড সিলেক্ট করুন</label>
+                <label>পেমেন্ট মেথড</label>
                 <select id="method" onchange="toggleInputOptions()">
                     <option value="bKash">বিকাশ</option>
                     <option value="Rocket">রকেট</option>
@@ -86,29 +85,24 @@
             </div>
 
             <div class="form-group">
-                <input type="text" id="trxInfo" placeholder="এখানে TrxID অথবা লাস্ট ৪ ডিজিট লিখুন...">
+                <input type="text" id="trxInfo" placeholder="TrxID বা লাস্ট ৪ ডিজিট লিখুন...">
             </div>
 
-            <button class="btn-send" onclick="sendToWhatsApp()">হোয়াটসঅ্যাপে ডিটেইলস পাঠান</button>
+            <button class="btn-send" onclick="sendToWhatsApp()">📤 হোয়াটসঅ্যাপে তথ্য পাঠান</button>
         </div>
         
-        <a href="index.html" class="back-link">← ফিরে যান</a>
+        <a href="index.html" class="back-link">← পরে আনলক করবো</a>
     </div>
 
     <script>
-        // Supabase Initialization
         const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // ১. শুধুমাত্র 'paid' ইউজারদের কাউন্ট করা
         async function updateSocialProof() {
             try {
                 const { count, error } = await supabaseClient
-                    .from('users')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('status', 'paid'); 
-
+                    .from('users').select('*', { count: 'exact', head: true }).eq('status', 'paid'); 
                 if (!error && count > 0) {
                     document.getElementById('paidCount').innerText = count; 
                     document.getElementById('socialProof').classList.remove('hidden');
@@ -116,48 +110,32 @@
             } catch (err) { console.error(err); }
         }
 
-        // ২. মেথড অনুযায়ী ইনপুট ফিল্ড পরিবর্তন
         function toggleInputOptions() {
             const method = document.getElementById('method').value;
             const typeGroup = document.getElementById('typeSelectorGroup');
             const trxInfo = document.getElementById('trxInfo');
-
             if (method === 'DBBL') {
                 typeGroup.classList.add('hidden');
                 trxInfo.placeholder = "আপনার DBBL TrxID লিখুন...";
             } else {
                 typeGroup.classList.remove('hidden');
-                trxInfo.placeholder = "এখানে TrxID অথবা লাস্ট ৪ ডিজিট লিখুন...";
+                trxInfo.placeholder = "TrxID বা লাস্ট ৪ ডিজিট লিখুন...";
             }
         }
 
-        // ৩. হোয়াটসঅ্যাপে ডাটা পাঠানো (সিস্টেম ভ্যালিডেশন সহ)
         function sendToWhatsApp() {
             const uuid = localStorage.getItem('device_uuid') || 'User';
             const method = document.getElementById('method').value;
             const infoType = (method === 'DBBL') ? 'TrxID' : document.getElementById('infoType').value;
             const infoValue = document.getElementById('trxInfo').value.trim();
             
-            // ভ্যালিডেশন: তথ্য না দিলে কাজ করবে না
-            if(!infoValue) { 
-                alert("অনুগ্রহ করে পেমেন্ট তথ্য দিন!"); 
-                return; 
-            }
+            if(!infoValue) { alert("অনুগ্রহ করে পেমেন্ট তথ্য দিন!"); return; }
             
-            const phoneNumber = "8801303680618";
-            const msg = `আসসালামু আলাইকুম। আমি 'পশুপাখি গল্প' অ্যাপটির প্রিমিয়াম ভার্সন আনলক করার জন্য পেমেন্ট করেছি। অনুগ্রহ করে আনলক করে দিন।\n\n` +
-                        `🆔 ইউজার আইডি: ${uuid}\n` +
-                        `💳 পেমেন্ট মেথড: ${method}\n` +
-                        `📝 তথ্যের ধরণ: ${infoType}\n` +
-                        `🔢 পেমেন্ট তথ্য: ${infoValue}`;
-
-            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+            const msg = `আসসালামু আলাইকুম। আমি 'পশুপাখি গল্প' আনলক করার জন্য পেমেন্ট করেছি।\n\n🆔 ইউজার আইডি: ${uuid}\n💳 মেথড: ${method}\n🔢 তথ্য: ${infoValue}`;
+            window.open(`https://wa.me/8801303680618?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        window.onload = () => {
-            toggleInputOptions();
-            updateSocialProof();
-        };
+        window.onload = () => { toggleInputOptions(); updateSocialProof(); };
     </script>
 </body>
 </html>
