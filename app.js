@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Stability v28.7 --- */
+/* --- PoshuPakhi Golpo - Auto-SEO & Gamified Edition v28.8 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -8,7 +8,29 @@ let dailyStoryId = null;
 let currentStoryTitle = "";
 let deferredPrompt;
 
-// ১. পপ সাউন্ড লজিক
+/**
+ * ১. অটো-এসইও আপডেট ফাংশন
+ * এটি গল্পের টাইটেল এবং কন্টেন্ট অনুযায়ী মেটা ট্যাগ আপডেট করে।
+ */
+function updateStorySEO(title, content) {
+    const siteTitle = "পশুপাখি গল্প - ছোটদের জাদুকরী ভুবন";
+    const shortDesc = content.substring(0, 150).replace(/\n/g, ' ') + "...";
+    
+    // ব্রাউজার ট্যাব টাইটেল
+    document.title = `${title} | ${siteTitle}`;
+
+    // মেটা ডেসক্রিপশন
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute("content", shortDesc);
+
+    // সোশ্যাল মিডিয়া (Open Graph) আপডেট
+    let ogTitle = document.querySelector('meta[property="og:title"]');
+    let ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogTitle) ogTitle.setAttribute("content", `${title} - পশুপাখি গল্প`);
+    if (ogDesc) ogDesc.setAttribute("content", shortDesc);
+}
+
+// ২. পপ সাউন্ড লজিক (বেলুন ও ইন্টারঅ্যাকশন)
 const playPopSound = () => {
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -26,7 +48,7 @@ const playPopSound = () => {
     } catch (e) { console.log("Sound interaction blocked."); }
 };
 
-// ২. বেলুন গ্যামিফিকেশন (Slow Motion)
+// ৩. বেলুন গ্যামিফিকেশন (Slow Motion)
 function createFloatingBalloon() {
     const b = document.createElement('div');
     b.className = 'balloon';
@@ -42,9 +64,10 @@ function createFloatingBalloon() {
     document.body.appendChild(b);
     setTimeout(() => { if(b.parentNode) b.remove(); }, 20000);
 }
-setInterval(createFloatingBalloon, 5000);
+// ৪ সেকেন্ড পরপর বেলুন আসবে
+setInterval(createFloatingBalloon, 4000);
 
-// ৩. স্মার্ট ইন্সটল লজিক
+// ৪. স্মার্ট ইন্সটল লজিক
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault(); deferredPrompt = e;
 });
@@ -60,11 +83,11 @@ const handleInstallClick = async () => {
         const { outcome } = await deferredPrompt.userChoice;
         if (outcome === 'accepted') deferredPrompt = null;
     } else {
-        alert("অ্যাপটি আপনার ডিভাইসে ইনস্টল করা আছে অথবা আপনার ব্রাউজার এটি সাপোর্ট করছে না।");
+        alert("অ্যাপটি ইনস্টল করা আছে অথবা আপনার ব্রাউজার এটি সাপোর্ট করছে না।");
     }
 };
 
-// ৪. নেভিগেশন ও শেয়ার
+// ৫. নেভিগেশন ও শেয়ার
 window.initPayment = () => { window.location.assign(window.location.origin + '/payment.html'); };
 
 window.shareApp = async () => {
@@ -77,7 +100,7 @@ window.shareApp = async () => {
     }
 };
 
-// ৫. ফুল-স্ক্রিন ফিক্স
+// ৬. ফুল-স্ক্রিন ফিক্স
 const toggleFullscreen = () => {
     const p = document.getElementById('playerArea');
     const isFS = document.fullscreenElement || document.webkitFullscreenElement;
@@ -90,7 +113,7 @@ const toggleFullscreen = () => {
     }
 };
 
-// ৬. স্টোরি ইঞ্জিন
+// ৭. স্টোরি ইঞ্জিন (অটো-এসইও এবং মার্কেটিং বক্স সহ)
 async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     if (!isAutoLoad) { playPopSound(); }
     const playerArea = document.getElementById('playerArea');
@@ -103,13 +126,17 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     if (!story) return;
 
     currentStoryTitle = story.title;
+    
+    // অটো-এসইও আপডেট কল
+    updateStorySEO(story.title, story.content);
+
     let isLocked = false;
     let content = (userStatus === 'paid' || isDailyFree || storyId === dailyStoryId) 
         ? story.content : story.content.substring(0, Math.floor(story.content.length * 0.2)) + "...";
 
     if (content.length < story.content.length) isLocked = true;
 
-    // ইউজার প্রোভাইডেড মার্কেটিং বক্স
+    // নিউরোমার্কেটিং মার্কেটিং বক্স
     const marketingBoxHTML = `
     <div class="m-box">
         <strong style="color: #1b5e20; font-size: 1.25rem; display: block; margin-bottom: 10px;">
@@ -165,6 +192,7 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     frame.src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
 }
 
+// ৮. ইনিশিয়ালাইজেশন
 async function initApp() {
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
     localStorage.setItem('device_uuid', uuid);
