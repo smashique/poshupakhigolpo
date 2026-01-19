@@ -15,7 +15,8 @@
         </header>
 
     <main class="container">
-              <section class="story-player">
+       
+        <section class="story-player">
             <div class="player-container" id="playerArea">
                 <button id="fullscreenBtn" class="fs-pulse-btn">📺 বড় পর্দা</button>
                 <iframe id="storyFrame" src="about:blank" allowfullscreen></iframe>
@@ -51,10 +52,10 @@
             const uid = el.innerText;
             if (uid && uid !== "...") {
                 navigator.clipboard.writeText(uid).then(() => {
-                    const originalText = uid;
+                    const original = uid;
                     el.innerText = "কপি হয়েছে!";
                     el.style.color = "#25D366";
-                    setTimeout(() => { el.innerText = originalText; el.style.color = "#2E7D32"; }, 1500);
+                    setTimeout(() => { el.innerText = original; el.style.color = "#2E7D32"; }, 1500);
                 });
             }
         }
