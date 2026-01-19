@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Auto-SEO & Gamified Edition v28.8 --- */
+/* --- PoshuPakhi Golpo - Stability & Count Fix v28.9 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -10,7 +10,7 @@ let deferredPrompt;
 
 /**
  * ১. অটো-এসইও আপডেট ফাংশন
- * এটি গল্পের টাইটেল এবং কন্টেন্ট অনুযায়ী মেটা ট্যাগ আপডেট করে।
+ * এটি গল্পের টাইটেল এবং কন্টেন্ট অনুযায়ী মেটা ট্যাগ আপডেট করে।
  */
 function updateStorySEO(title, content) {
     const siteTitle = "পশুপাখি গল্প - ছোটদের জাদুকরী ভুবন";
@@ -23,7 +23,7 @@ function updateStorySEO(title, content) {
     let metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute("content", shortDesc);
 
-    // সোশ্যাল মিডিয়া (Open Graph) আপডেট
+    // সোশ্যাল মিডিয়া (Open Graph) আপডেট
     let ogTitle = document.querySelector('meta[property="og:title"]');
     let ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogTitle) ogTitle.setAttribute("content", `${title} - পশুপাখি গল্প`);
@@ -87,7 +87,7 @@ const handleInstallClick = async () => {
     }
 };
 
-// ৫. নেভিগেশন ও শেয়ার
+// ৫. নেভিগেশন ও শেয়ার
 window.initPayment = () => { window.location.assign(window.location.origin + '/payment.html'); };
 
 window.shareApp = async () => {
@@ -153,7 +153,7 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
         </div>
         <div style="background: #fff; padding: 15px; border-radius: 15px; margin: 20px 0; border: 1px solid #c8e6c9;">
             <p style="font-size: 1rem; color: #555; margin-bottom: 10px;">
-                এটি আপনার সন্তানের জন্য আপনার <strong>লাইফটাইম ইনভেস্টমেন্ট</strong>, আর আমাদের জন্য কাজের মোটিভেশন।
+                এটি আপনার সন্তানের জন্য আপনার <strong>লাইফটাইম ইনভেস্টমেন্ট</strong>, আর আমাদের জন্য কাজের মোтивногоেশন।
             </p>
             <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">
                 লাইফটাইম অফার: <del style="color: #999;">৳৪৯৯</del> <span style="color: #d32f2f; background: #fff9c4; padding: 2px 10px; border-radius: 8px;">৳২৯৯</span>
@@ -192,7 +192,7 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     frame.src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
 }
 
-// ৮. ইনিশিয়ালাইজেশন
+// ৮. ইনিশিয়ালাইজেশন (Count Fix Integrated)
 async function initApp() {
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
     localStorage.setItem('device_uuid', uuid);
@@ -210,12 +210,18 @@ async function initApp() {
         const { data: user } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
         if (user?.status === 'paid') userStatus = 'paid';
         const { data: stories } = await _supabase.from('stories').select('id, title').order('created_at', { ascending: true });
+        
         if (stories) {
+            // Updated: শো-গল্পের সংখ্যা আপডেট
+            if(document.getElementById('totalCount')) {
+                document.getElementById('totalCount').innerText = stories.length;
+            }
+
             dailyStoryId = stories[Math.floor(Date.now() / 86400000) % stories.length].id;
             fetchAndPlay(dailyStoryId, true, true);
             renderSidebar(stories);
         }
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error("Init Error:", e); }
 }
 
 function renderSidebar(stories) {
