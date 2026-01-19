@@ -6,16 +6,18 @@
     <title>পশুপাখি গল্প - Bilingual Animal Tales & Stories for Kids</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body oncontextmenu="return false;">
 
     <header class="navbar">
         <div class="logo-text" onclick="location.reload()">🐾 পশুপাখি গল্প</div>
+        <button id="installPwa" class="btn-install hidden">🪁 No need searching! Just Install App🎯</button>
     </header>
 
     <main class="container">
         <div id="trustBox" class="fomo-live hidden" style="grid-column: 1 / -1; margin-bottom: 20px;">
-            <span class="dot-pulse"></span> ইতিমদ্ধে <strong id="paidCount">...</strong> জন সচেতন অভিভাবক তাদের সোনামণির জন্য মেম্বারশিপ নিয়েছেন!
+            <span class="dot-pulse"></span> ইতিমদ্ধে <strong id="paidCount">...</strong> জন সচেতন অভিভাবক মেম্বারশিপ নিয়েছেন!
         </div>
 
         <section class="story-player">
@@ -40,6 +42,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js?v=28.0"></script>
+    <script src="app.js?v=28.1"></script>
 </body>
 </html>
