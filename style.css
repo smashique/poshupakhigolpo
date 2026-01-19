@@ -35,6 +35,16 @@ body { margin: 0; font-family: var(--font-main); background-color: var(--bg-ligh
 .footer-container { text-align: center; margin: 15px 0; font-size: 0.85rem; }
 .balloon { position: fixed; bottom: -100px; animation: riseUp 20s linear; z-index: 100; cursor: pointer; }
 
+#footerUid { 
+    word-break: break-all; /* লম্বা আইডি ভেঙে দেওয়ার জন্য */
+    display: inline-block;
+    font-size: 0.8rem; /* মোবাইলের জন্য সামান্য ছোট করা হয়েছে */
+    background: #f9f9f9;
+    padding: 2px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 @keyframes riseUp { 0% { transform: translateY(0); } 100% { transform: translateY(-115vh); } }
 
 @media (max-width: 1000px) { .container { grid-template-columns: 1fr; } .player-container, .sidebar { height: 340px; } }
