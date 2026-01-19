@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Stability & Count Fix v28.9 --- */
+/* --- PoshuPakhi Golpo - Stability & SEO v28.9 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -8,29 +8,20 @@ let dailyStoryId = null;
 let currentStoryTitle = "";
 let deferredPrompt;
 
-/**
- * ১. অটো-এসইও আপডেট ফাংশন
- * এটি গল্পের টাইটেল এবং কন্টেন্ট অনুযায়ী মেটা ট্যাগ আপডেট করে।
- */
+// ১. অটো-এসইও আপডেট ফাংশন
 function updateStorySEO(title, content) {
     const siteTitle = "পশুপাখি গল্প - ছোটদের জাদুকরী ভুবন";
     const shortDesc = content.substring(0, 150).replace(/\n/g, ' ') + "...";
-    
-    // ব্রাউজার ট্যাব টাইটেল
     document.title = `${title} | ${siteTitle}`;
-
-    // মেটা ডেসক্রিপশন
     let metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute("content", shortDesc);
-
-    // সোশ্যাল মিডিয়া (Open Graph) আপডেট
     let ogTitle = document.querySelector('meta[property="og:title"]');
     let ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogTitle) ogTitle.setAttribute("content", `${title} - পশুপাখি গল্প`);
     if (ogDesc) ogDesc.setAttribute("content", shortDesc);
 }
 
-// ২. পপ সাউন্ড লজিক (বেলুন ও ইন্টারঅ্যাকশন)
+// ২. পপ সাউন্ড লজিক
 const playPopSound = () => {
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -48,7 +39,7 @@ const playPopSound = () => {
     } catch (e) { console.log("Sound interaction blocked."); }
 };
 
-// ৩. বেলুন গ্যামিফিকেশন (Slow Motion)
+// ৩. বেলুন গ্যামিফিকেশন
 function createFloatingBalloon() {
     const b = document.createElement('div');
     b.className = 'balloon';
@@ -64,40 +55,27 @@ function createFloatingBalloon() {
     document.body.appendChild(b);
     setTimeout(() => { if(b.parentNode) b.remove(); }, 20000);
 }
-// ৪ সেকেন্ড পরপর বেলুন আসবে
 setInterval(createFloatingBalloon, 4000);
 
 // ৪. স্মার্ট ইন্সটল লজিক
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault(); deferredPrompt = e;
-});
-
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
 const handleInstallClick = async () => {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    if (isStandalone) {
-        alert("গল্পের অ্যাপটি আপনার ডিভাইসে অলরেডি ইনস্টল করা আছে! ✨");
-        return;
-    }
+    if (isStandalone) return alert("অ্যাপটি অলরেডি আপনার ডিভাইসে ইনস্টল করা আছে! ✨");
     if (deferredPrompt) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
         if (outcome === 'accepted') deferredPrompt = null;
-    } else {
-        alert("অ্যাপটি ইনস্টল করা আছে অথবা আপনার ব্রাউজার এটি সাপোর্ট করছে না।");
-    }
+    } else alert("অ্যাপটি ইনস্টল করা আছে অথবা আপনার ব্রাউজার এটি সাপোর্ট করছে না।");
 };
 
 // ৫. নেভিগেশন ও শেয়ার
 window.initPayment = () => { window.location.assign(window.location.origin + '/payment.html'); };
-
 window.shareApp = async () => {
     if (!currentStoryTitle) return alert("গল্প পড়তে শুরু করুন!");
     const msg = `📖 '${currentStoryTitle}' - সোনামণির জন্য চমৎকার গল্প! ✨\n🔗 ${window.location.origin}`;
-    if (navigator.share) {
-        try { await navigator.share({ title: 'পশুপাখি গল্প', text: msg }); } catch (e) {}
-    } else {
-        navigator.clipboard.writeText(msg); alert("লিঙ্ক কপি হয়েছে!");
-    }
+    if (navigator.share) try { await navigator.share({ title: 'পশুপাখি গল্প', text: msg }); } catch (e) {}
+    else { navigator.clipboard.writeText(msg); alert("লিঙ্ক কপি হয়েছে!"); }
 };
 
 // ৬. ফুল-স্ক্রিন ফিক্স
@@ -113,58 +91,44 @@ const toggleFullscreen = () => {
     }
 };
 
-// ৭. স্টোরি ইঞ্জিন (অটো-এসইও এবং মার্কেটিং বক্স সহ)
+// ৭. স্টোরি ইঞ্জিন (Expert Fonts Integration)
 async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
-    if (!isAutoLoad) { playPopSound(); }
+    if (!isAutoLoad) playPopSound();
     const playerArea = document.getElementById('playerArea');
-    if (window.innerWidth < 1000 && !isAutoLoad) {
-        playerArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    if (window.innerWidth < 1000 && !isAutoLoad) playerArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     const frame = document.getElementById('storyFrame');
     const { data: story } = await _supabase.from('stories').select('*').eq('id', storyId).single();
     if (!story) return;
 
     currentStoryTitle = story.title;
-    
-    // অটো-এসইও আপডেট কল
     updateStorySEO(story.title, story.content);
 
     let isLocked = false;
     let content = (userStatus === 'paid' || isDailyFree || storyId === dailyStoryId) 
         ? story.content : story.content.substring(0, Math.floor(story.content.length * 0.2)) + "...";
-
     if (content.length < story.content.length) isLocked = true;
 
-    // নিউরোমার্কেটিং মার্কেটিং বক্স
     const marketingBoxHTML = `
     <div class="m-box">
         <strong style="color: #1b5e20; font-size: 1.25rem; display: block; margin-bottom: 10px;">
             মাশাআল্লাহ! আপনার সন্তানকে উত্তম নৈতিক শিক্ষায় শিক্ষিত করার প্রচেষ্টার জন্য আন্তরিক মোবারকবাদ!
         </strong>
-        <p style="font-size: 1.05rem; color: #444; margin: 15px 0;">
-            এই ওয়েবেপ্স এর ফিচারগুলো আপনার এই মহান কাজে সহায়ক হবে ইনশাআল্লাহ:
-        </p>
+        <p style="font-size: 1.05rem; color: #444; margin: 15px 0;">এই ওয়েবেপ্স এর ফিচারগুলো আপনার এই মহান কাজে সহায়ক হবে ইনশাআল্লাহ:</p>
         <div style="text-align: left; display: inline-block; font-size: 1.1rem; color: #333; line-height: 1.6;">
-            ✔ পশু-পাখিদের মজার গল্প যা সোনামণির শৈশবকে আনন্দময় করবে।<br>
-            ✔ ইতিহাস, বিজ্ঞান ও মহামানবদের জীবনী থেকে সফলতার রোডম্যাপ।<br>
-            ✔ বাংলা-ইংরেজি দুই ভাষায় ইংরেজি দক্ষতা বাড়বে ইনশাআল্লাহ।<br>
-            ✔ আপনি পড়ে শোনাবেন, তাই সন্তানের সাথে আপনার বোঝাপড়া বাড়বে।
+            ✔ পশু-পাখিদের মজার গল্প যা শৈশবকে আনন্দময় করবে।<br>
+            ✔ ইতিহাস, বিজ্ঞান ও সফলতার রোডম্যাপ।<br>
+            ✔ বাংলা-ইংরেজি দুই ভাষায় ইংরেজি দক্ষতা বাড়বে ইনশাআল্লাহ।
         </div>
         <div style="background: #fff; padding: 15px; border-radius: 15px; margin: 20px 0; border: 1px solid #c8e6c9;">
-            <p style="font-size: 1rem; color: #555; margin-bottom: 10px;">
-                এটি আপনার সন্তানের জন্য আপনার <strong>লাইফটাইম ইনভেস্টমেন্ট</strong>, আর আমাদের জন্য কাজের মোтивногоেশন।
-            </p>
+            <p style="font-size: 1rem; color: #555; margin-bottom: 10px;">এটি আপনার সন্তানের জন্য আপনার <strong>লাইফটাইম ইনভেস্টমেন্ট</strong>।</p>
             <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">
-                লাইফটাইম অফার: <del style="color: #999;">৳৪৯৯</del> <span style="color: #d32f2f; background: #fff9c4; padding: 2px 10px; border-radius: 8px;">৳২৯৯</span>
+                অফার: <del style="color: #999;">৳৪৯৯</del> <span style="color: #d32f2f; background: #fff9c4; padding: 2px 10px; border-radius: 8px;">৳২৯৯</span>
             </div>
-            <button onclick="window.parent.initPayment()" class="btn" style="padding: 18px 45px; font-size: 1.2rem; cursor:pointer;">
-                আজীবনের জন্য আনলক করুন
-            </button>
+            <button onclick="window.parent.initPayment()" class="btn">আজীবনের জন্য আনলক করুন</button>
         </div>
         <p style="font-size: 0.95rem; color: #666;">
-            যদি এখনই আনলক করতে না চান তাহলে <br>
-            <span onclick="window.parent.location.reload()" style="color: #2E7D32; text-decoration: underline; cursor: pointer; font-weight: bold;">আজকের ফ্রি গল্পটি</span> আপনার সোনামণিকে পড়ে শোনাতে এখানে ক্লিক করুন।
+            এখনই আনলক করতে না চাইলে <span onclick="window.parent.location.reload()" style="color: #2E7D32; text-decoration: underline; cursor: pointer; font-weight: bold;">আজকের ফ্রি গল্পটি</span> পড়ুন।
         </p>
     </div>`;
 
@@ -172,21 +136,17 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     <html>
     <head>
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap');
-            body { margin:0; background:#FDFBF7; font-family:'Hind Siliguri', sans-serif; padding:25px; user-select:none; }
+            @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&family=Quicksand:wght@500;700&display=swap');
+            body { margin:0; background:#FDFBF7; font-family: 'Quicksand', 'Hind Siliguri', sans-serif; padding:25px; user-select:none; }
             .card { background:white; padding:35px; border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.03); border: 2px solid #E8F5E9; text-align:center; }
-            h1 { color:#2E7D32; font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px dashed #2E7D32; padding-bottom: 10px; }
-            p { line-height:2; font-size:1.35rem; color:#333; text-align:justify; }
-            .m-box { background:#f0fdf4; padding:25px; border-radius:20px; border:2px dashed #2E7D32; margin-top:25px; }
-            .btn { background:#2E7D32; color:white; border:none; padding:15px 35px; border-radius:50px; font-weight:bold; cursor:pointer; font-family:'Hind Siliguri'; }
+            h1 { color:#2E7D32; font-size: 1.8rem; margin-bottom: 25px; border-bottom: 2px dashed #A5D6A7; padding-bottom: 15px; font-weight: 700; }
+            p { line-height: 1.8; font-size: 1.4rem; color:#333; text-align:justify; margin-bottom: 20px; font-weight: 500; }
+            .m-box { background:#f0fdf4; padding:25px; border-radius:25px; border:2px dashed #2E7D32; margin-top:30px; }
+            .btn { background:#2E7D32; color:white; border:none; padding:16px 40px; border-radius:50px; font-weight:700; cursor:pointer; font-family: inherit; font-size: 1.1rem; }
         </style>
     </head>
     <body>
-        <div class="card">
-            <h1>${story.title}</h1>
-            <p>${content.replace(/\n/g, '<br>')}</p>
-            ${isLocked ? marketingBoxHTML : ''}
-        </div>
+        <div class="card"><h1>${story.title}</h1><p>${content.replace(/\n/g, '<br>')}</p>${isLocked ? marketingBoxHTML : ''}</div>
     </body>
     </html>`;
     frame.src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
@@ -197,7 +157,6 @@ async function initApp() {
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
     localStorage.setItem('device_uuid', uuid);
     if(document.getElementById('footerUid')) document.getElementById('footerUid').innerText = uuid;
-
     document.getElementById('installPwa')?.addEventListener('click', handleInstallClick);
     document.getElementById('fullscreenBtn')?.addEventListener('click', toggleFullscreen);
 
@@ -212,11 +171,8 @@ async function initApp() {
         const { data: stories } = await _supabase.from('stories').select('id, title').order('created_at', { ascending: true });
         
         if (stories) {
-            // Updated: শো-গল্পের সংখ্যা আপডেট
-            if(document.getElementById('totalCount')) {
-                document.getElementById('totalCount').innerText = stories.length;
-            }
-
+            // গল্পের সংখ্যা আপডেট
+            if(document.getElementById('totalCount')) document.getElementById('totalCount').innerText = stories.length;
             dailyStoryId = stories[Math.floor(Date.now() / 86400000) % stories.length].id;
             fetchAndPlay(dailyStoryId, true, true);
             renderSidebar(stories);
