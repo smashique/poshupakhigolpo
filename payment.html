@@ -4,143 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>প্রিমিয়াম আনলক করুন - পশুপাখি গল্প</title>
-    <link rel="stylesheet" href="style.css">
     <style>
-        /* ... (আগের স্টাইল) ... */
-        body {
-            font-family: 'Hind Siliguri', sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-main);
-            line-height: 1.5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+        
+        :root { --primary-green: #2E7D32; --bg-light: #F1F8E9; --text-main: #263238; }
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg-light); display: flex; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { max-width: 600px; text-align: center; width: 100%; }
+        .payment-card { background: white; border-radius: 25px; padding: 20px; border: 2px solid #e0e0e0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        
+        /* অফার টেক্সট স্টাইল */
+        .offer-text { font-size: 1.4rem; font-weight: 600; margin-bottom: 25px; color: #333; line-height: 1.6; }
+        .old-price { text-decoration: line-through; color: #888; font-size: 1.2rem; margin: 0 5px; }
+        .new-price { color: #d32f2f; font-size: 1.8rem; font-weight: 800; background: #fff9c4; padding: 2px 12px; border-radius: 8px; }
 
-        .container {
-            max-width: 900px;
-            text-align: center;
-            width: 100%;
-        }
-
-        .payment-card {
-            background: white;
-            border-radius: 25px;
-            padding: 25px;
-            border: 2px solid #e0e0e0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-
-        /* পেমেন্ট কার্ড লেআউট */
-        .payment-methods {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        /* পেমেন্ট ফর্ম সেকশন */
-        .payment-form-section {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        /* ... (বাকি স্টাইলগুলো আগের মতোই) ... */
-        .method-title { font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; justify-content: center; }
-        .number-box { background: #f5f5f5; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; border: 1px dashed #ccc; text-align: center; }
-        .form-group { margin-top: 20px; text-align: left; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; }
-        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ccc; box-sizing: border-box; font-family: 'Hind Siliguri'; }
-        .btn-send { background: #25D366; color: white; border: none; padding: 15px; width: 100%; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.1rem; margin-top: 20px; transition: 0.3s; }
-        .btn-send:hover { background: #1da851; }
-        .instruction { font-size: 0.85rem; color: #666; margin-top: 10px; text-align: center; }
-        .file-upload-box { background: #f5f5f5; padding: 12px; border-radius: 10px; border: 1px dashed #ccc; text-align: center; cursor: pointer; }
-        .file-upload-label { display: block; font-weight: 600; margin-bottom: 8px; }
-        input[type="file"] { display: none; }
-        .uploaded-file-name { margin-top: 10px; font-size: 0.9rem; color: #666; }
-        .back-link { display: inline-block; margin-top: 20px; text-decoration: none; color: #666; font-size: 0.9rem; transition: 0.3s; }
-        .back-link:hover { color: var(--primary-green); }
-
-    </style>
+        .method-title { font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; margin-bottom: 8px; justify-content: center; }
+        .number-box { background: #f5f5f5; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 1.2rem; border: 1px dashed #ccc; color: var(--primary-green); }
+        
+        .form-group { margin-top: 15px; text-align: left; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; }
+        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-family: 'Hind Siliguri'; box-sizing: border-box; }
+        
+        .btn-send { background: #25D366; color: white; border: none; padding: 15px; width: 100%; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-top: 20px; transition: 0.3s; }
+        .btn-send:hover { background: #1da851; transform: scale(1.02); }
+        
+        .file-upload-box { background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px dashed #bbb; text-align: center; cursor: pointer; margin-top: 5px; }
+        .back-link { display: inline-block; margin-top: 20px; text-decoration: none; color: #666; font-size: 0.9rem; }
+    </script>
 </head>
 <body>
     <div class="container">
-        <h2 style="color: var(--primary-green);">প্রিমিয়াম মেম্বারশিপ</h2>
-        <p>নিচের যেকোনো একটি মাধ্যমে ৳২৯৯ পাঠিয়ে তথ্য দিন।</p>
+        <h2 style="color: var(--primary-green);">✨ প্রিমিয়াম মেম্বারশিপ</h2>
+        
+        <p class="offer-text">
+            নিচের যেকোনো একটি মাধ্যমে <span class="old-price">৳৪৯৯</span> <span class="new-price">৳২৯৯</span> পাঠিয়ে তথ্য দিন।
+        </p>
 
-        <div class="payment-methods">
-            <div class="payment-card">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+            <div class="payment-card" style="margin-bottom:0;">
                 <div class="method-title"><span style="color:#d12053">■</span> বিকাশ (পার্সোনাল)</div>
                 <div class="number-box">017XXXXXXXX</div>
             </div>
-
-            <div class="payment-card">
+            <div class="payment-card" style="margin-bottom:0;">
                 <div class="method-title"><span style="color:#8b2c8a">■</span> রকেট (পার্সোনাল)</div>
                 <div class="number-box">019XXXXXXXX</div>
             </div>
-
-            <div class="payment-card">
-                <div class="method-title"><span style="color:#004A99">■</span> ডাচ-বাংলা ব্যাংক অ্যাকাউন্ট</div>
-                <div class="number-box">অ্যাকাউন্ট নাম্বার: XXXXXXXXXXXXX</div>
-            </div>
         </div>
 
-        <div class="payment-form-section">
-            <div class="payment-card">
-                <div class="form-group">
-                    <label>পেমেন্ট মেথড</label>
-                    <select id="method">
-                        <option value="bKash">বিকাশ</option>
-                        <option value="Rocket">রকেট</option>
-                        <option value="DBBL">ডাচ-বাংলা ব্যাংক</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>TrxID অথবা লাস্ট ৪ ডিজিট</label>
-                    <input type="text" id="trxInfo" placeholder="উদা: T9X2... অথবা ৪৩২১">
-                </div>
-                <div class="form-group">
-                    <span class="file-upload-label">স্ক্রিনশট সংযুক্ত করুন (ঐচ্ছিক)</span>
-                    <div class="file-upload-box" onclick="document.getElementById('paymentScreenshot').click()">
-                        <span id="uploadStatus">ক্লিক করে ফাইল নির্বাচন করুন</span>
-                        <input type="file" id="paymentScreenshot" accept="image/*" onchange="updateFileName(this)">
-                    </div>
-                    <div id="uploadedFileName" class="uploaded-file-name"></div>
-                </div>
-                <button class="btn-send" onclick="sendToWhatsApp()">হোয়াটসঅ্যাপে ডিটেইলস পাঠান</button>
-                <p class="instruction">বাটনে ক্লিক করার পর আপনার হোয়াটসঅ্যাপ ওপেন হবে, সেখানে পেমেন্টের ডিটেইলস বা স্ক্রিনশটটি পাঠিয়ে দিন।</p>
-            </div>
-            <a href="index.html" class="back-link">← ফিরে যান</a>
+        <div class="payment-card">
+            <div class="method-title"><span style="color:#004A99">■</span> ডাচ-বাংলা ব্যাংক অ্যাকাউন্ট</div>
+            <div class="number-box" style="font-size: 1rem;">AC: XXXXXXXXXXXXX</div>
         </div>
+
+        <div class="payment-card">
+            <div class="form-group">
+                <label>পেমেন্ট মেথড</label>
+                <select id="method">
+                    <option value="bKash">বিকাশ</option>
+                    <option value="Rocket">রকেট</option>
+                    <option value="DBBL">ডাচ-বাংলা ব্যাংক</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>TrxID অথবা লাস্ট ৪ ডিজিট</label>
+                <input type="text" id="trxInfo" placeholder="উদা: ৪৩২১">
+            </div>
+            <div class="form-group">
+                <label>পেমেন্ট স্ক্রিনশট (ঐচ্ছিক)</label>
+                <div class="file-upload-box" onclick="document.getElementById('screenshot').click()">
+                    <span id="fileName">ফাইল সিলেক্ট করুন</span>
+                    <input type="file" id="screenshot" hidden onchange="document.getElementById('fileName').innerText = this.files[0].name">
+                </div>
+            </div>
+            <button class="btn-send" onclick="sendToWhatsApp()">হোয়াটসঅ্যাপে ডিটেইলস পাঠান</button>
+        </div>
+        
+        <a href="index.html" class="back-link">← ফিরে যান</a>
     </div>
 
     <script>
-        // ... (আগের স্ক্রিপ্ট) ...
-        function updateFileName(input) {
-            const fileName = input.files[0] ? input.files[0].name : "কোনো ফাইল নির্বাচিত হয়নি";
-            document.getElementById("uploadedFileName").textContent = fileName;
-        }
-
         function sendToWhatsApp() {
-            const uuid = localStorage.getItem('device_uuid') || 'Unknown';
+            const uuid = localStorage.getItem('device_uuid') || 'User';
             const method = document.getElementById('method').value;
-            const trxInfo = document.getElementById('trxInfo').value;
-            const screenshotInput = document.getElementById('paymentScreenshot');
-            const fileName = screenshotInput.files[0] ? screenshotInput.files[0].name : "সংযুক্ত করা হয়নি";
-
-            if(!trxInfo && fileName === "সংযুক্ত করা হয়নি") {
-                alert('পেমেন্ট ডিটেইলস বা স্ক্রিনশট দিন!');
-                return;
-            }
-
-            const phoneNumber = "8801303680618";
-            const message = `আসসালামু আলাইকুম। আমি পেমেন্ট করেছি।\n\n🆔 ইউজার আইডি: ${uuid}\n💳 মেথড: ${method}\n🔢 ট্রাঞ্জেকশন/লাস্ট ডিজিট: ${trxInfo}\n🖼️ স্ক্রিনশট: ${fileName}\n\n(স্ক্রিনশটটি ম্যানুয়ালি এখানে পাঠিয়ে দিন)`;
+            const info = document.getElementById('trxInfo').value;
+            if(!info) return alert("পেমেন্ট তথ্য দিন!");
             
-            const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappLink, '_blank');
+            const msg = `আসসালামু আলাইকুম। আমি পেমেন্ট করেছি।\n\n🆔 আইডি: ${uuid}\n💳 মেথড: ${method}\n🔢 তথ্য: ${info}\n\n(স্ক্রিনশট নিচে দিচ্ছি)`;
+            window.open(`https://wa.me/8801303680618?text=${encodeURIComponent(msg)}`, '_blank');
         }
     </script>
 </body>
