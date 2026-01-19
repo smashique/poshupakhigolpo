@@ -2,10 +2,9 @@
 
 :root { --primary-green: #2E7D32; --bg-light: #F1F8E9; --text-main: #263238; }
 
-body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg-light); color: var(--text-main); overflow-x: hidden; position: relative; }
+body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg-light); overflow-x: hidden; }
 
 .navbar { padding: 10px; background: white; display: flex; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 1000; }
-.logo-text { font-weight: 700; color: var(--primary-green); font-size: 1.25rem; cursor: pointer; }
 
 .container { display: grid; grid-template-columns: 1fr 340px; gap: 20px; max-width: 1300px; margin: 20px auto; padding: 0 15px; }
 
@@ -21,9 +20,7 @@ body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background-color: va
 
 @keyframes riseUp {
     0% { transform: translateY(0) translateX(0); }
-    25% { transform: translateY(-25vh) translateX(20px); }
-    50% { transform: translateY(-50vh) translateX(-20px); }
-    75% { transform: translateY(-75vh) translateX(20px); }
+    50% { transform: translateY(-55vh) translateX(-25px); }
     100% { transform: translateY(-115vh) translateX(0); }
 }
 
@@ -35,11 +32,14 @@ body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background-color: va
 .player-container { position: relative; width: 100%; height: 420px; background: white; border-radius: 35px; border: 8px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; }
 #storyFrame { width: 100%; height: 100%; border: none; }
 
+.trust-banner { grid-column: 1 / -1; background: #e6fffa; border: 1px solid #81e6d9; padding: 12px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #234e52; text-align: center; }
+.dot-pulse { height: 10px; width: 10px; background: #38b2ac; border-radius: 50%; margin-right: 10px; animation: pulse 1.5s infinite; }
+
 .sidebar { background: white; border-radius: 35px; padding: 20px; height: 420px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 .thumbnail-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
 
-.trust-banner { grid-column: 1 / -1; background: #e6fffa; border: 1px solid #81e6d9; padding: 12px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #234e52; text-align: center; }
-.dot-pulse { height: 10px; width: 10px; background: #38b2ac; border-radius: 50%; margin-right: 10px; animation: pulse 1.5s infinite; }
+.footer-container { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 600px; margin: 30px auto; padding-bottom: 20px; }
+.footer-brand { margin: 10px 0; font-weight: bold; color: var(--primary-green); cursor: pointer; }
 
 @keyframes pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1.1); } 100% { transform: scale(0.9); } }
 
