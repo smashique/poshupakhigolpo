@@ -110,11 +110,11 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
         <strong style="color: #1b5e20; font-size: 1.25rem; display: block; margin-bottom: 10px;">
             মাশাআল্লাহ! আপনার সন্তানকে উত্তম নৈতিক শিক্ষায় শিক্ষিত করার প্রচেষ্টার জন্য আন্তরিক মোবারকবাদ!
         </strong>
-        <p style="font-size: 1.05rem; color: #444; margin: 15px 0;">এই ওয়েবেপ্স এর ফিচারগুলো আপনার এই মহান কাজে সহায়ক হবে ইনশাআল্লাহ:</p>
+        <p style="font-size: 1.05rem; color: #444; margin: 15px 0;">এই ওয়েবঅ্যাপ এর ফিচারগুলো আপনার এই মহান কাজে সহায়ক হবে ইনশাআল্লাহ:</p>
         <div style="text-align: left; display: inline-block; font-size: 1.1rem; color: #333; line-height: 1.6;">
             ✔ পশু-পাখিদের মজার গল্প যা সোনামণির শৈশবকে আনন্দময় করবে।<br>
             ✔ ইতিহাস, বিজ্ঞান ও মহামানবদের জীবনী থেকে সফলতার রোডম্যাপ।<br>
-            ✔ বাংলা-ইংরেজি দুই ভাষায় ইংরেজি দক্ষতা বাড়বে ইনশাআল্লাহ।<br>
+            ✔ বাংলা-ইংরেজি দুই ভাষায় হওয়ায় ইংরেজিতে দক্ষতা বাড়বে ইনশাআল্লাহ।<br>
             ✔ আপনি পড়ে শোনাবেন, তাই সন্তানের সাথে আপনার বোঝাপড়া বাড়বে।
             
         </div>
