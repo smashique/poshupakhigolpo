@@ -1,5 +1,16 @@
+# PoshuPakhiGolpo.online Robots File
+# Developed by ITCraftBangladesh
+
 User-agent: *
 Allow: /
-Disallow: /checkout.html
+Allow: /index.html
+Allow: /payment.html
+Allow: /logo.png
 
+# সোনামণিদের গল্পের জন্য ডাইনামিক সাইটম্যাপ লিঙ্ক
 Sitemap: https://poshupakhigolpo.online/sitemap.xml
+
+# অপ্রয়োজনীয় বা প্রাইভেট ফাইল ইনডেক্সিং বন্ধ (যদি থাকে)
+Disallow: /api/
+Disallow: /assets/
+Disallow: /private/
