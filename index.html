@@ -6,20 +6,20 @@
     
     <title>পশুপাখি গল্প - Bilingual Animal Stories for Kids (Bangla & English)</title>
     <meta name="title" content="পশুপাখি গল্প - Bilingual Animal Stories for Kids (Bangla & English)">
-    <meta name="description" content="সোনামণিদের জন্য বাংলা ও ইংরেজি ভাষায় পশুপাখির শিক্ষামূলক এবং নৈতিক গল্পের এক জাদুকরী ভুবন। Bilingual moral and educational animal tales to make childhood joyful.">
+    <meta name="description" content="সোনামণিদের জন্য বাংলা ও ইংরেজি ভাষায় পশুপাখির শিক্ষামূলক এবং নৈতিক গল্পের এক জাদুকরী ভুবন। Bilingual moral and educational animal tales to make childhood joyful.">
     <meta name="keywords" content="Animal Stories for Kids, Bilingual Stories, Bangla English Kids Stories, পশুপাখি গল্প, ছোটদের নৈতিক গল্প, Moral Tales for Children, ITCraftBangladesh, Educational Stories Bangladesh">
     <meta name="author" content="ITCraftBangladesh">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://poshupakhigolpo.online/">
     <meta property="og:title" content="পশুপাখি গল্প - ছোটদের জাদুকরী ভুবন ✨">
-    <meta property="og:description" content="বাংলা ও ইংরেজিতে পশুপাখির মজার ও শিক্ষামূলক গল্প। আজই সোনামণিকে পড়ে শোনান!">
+    <meta property="og:description" content="বাংলা ও ইংরেজিতে পশুপাখির মজার ও শিক্ষামূলক গল্প। আজই সোনামণিকে পড়ে শোনান!">
     <meta property="og:image" content="https://poshupakhigolpo.online/logo.png">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://poshupakhigolpo.online/">
     <meta property="twitter:title" content="পশুপাখি গল্প - Bilingual Animal Stories for Kids">
-    <meta property="twitter:description" content="Bilingual moral and educational animal tales for kids. শৈশব হোক আনন্দময়।">
+    <meta property="twitter:description" content="Bilingual moral and educational animal tales for kids. শৈশব হোক আনন্দময়।">
     <meta property="twitter:image" content="https://poshupakhigolpo.online/logo.png">
 
     <link rel="icon" type="image/png" href="logo.png">
@@ -28,29 +28,30 @@
     <meta name="theme-color" content="#2E7D32">
 
     <link rel="stylesheet" href="style.css">
-     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="canonical" href="https://poshupakhigolpo.online/">
 </head>
 <body oncontextmenu="return false;">
 
-     <main class="container">
-       
+    <main class="container">
         <section class="story-player">
             <div class="player-container" id="playerArea">
-                <button id="fullscreenBtn" class="fs-pulse-btn">📺 বড় পর্দা</button>
+                <button id="fullscreenBtn" class="fs-pulse-btn" onclick="toggleFullscreen()">📺 বড় পর্দা</button>
                 <iframe id="storyFrame" src="about:blank" allowfullscreen></iframe>
-                <div id="lockOverlay" class="lock-overlay hidden"></div>
             </div>
             <div class="player-footer">
-                <button onclick="shareApp()" class="btn-share">🎁গল্পটি শেয়ার করুন </button>
+                <button onclick="shareApp()" class="btn-share">🎁 গল্পটি শেয়ার করুন</button>
                 <button id="installPwa" class="btn-install-footer">🪁 অ্যাপ ইনস্টল করুন</button>
             </div>
         </section>
 
         <aside class="sidebar">
-            <h3 class="sidebar-title">গল্পের তালিকা [<span id="totalCount">...</span>]</h3>
+            <h3 class="sidebar-title">গল্প জমেছে [<span id="totalCount">...</span>] টি। আরো... </h3>
             <div id="storyList" class="thumbnail-list"></div>
+            
+            <div class="search-container">
+                <input type="text" id="storySearch" placeholder="🔍 গল্পের নাম লিখুন..." oninput="filterStories()">
+            </div>
         </aside>
     </main>
     
@@ -59,13 +60,12 @@
             <p>সাপোর্ট আইডি: <strong id="footerUid" onclick="copySupportId()" title="কপি করতে ক্লিক করুন">...</strong></p>
             <div class="footer-brand" onclick="location.reload()">poshupakhigolpo.online</div>
             <p>Developed by: <strong>ITCraft Bangladesh</strong></p>
-            <p>হোয়াটসঅ্যাপ সাপোর্ট: <strong>+8801303680618</strong></p>
             <p class="copyright">© 2026 ITCraftBangladesh | সোনামণিদের নিরাপদ গল্পের ভুবন।</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js?v=28.7"></script>
+    <script src="app.js"></script>
     <script>
         function copySupportId() {
             const el = document.getElementById('footerUid');
