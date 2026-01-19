@@ -5,36 +5,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="logo.png">
     <title>প্রিমিয়াম আনলক - পশুপাখি গল্প</title>
+    
+    <meta name="description" content="পশুপাখি গল্পের প্রিমিয়াম মেম্বারশিপ আনলক করে আপনার সোনামণিকে দিন এক জাদুকরী শৈশব।">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Quicksand:wght@500;700&display=swap');
         :root { --primary-green: #2E7D32; --bg-light: #F1F8E9; --text-main: #263238; }
-        body { font-family: 'Quicksand', 'Hind Siliguri', sans-serif; background-color: var(--bg-light); margin: 0; padding: 10px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; box-sizing: border-box; }
+        body { 
+            font-family: 'Quicksand', 'Hind Siliguri', sans-serif; 
+            background-color: var(--bg-light); 
+            margin: 0; 
+            padding: 10px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            min-height: 100vh; 
+            box-sizing: border-box; 
+        }
         
         .container { max-width: 450px; width: 100%; text-align: center; }
-        .card { background: white; border-radius: 20px; padding: 15px; border: 1.5px solid #E8F5E9; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 12px; }
+        .card { 
+            background: white; 
+            border-radius: 20px; 
+            padding: 12px; 
+            border: 1.5px solid #E8F5E9; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            margin-bottom: 10px; 
+        }
         
         /* ফোমো ব্যানার স্লিম */
-        .fomo-live { background: #e6fffa; border: 1px solid #81e6d9; padding: 8px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.9rem; color: #234e52; font-weight: 700; }
+        .fomo-live { 
+            background: #e6fffa; 
+            border: 1px solid #81e6d9; 
+            padding: 8px; 
+            border-radius: 12px; 
+            margin-bottom: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 6px; 
+            font-size: 0.9rem; 
+            color: #234e52; 
+            font-weight: 700; 
+        }
         .dot { height: 8px; width: 8px; background: #38b2ac; border-radius: 50%; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(0.9); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.5; } 100% { transform: scale(0.9); opacity: 1; } }
 
-        .price-box { margin: 10px 0; }
+        .price-box { margin: 5px 0; }
         .old-price { text-decoration: line-through; color: #888; font-size: 1rem; }
-        .new-price { color: #d32f2f; font-size: 1.6rem; font-weight: 800; background: #fff9c4; padding: 2px 10px; border-radius: 8px; border: 1.5px solid #ffd600; }
+        .new-price { 
+            color: #d32f2f; 
+            font-size: 1.6rem; 
+            font-weight: 800; 
+            background: #fff9c4; 
+            padding: 2px 10px; 
+            border-radius: 8px; 
+            border: 1.5px solid #ffd600; 
+        }
 
-        /* পেমেন্ট নম্বর কম্প্রেসড */
-        .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-        .method-item { background: #f9f9f9; padding: 8px; border-radius: 12px; border: 1px solid #eee; text-align: center; }
-        .method-item span { font-size: 0.8rem; color: #666; font-weight: bold; }
-        .num { display: block; font-weight: 800; color: var(--primary-green); font-size: 1rem; margin-top: 2px; }
+        /* ইন্সট্রাকশন বক্স */
+        .instruction-box {
+            background: #fdf2f2;
+            border: 1.5px dashed #d32f2f;
+            padding: 12px;
+            margin-bottom: 10px;
+            text-align: left;
+            border-radius: 15px;
+        }
+        .instruction-box ol { 
+            font-size: 0.85rem; 
+            color: #444; 
+            margin: 5px 0 0 0; 
+            padding-left: 20px; 
+            line-height: 1.5; 
+        }
 
-        .form-group { margin-top: 10px; text-align: left; }
-        label { font-size: 0.85rem; font-weight: 600; color: #555; margin-left: 5px; }
-        select, input { width: 100%; padding: 10px; border-radius: 10px; border: 1.2px solid #ddd; font-family: inherit; font-size: 0.95rem; margin-top: 4px; box-sizing: border-box; }
+        /* পেমেন্ট নম্বর গ্রিড */
+        .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .method-item { background: #f9f9f9; padding: 6px; border-radius: 12px; border: 1px solid #eee; text-align: center; }
+        .method-item span { font-size: 0.75rem; color: #666; font-weight: bold; }
+        .num { display: block; font-weight: 800; color: var(--primary-green); font-size: 0.95rem; }
 
-        .btn-send { background: #25D366; color: white; border: none; padding: 14px; width: 100%; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.1rem; margin-top: 15px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2); }
-        .back-link { display: inline-block; margin-top: 12px; text-decoration: none; color: #888; font-size: 0.85rem; font-weight: 600; }
+        .form-group { margin-top: 8px; text-align: left; }
+        label { font-size: 0.8rem; font-weight: 600; color: #555; margin-left: 5px; }
+        select, input { 
+            width: 100%; 
+            padding: 10px; 
+            border-radius: 10px; 
+            border: 1.2px solid #ddd; 
+            font-family: inherit; 
+            font-size: 0.9rem; 
+            margin-top: 3px; 
+            box-sizing: border-box; 
+        }
+
+        .btn-send { 
+            background: #25D366; 
+            color: white; 
+            border: none; 
+            padding: 14px; 
+            width: 100%; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 1.1rem; 
+            margin-top: 10px; 
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2); 
+        }
+        .back-link { display: inline-block; margin: 10px 0; text-decoration: none; color: #888; font-size: 0.85rem; font-weight: 600; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -50,6 +130,16 @@
             <span class="old-price">৳৪৯৯</span> <span class="new-price">৳২৯৯</span>
         </div>
 
+        <div class="instruction-box">
+            <strong style="color: #d32f2f; font-size: 0.95rem;">🛠 আনলক করার সহজ ধাপ:</strong>
+            <ol>
+                <li>নিচের যেকোনো নাম্বারে <strong>৳২৯৯</strong> 'সেন্ড মানি' করুন।</li>
+                <li>TrxID অথবা নাম্বারের শেষ ৪ ডিজিট সংগ্রহ করুন।</li>
+                <li>নিচের ফর্মে তথ্য দিয়ে হোয়াটসঅ্যাপে আমাদের জানান।</li>
+                <li>আমরা ৫-১০ মিনিটে আপনার আইডি আনলক করে দেব।</li>
+            </ol>
+        </div>
+
         <div class="pay-grid">
             <div class="method-item">
                 <span>বিকাশ (Personal)</span>
@@ -61,9 +151,9 @@
             </div>
         </div>
 
-        <div class="card" style="padding: 10px;">
+        <div class="card" style="padding: 8px;">
             <div style="font-size: 0.85rem; font-weight: bold; color: #444;">ডাচ-বাংলা ব্যাংক (DBBL)</div>
-            <div style="font-size: 0.8rem; color: #666;">A/C: S M ASHIQUE | 2701030006565</div>
+            <div style="font-size: 0.75rem; color: #666;">A/C: S M ASHIQUE | 2701030006565</div>
         </div>
 
         <div class="card">
@@ -80,12 +170,12 @@
                 <label>কি তথ্য পাঠাতে চান?</label>
                 <select id="infoType">
                     <option value="TrxID">TrxID (ট্রাঞ্জেকশন আইডি)</option>
-                    <option value="Last 4 Digits">লাস্ট ৪ ডিজিট (যে নাম্বার থেকে পাঠিয়েছেন)</option>
+                    <option value="Last 4 Digits">লাস্ট ৪ ডিজিট</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <input type="text" id="trxInfo" placeholder="TrxID বা লাস্ট ৪ ডিজিট লিখুন...">
+                <input type="text" id="trxInfo" placeholder="তথ্যটি এখানে লিখুন...">
             </div>
 
             <button class="btn-send" onclick="sendToWhatsApp()">📤 হোয়াটসঅ্যাপে তথ্য পাঠান</button>
@@ -119,14 +209,13 @@
                 trxInfo.placeholder = "আপনার DBBL TrxID লিখুন...";
             } else {
                 typeGroup.classList.remove('hidden');
-                trxInfo.placeholder = "TrxID বা লাস্ট ৪ ডিজিট লিখুন...";
+                trxInfo.placeholder = "তথ্যটি এখানে লিখুন...";
             }
         }
 
         function sendToWhatsApp() {
             const uuid = localStorage.getItem('device_uuid') || 'User';
             const method = document.getElementById('method').value;
-            const infoType = (method === 'DBBL') ? 'TrxID' : document.getElementById('infoType').value;
             const infoValue = document.getElementById('trxInfo').value.trim();
             
             if(!infoValue) { alert("অনুগ্রহ করে পেমেন্ট তথ্য দিন!"); return; }
