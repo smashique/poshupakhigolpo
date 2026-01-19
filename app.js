@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Engine v28.7 --- */
+/* --- PoshuPakhi Golpo - Stability v28.7 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -8,7 +8,7 @@ let dailyStoryId = null;
 let currentStoryTitle = "";
 let deferredPrompt;
 
-// ১. পপ সাউন্ড জেনারেটর
+// ১. পপ সাউন্ড লজিক
 const playPopSound = () => {
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -60,7 +60,7 @@ const handleInstallClick = async () => {
         const { outcome } = await deferredPrompt.userChoice;
         if (outcome === 'accepted') deferredPrompt = null;
     } else {
-        alert("আপনার ডিভাইসে অ্যাপটি অলরেডি ইনস্টল করা আছে অথবা আপনার ব্রাউজার এটি সাপোর্ট করছে না।");
+        alert("অ্যাপটি আপনার ডিভাইসে ইনস্টল করা আছে অথবা আপনার ব্রাউজার এটি সাপোর্ট করছে না।");
     }
 };
 
@@ -90,7 +90,7 @@ const toggleFullscreen = () => {
     }
 };
 
-// ৬. স্টোরি ইঞ্জিন ও আপনার দেওয়া মার্কেটিং বক্স
+// ৬. স্টোরি ইঞ্জিন
 async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     if (!isAutoLoad) { playPopSound(); }
     const playerArea = document.getElementById('playerArea');
@@ -109,6 +109,38 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
 
     if (content.length < story.content.length) isLocked = true;
 
+    // ইউজার প্রোভাইডেড মার্কেটিং বক্স
+    const marketingBoxHTML = `
+    <div class="m-box">
+        <strong style="color: #1b5e20; font-size: 1.25rem; display: block; margin-bottom: 10px;">
+            মাশাআল্লাহ! আপনার সন্তানকে উত্তম নৈতিক শিক্ষায় শিক্ষিত করার প্রচেষ্টার জন্য আন্তরিক মোবারকবাদ!
+        </strong>
+        <p style="font-size: 1.05rem; color: #444; margin: 15px 0;">
+            এই ওয়েবেপ্স এর ফিচারগুলো আপনার এই মহান কাজে সহায়ক হবে ইনশাআল্লাহ:
+        </p>
+        <div style="text-align: left; display: inline-block; font-size: 1.1rem; color: #333; line-height: 1.6;">
+            ✔ পশু-পাখিদের মজার গল্প যা সোনামণির শৈশবকে আনন্দময় করবে।<br>
+            ✔ ইতিহাস, বিজ্ঞান ও মহামানবদের জীবনী থেকে সফলতার রোডম্যাপ।<br>
+            ✔ বাংলা-ইংরেজি দুই ভাষায় ইংরেজি দক্ষতা বাড়বে ইনশাআল্লাহ।<br>
+            ✔ আপনি পড়ে শোনাবেন, তাই সন্তানের সাথে আপনার বোঝাপড়া বাড়বে।
+        </div>
+        <div style="background: #fff; padding: 15px; border-radius: 15px; margin: 20px 0; border: 1px solid #c8e6c9;">
+            <p style="font-size: 1rem; color: #555; margin-bottom: 10px;">
+                এটি আপনার সন্তানের জন্য আপনার <strong>লাইফটাইম ইনভেস্টমেন্ট</strong>, আর আমাদের জন্য কাজের মোটিভেশন।
+            </p>
+            <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">
+                লাইফটাইম অফার: <del style="color: #999;">৳৪৯৯</del> <span style="color: #d32f2f; background: #fff9c4; padding: 2px 10px; border-radius: 8px;">৳২৯৯</span>
+            </div>
+            <button onclick="window.parent.initPayment()" class="btn" style="padding: 18px 45px; font-size: 1.2rem; cursor:pointer;">
+                আজীবনের জন্য আনলক করুন
+            </button>
+        </div>
+        <p style="font-size: 0.95rem; color: #666;">
+            যদি এখনই আনলক করতে না চান তাহলে <br>
+            <span onclick="window.parent.location.reload()" style="color: #2E7D32; text-decoration: underline; cursor: pointer; font-weight: bold;">আজকের ফ্রি গল্পটি</span> আপনার সোনামণিকে পড়ে শোনাতে এখানে ক্লিক করুন।
+        </p>
+    </div>`;
+
     const storyHtml = `
     <html>
     <head>
@@ -118,44 +150,15 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
             .card { background:white; padding:35px; border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.03); border: 2px solid #E8F5E9; text-align:center; }
             h1 { color:#2E7D32; font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px dashed #2E7D32; padding-bottom: 10px; }
             p { line-height:2; font-size:1.35rem; color:#333; text-align:justify; }
-            .m-box { background:#f0fdf4; padding:25px; border-radius:20px; border:2px dashed #2E7D32; margin-top:25px; text-align:center; }
-            .btn { background:#2E7D32; color:white; border:none; padding:15px 35px; border-radius:50px; font-weight:bold; cursor:pointer; font-family:'Hind Siliguri'; font-size:1.1rem; }
+            .m-box { background:#f0fdf4; padding:25px; border-radius:20px; border:2px dashed #2E7D32; margin-top:25px; }
+            .btn { background:#2E7D32; color:white; border:none; padding:15px 35px; border-radius:50px; font-weight:bold; cursor:pointer; font-family:'Hind Siliguri'; }
         </style>
     </head>
     <body>
         <div class="card">
             <h1>${story.title}</h1>
             <p>${content.replace(/\n/g, '<br>')}</p>
-            ${isLocked ? \`
-            <div class="m-box">
-                <strong style="color: #1b5e20; font-size: 1.25rem; display: block; margin-bottom: 10px;">
-                    মাশাআল্লাহ! আপনার সন্তানকে উত্তম নৈতিক শিক্ষায় শিক্ষিত করার প্রচেষ্টার জন্য আন্তরিক মোবারকবাদ!
-                </strong>
-                <p style="font-size: 1.05rem; color: #444; margin: 15px 0;">
-                    এই ওয়েবেপ্স এর ফিচারগুলো আপনার এই মহান কাজে সহায়ক হবে ইনশাআল্লাহ:
-                </p>
-                <div style="text-align: left; display: inline-block; font-size: 1.1rem; color: #333; line-height: 1.6;">
-                    ✔ পশু-পাখিদের মজার গল্প যা সোনামণির শৈশবকে আনন্দময় করবে।<br>
-                    ✔ ইতিহাস, বিজ্ঞান ও মহামানবদের জীবনী থেকে সফলতার রোডম্যাপ।<br>
-                    ✔ বাংলা-ইংরেজি দুই ভাষায় ইংরেজি দক্ষতা বাড়বে ইনশাআল্লাহ।<br>
-                    ✔ আপনি পড়ে শোনাবেন, তাই সন্তানের সাথে আপনার বোঝাপড়া বাড়বে।
-                </div>
-                <div style="background: #fff; padding: 15px; border-radius: 15px; margin: 20px 0; border: 1px solid #c8e6c9;">
-                    <p style="font-size: 1rem; color: #555; margin-bottom: 10px;">
-                        এটি আপনার সন্তানের জন্য আপনার <strong>লাইফটাইম ইনভেস্টমেন্ট</strong>, আর আমাদের জন্য কাজের মোটিভেশন।
-                    </p>
-                    <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">
-                        লাইফটাইম অফার: <del style="color: #999;">৳৪৯৯</del> <span style="color: #d32f2f; background: #fff9c4; padding: 2px 10px; border-radius: 8px;">৳২৯৯</span>
-                    </div>
-                    <button onclick="window.parent.initPayment()" class="btn" style="padding: 18px 45px; font-size: 1.2rem; box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);">
-                        আজীবনের জন্য আনলক করুন
-                    </button>
-                </div>
-                <p style="font-size: 0.95rem; color: #666;">
-                    যদি এখনই আনলক করতে না চান তাহলে <br>
-                    <span onclick="window.parent.location.reload()" style="color: #2E7D32; text-decoration: underline; cursor: pointer; font-weight: bold;">আজকের ফ্রি গল্পটি</span> আপনার সোনামণিকে পড়ে শোনাতে এখানে ক্লিক করুন।
-                </p>
-            </div>\` : ''}
+            ${isLocked ? marketingBoxHTML : ''}
         </div>
     </body>
     </html>`;
