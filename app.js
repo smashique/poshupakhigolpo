@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Nuromarketers Final Edition v28.0 --- */
+/* --- PoshuPakhi Golpo - Nuromarketers Final Edition v28.1 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -7,7 +7,28 @@ let userStatus = 'free';
 let dailyStoryId = null;
 let currentStoryText = ""; 
 let currentStoryTitle = "";
+let deferredPrompt;
 
+// --- PWA ইন্সটলেশন লজিক ---
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const installBtn = document.getElementById('installPwa');
+    if (installBtn) installBtn.classList.remove('hidden');
+});
+
+document.getElementById('installPwa')?.addEventListener('click', async () => {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            document.getElementById('installPwa').classList.add('hidden');
+        }
+        deferredPrompt = null;
+    }
+});
+
+// ১. পেমেন্ট রিডাইরেক্ট
 window.initPayment = () => {
     window.location.href = 'payment.html'; 
 };
@@ -19,49 +40,27 @@ window.shareApp = async () => {
         return;
     }
     const siteUrl = window.location.origin; 
-    
-    // মার্কেটিং মেসেজ: শুধুমাত্র নাম এবং সাইট লিঙ্ক যা কিউরিওসিটি তৈরি করবে
     const shareMessage = `📖 '${currentStoryTitle}' - সোনামণির জন্য একটি চমৎকার শিক্ষামূলক গল্প! ✨\n\nপুরো গল্পটি পড়তে এবং আরও মজার গল্পের জন্য আজই ভিজিট করুন:\n🔗 ${siteUrl}`;
 
     if (navigator.share) {
-        try { 
-            await navigator.share({ 
-                title: 'পشুপাখি গল্প ✨', 
-                text: shareMessage,
-                url: siteUrl
-            }); 
-        } catch (e) { console.log("Sharing cancelled"); }
+        try { await navigator.share({ title: 'পশুপাখি গল্প ✨', text: shareMessage, url: siteUrl }); } 
+        catch (e) { console.log("Sharing cancelled"); }
     } else { 
         navigator.clipboard.writeText(shareMessage);
-        alert("গল্পের লিঙ্ক এবং আমন্ত্রণ কপি হয়েছে! বন্ধুদের পাঠিয়ে দিন।"); 
+        alert("গল্পের লিঙ্ক এবং আমন্ত্রণ কপি হয়েছে!"); 
     }
 };
 
+// ৩. ফুল-স্ক্রিন লজিক
 document.getElementById('fullscreenBtn')?.addEventListener('click', () => {
     const playerArea = document.getElementById('playerArea');
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    if (!document.fullscreenElement) {
         if (playerArea.requestFullscreen) playerArea.requestFullscreen();
         else if (playerArea.webkitRequestFullscreen) playerArea.webkitRequestFullscreen();
     } else {
-        if (document.exitFullscreen) document.exitFullscreen();
+        document.exitFullscreen();
     }
 });
-
-// ৩. ট্রাস্ট সেকশন ডাটা (সুপাবেস থেকে পেইড ইউজার কাউন্ট)
-async function updateTrustSection() {
-    try {
-        const { count, error } = await _supabase
-            .from('users')
-            .select('*', { count: 'exact', head: true })
-            .eq('status', 'paid'); 
-
-        if (!error && count > 0) {
-            const el = document.getElementById('paidCount');
-            if(el) el.innerText = count;
-            document.getElementById('trustBox')?.classList.remove('hidden');
-        }
-    } catch (err) { console.error(err); }
-}
 
 // ৪. স্টোরি প্লেয়ার (২০% প্রিভিউ + প্রাইস অ্যাঙ্কর মার্কেটিং)
 async function fetchAndPlay(storyId, isDailyFree = false) {
@@ -93,11 +92,10 @@ async function fetchAndPlay(storyId, isDailyFree = false) {
             h1 { color:#2E7D32; text-align:center; font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px dashed #2E7D32; padding-bottom: 10px; }
             p { line-height:2; font-size:1.35rem; text-align:justify; color:#333; }
             .m-box { background: #f0fdf4; padding: 25px; border-radius: 20px; border: 2px dashed #2E7D32; margin-top: 25px; text-align: center; }
-            .m-title { color: #166534; font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; display: block; }
             .price-tag { font-size: 1.4rem; margin: 15px 0; font-weight: bold; }
             .old-p { text-decoration: line-through; color: #999; margin-right: 10px; }
             .new-p { color: #d32f2f; background: #fff9c4; padding: 2px 10px; border-radius: 8px; }
-            .unlock-btn { background: #2E7D32; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-weight: bold; font-size: 1.15rem; cursor: pointer; display: inline-block; text-decoration: none; box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3); }
+            .unlock-btn { background: #2E7D32; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-weight: bold; font-size: 1.15rem; cursor: pointer; display: inline-block; text-decoration: none; }
             .free-link { display: block; margin-top: 15px; color: #6b7280; font-size: 0.95rem; text-decoration: underline; cursor: pointer; }
         </style>
     </head>
@@ -107,25 +105,23 @@ async function fetchAndPlay(storyId, isDailyFree = false) {
             <p>${contentToDisplay.replace(/\n/g, '<br>')}</p>
             ${showMarketing ? `
             <div class="m-box">
-                <span class="m-title">মাশাআল্লাহ! আপনার সন্তানকে উত্তম নৈতিক শিক্ষায় শিক্ষিত করার প্রচেষ্টার জন্য আন্তরিক মোবারকবাদ!</span>
-                <p style="font-size: 1rem; color: #444; text-align: left; line-height: 1.6;">
+                <span style="color: #166534; font-weight: bold; font-size: 1.1rem;">মাশাআল্লাহ! আপনার প্রচেষ্টার জন্য মোবারকবাদ!</span>
+                <p style="font-size: 1rem; color: #444; text-align: left; margin: 15px 0;">
                 ✔ মজার ও শিক্ষামূলক গল্প যা সন্তানের শৈশবকে আনন্দময় করবে।<br>
-                ✔ ইতিহাস ও বিজ্ঞান থেকে নেয়া শিক্ষার রোডম্যাপ।<br>
-                ✔ বাংলা-ইংরেজি দুই ভাষায় ইংরেজি দক্ষতা বাড়বে।<br>
-                ✔ সন্তানের সাথে আপনার আত্মিক বোঝাপড়া বাড়বে।
+                ✔ বাংলা-ইংরেজি দুই ভাষায় ইংরেজি দক্ষতা বাড়বে।
                 </p>
                 <div class="price-tag">লাইফটাইম অফার: <span class="old-p">৳৪৯৯</span> <span class="new-p">৳২৯৯</span></div>
                 <button onclick="window.parent.initPayment()" class="unlock-btn">আজীবনের জন্য আনলক করুন</button>
-                <span class="free-link" onclick="window.parent.location.reload()">না চাইলে আজকের ফ্রি গল্পটি পড়ুন</span>
+                <span class="free-link" onclick="window.parent.location.reload()">আজকের ফ্রি গল্পটি পড়ুন</span>
             </div>
             ` : ''}
         </div>
     </body>
     </html>`;
-    if (frame.src.startsWith('blob:')) URL.revokeObjectURL(frame.src);
     frame.src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
 }
 
+// ৫. সাইডবার রেন্ডারিং ও অটো-স্ক্রোল
 function renderSidebar(stories) {
     const list = document.getElementById('storyList');
     if(!list) return;
@@ -142,45 +138,28 @@ function renderSidebar(stories) {
     });
 }
 
-function startAutoScroll() {
-    const list = document.getElementById('storyList');
-    let speed = 0.4;
-    let isUserInteracting = false;
-    list.addEventListener('mouseenter', () => isUserInteracting = true);
-    list.addEventListener('mouseleave', () => isUserInteracting = false);
-    function scroll() {
-        if (!isUserInteracting) {
-            list.scrollTop += speed;
-            if (list.scrollTop >= list.scrollHeight - list.clientHeight) list.scrollTop = 0;
-        }
-        requestAnimationFrame(scroll);
-    }
-    requestAnimationFrame(scroll);
-}
-
 async function initApp() {
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
     localStorage.setItem('device_uuid', uuid);
     if(document.getElementById('footerUid')) document.getElementById('footerUid').innerText = uuid;
 
     try {
-        const { count } = await _supabase.from('stories').select('*', { count: 'exact', head: true });
-        document.querySelectorAll('#totalCount').forEach(el => el.innerText = count || 0);
+        const { count: paidCount } = await _supabase.from('users').select('*', { count: 'exact', head: true }).eq('status', 'paid');
+        if(paidCount) {
+            document.getElementById('paidCount').innerText = paidCount;
+            document.getElementById('trustBox').classList.remove('hidden');
+        }
 
         const { data: user } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
-        if (user?.status === 'paid') {
-            userStatus = 'paid';
-            document.querySelectorAll('.premium-banner, .lock-overlay').forEach(el => el.style.display = 'none');
-        }
+        if (user?.status === 'paid') userStatus = 'paid';
         
         const { data: stories } = await _supabase.from('stories').select('id, title').order('created_at', { ascending: true });
         if (stories) {
             dailyStoryId = stories[Math.floor(Date.now() / 86400000) % stories.length].id;
             fetchAndPlay(dailyStoryId, true);
             renderSidebar(stories);
-            startAutoScroll();
-            updateTrustSection(); // ট্রাস্ট সেকশন লোড করা
         }
     } catch (err) { console.error(err); }
 }
+
 document.addEventListener('DOMContentLoaded', initApp);
