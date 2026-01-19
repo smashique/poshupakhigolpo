@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:,">
     <title>পশুপাখি গল্প - Bilingual Animal Tales & Stories for Kids</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
@@ -47,17 +48,17 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js?v=28.3"></script>
+    <script src="app.js?v=28.4"></script>
     <script>
         function copySupportId() {
             const el = document.getElementById('footerUid');
             const uid = el.innerText;
             if (uid && uid !== "...") {
                 navigator.clipboard.writeText(uid).then(() => {
-                    const original = uid;
+                    const originalText = uid;
                     el.innerText = "কপি হয়েছে!";
                     el.style.color = "#25D366";
-                    setTimeout(() => { el.innerText = original; el.style.color = "#2E7D32"; }, 1500);
+                    setTimeout(() => { el.innerText = originalText; el.style.color = "#2E7D32"; }, 1500);
                 });
             }
         }
