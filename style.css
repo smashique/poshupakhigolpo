@@ -1,136 +1,47 @@
-/* --- PoshuPakhi Golpo - Ultra Compressed v28.9 --- */
-@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+/* --- PoshuPakhi Golpo - Compressed Expert Edition v28.9 --- */
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap');
 
 :root { 
     --primary-green: #2E7D32; 
     --bg-light: #F1F8E9; 
     --text-main: #263238; 
+    --font-main: 'Quicksand', 'Hind Siliguri', sans-serif; /* এক্সপার্ট চয়েস */
 }
 
 body { 
     margin: 0; 
-    font-family: 'Hind Siliguri', sans-serif; 
+    font-family: var(--font-main); 
     background-color: var(--bg-light); 
     overflow-x: hidden; 
-    overflow-y: auto; /* স্ক্রলিং অপশন রাখা হয়েছে */
+    overflow-y: auto;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* ন্যাভবার হাইট কমানো হয়েছে */
-.navbar { 
-    padding: 5px 10px; 
-    background: white; 
-    display: flex; 
-    justify-content: center; 
-    box-shadow: 0 2px 10px rgba(0,0,0,0.03); 
-    position: sticky; 
-    top: 0; 
-    z-index: 1000; 
-}
+.navbar { padding: 5px 10px; background: white; display: flex; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 1000; }
 
-/* কন্টেইনার গ্যাপ ও মার্জিন কম্প্রেসড */
-.container { 
-    display: grid; 
-    grid-template-columns: 1fr 340px; 
-    gap: 15px; 
-    max-width: 1300px; 
-    margin: 10px auto; 
-    padding: 0 10px; 
-}
+.container { display: grid; grid-template-columns: 1fr 340px; gap: 15px; max-width: 1300px; margin: 10px auto; padding: 0 10px; }
 
-/* ট্রাস্ট ব্যানার স্লিম করা হয়েছে */
-.trust-banner { 
-    grid-column: 1 / -1; 
-    background: #e6fffa; 
-    border: 1px solid #81e6d9; 
-    padding: 6px; 
-    border-radius: 12px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    font-weight: 700; 
-    color: #234e52; 
-    text-align: center; 
-    font-size: 0.9rem;
-}
-
+.trust-banner { grid-column: 1 / -1; background: #e6fffa; border: 1px solid #81e6d9; padding: 6px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #234e52; text-align: center; font-size: 0.9rem; }
 .dot-pulse { height: 8px; width: 8px; background: #38b2ac; border-radius: 50%; margin-right: 8px; animation: pulse 1.5s infinite; }
 
-/* প্লেয়ার হাইট ৪২০ থেকে কমিয়ে ৩৮০ করা হয়েছে */
-.player-container { 
-    position: relative; 
-    width: 100%; 
-    height: 380px; 
-    background: white; 
-    border-radius: 25px; 
-    border: 5px solid white; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-    overflow: hidden; 
-}
-
+.player-container { position: relative; width: 100%; height: 380px; background: white; border-radius: 25px; border: 5px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; }
 #storyFrame { width: 100%; height: 100%; border: none; }
 
-/* বাটন হাইট এবং প্যাডিং কম্প্রেসড */
 .player-footer { display: flex; gap: 10px; margin-top: 8px; justify-content: center; }
-
-.btn-share, .btn-install-footer { 
-    flex: 1; 
-    padding: 8px 12px; 
-    border-radius: 50px; 
-    font-weight: bold; 
-    cursor: pointer; 
-    font-size: 0.9rem; 
-    border: none; 
-    font-family: 'Hind Siliguri'; 
-    transition: 0.2s;
-}
-
+.btn-share, .btn-install-footer { flex: 1; padding: 8px 12px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 0.9rem; border: none; font-family: inherit; transition: 0.2s; }
 .btn-share { background: white; border: 2px solid var(--primary-green); color: var(--primary-green); }
 .btn-install-footer { background: #FFD600; color: #333; border: 2px solid #E6C200; }
 
-/* সাইডবার হাইট প্লেয়ারের সাথে সামঞ্জস্যপূর্ণ */
-.sidebar { 
-    background: white; 
-    border-radius: 25px; 
-    padding: 15px; 
-    height: 380px; 
-    display: flex; 
-    flex-direction: column; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-}
-
-.sidebar-title { margin-top: 0; margin-bottom: 10px; font-size: 1.1rem; }
+.sidebar { background: white; border-radius: 25px; padding: 15px; height: 380px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 .thumbnail-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
 
-/* সাইট ফুটার কম্প্রেসড */
-.footer-container { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    text-align: center; 
-    max-width: 600px; 
-    margin: 15px auto; 
-    padding-bottom: 10px; 
-    font-size: 0.85rem;
-}
-
+.footer-container { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 600px; margin: 15px auto; padding-bottom: 10px; font-size: 0.85rem; }
 .footer-brand { margin: 5px 0; font-weight: bold; color: var(--primary-green); cursor: pointer; font-size: 1rem; }
 
-/* বেলুন অ্যানিমেশন */
 .balloon { position: fixed; bottom: -100px; z-index: 50; cursor: pointer; user-select: none; animation: riseUp 20s linear forwards; font-size: 24px; }
 
-@keyframes riseUp {
-    0% { transform: translateY(0) translateX(0); }
-    50% { transform: translateY(-55vh) translateX(-25px); }
-    100% { transform: translateY(-115vh) translateX(0); }
-}
-
+@keyframes riseUp { 0% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-55vh) translateX(-25px); } 100% { transform: translateY(-115vh) translateX(0); } }
 @keyframes pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1.1); } 100% { transform: scale(0.9); } }
 
-/* মোবাইল অপ্টিমাইজেশন */
-@media (max-width: 1000px) { 
-    .container { grid-template-columns: 1fr; margin: 5px auto; } 
-    .player-container, .sidebar { height: 340px; } 
-    .btn-share, .btn-install-footer { font-size: 0.85rem; padding: 6px 10px; }
-}
-
+@media (max-width: 1000px) { .container { grid-template-columns: 1fr; margin: 5px auto; } .player-container, .sidebar { height: 340px; } .btn-share, .btn-install-footer { font-size: 0.85rem; padding: 6px 10px; } }
 .hidden { display: none !important; }
