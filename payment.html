@@ -14,7 +14,7 @@
         .container { max-width: 600px; text-align: center; width: 100%; }
         .payment-card { background: white; border-radius: 25px; padding: 20px; border: 2px solid #e0e0e0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; }
         
-        /* Social Proof Banner Style */
+        /* Social Proof Banner */
         .fomo-live { background: #e6fffa; border: 1px solid #81e6d9; padding: 12px; border-radius: 15px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1rem; color: #234e52; font-weight: 700; }
         .dot { height: 10px; width: 10px; background-color: #38b2ac; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 178, 172, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(56, 178, 172, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 178, 172, 0); } }
@@ -24,21 +24,27 @@
         .new-price { color: #d32f2f; font-size: 2rem; font-weight: 800; background: #fff9c4; padding: 2px 12px; border-radius: 10px; border: 2px solid #ffd600; }
 
         .number-box { background: #f5f5f5; padding: 10px; border-radius: 12px; font-weight: bold; font-size: 1.2rem; border: 1px dashed #ccc; color: var(--primary-green); letter-spacing: 1px; }
-        .btn-send { background: #25D366; color: white; border: none; padding: 18px; width: 100%; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-top: 20px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
-        .hidden { display: none !important; }
+        .acc-name { font-size: 0.95rem; color: #555; margin-bottom: 5px; font-weight: 700; }
         
         .form-group { margin-top: 15px; text-align: left; }
         label { display: block; margin-bottom: 5px; font-weight: 600; color: #444; }
-        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #ccc; font-family: 'Hind Siliguri'; box-sizing: border-box; }
+        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #ccc; font-family: 'Hind Siliguri'; box-sizing: border-box; font-size: 1rem; outline: none; }
+        
+        .btn-send { background: #25D366; color: white; border: none; padding: 18px; width: 100%; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-top: 20px; transition: 0.3s; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
+        .btn-send:hover { background: #1da851; transform: translateY(-2px); }
+        
+        .back-link { display: inline-block; margin-top: 20px; text-decoration: none; color: #666; font-size: 0.9rem; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
     <div class="container">
         <div id="socialProof" class="fomo-live hidden">
-            <span class="dot"></span> <span id="paidCount">...</span>+ জন সচেতন অভিভাবক ইতিমদ্ধে মেম্বারশিপ নিয়েছেন!
+            <span class="dot"></span> <span id="paidCount">...</span> জন সচেতন অভিভাবক ইতিমদ্ধে মেম্বারশিপ নিয়েছেন!
         </div>
 
         <h2 style="color: var(--primary-green);">✨ প্রিমিয়াম মেম্বারশিপ</h2>
+        
         <p class="offer-text">
             নিচের যেকোনো একটি মাধ্যমে <br>
             <span class="old-price">৳৪৯৯</span> <span class="new-price">৳২৯৯</span> পাঠিয়ে তথ্য দিন।
@@ -57,32 +63,36 @@
 
         <div class="payment-card">
             <div style="font-weight: bold; margin-bottom: 5px;">ডাচ-বাংলা ব্যাংক অ্যাকাউন্ট</div>
-            <div style="font-size: 0.95rem; font-weight: 700;">নাম: S M ASHIQUE</div>
+            <div class="acc-name">নাম: S M ASHIQUE</div>
             <div class="number-box" style="font-size: 1.1rem;">AC: 2701030006565</div>
         </div>
 
         <div class="payment-card">
             <div class="form-group">
-                <label>পেমেন্ট মেথড</label>
+                <label>পেমেন্ট মেথড সিলেক্ট করুন</label>
                 <select id="method" onchange="toggleInputOptions()">
                     <option value="bKash">বিকাশ</option>
                     <option value="Rocket">রকেট</option>
                     <option value="DBBL">ডাচ-বাংলা ব্যাংক</option>
                 </select>
             </div>
+
             <div id="typeSelectorGroup" class="form-group">
                 <label>কি তথ্য পাঠাতে চান?</label>
                 <select id="infoType">
-                    <option value="TrxID">TrxID</option>
-                    <option value="Last 4 Digits">লাস্ট ৪ ডিজিট</option>
+                    <option value="TrxID">TrxID (ট্রাঞ্জেকশন আইডি)</option>
+                    <option value="Last 4 Digits">লাস্ট ৪ ডিজিট (যে নাম্বার থেকে পাঠিয়েছেন)</option>
                 </select>
             </div>
+
             <div class="form-group">
-                <input type="text" id="trxInfo" placeholder="এখানে তথ্য লিখুন...">
+                <input type="text" id="trxInfo" placeholder="এখানে TrxID অথবা লাস্ট ৪ ডিজিট লিখুন...">
             </div>
+
             <button class="btn-send" onclick="sendToWhatsApp()">হোয়াটসঅ্যাপে ডিটেইলস পাঠান</button>
         </div>
-        <a href="index.html" style="text-decoration:none; color:#666; font-size:0.9rem;">← ফিরে যান</a>
+        
+        <a href="index.html" class="back-link">← ফিরে যান</a>
     </div>
 
     <script>
@@ -91,44 +101,57 @@
         const SUPABASE_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Fetch dynamic paid user count
+        // ১. শুধুমাত্র 'paid' ইউজারদের কাউন্ট করা
         async function updateSocialProof() {
             try {
                 const { count, error } = await supabaseClient
                     .from('users')
                     .select('*', { count: 'exact', head: true })
-                    .eq('status', 'paid'); // Paid ইউজারদের কাউন্ট করা হচ্ছে
+                    .eq('status', 'paid'); 
 
                 if (!error && count > 0) {
-                    document.getElementById('paidCount').innerText = count + 50; // বেস ভ্যালু যোগ করা (ঐচ্ছিক)
+                    document.getElementById('paidCount').innerText = count; 
                     document.getElementById('socialProof').classList.remove('hidden');
                 }
             } catch (err) { console.error(err); }
         }
 
+        // ২. মেথড অনুযায়ী ইনপুট ফিল্ড পরিবর্তন
         function toggleInputOptions() {
             const method = document.getElementById('method').value;
             const typeGroup = document.getElementById('typeSelectorGroup');
             const trxInfo = document.getElementById('trxInfo');
+
             if (method === 'DBBL') {
                 typeGroup.classList.add('hidden');
-                trxInfo.placeholder = "আপনার TrxID লিখুন...";
+                trxInfo.placeholder = "আপনার DBBL TrxID লিখুন...";
             } else {
                 typeGroup.classList.remove('hidden');
-                trxInfo.placeholder = "এখানে তথ্য লিখুন...";
+                trxInfo.placeholder = "এখানে TrxID অথবা লাস্ট ৪ ডিজিট লিখুন...";
             }
         }
 
+        // ৩. হোয়াটসঅ্যাপে ডাটা পাঠানো (সিস্টেম ভ্যালিডেশন সহ)
         function sendToWhatsApp() {
             const uuid = localStorage.getItem('device_uuid') || 'User';
             const method = document.getElementById('method').value;
             const infoType = (method === 'DBBL') ? 'TrxID' : document.getElementById('infoType').value;
             const infoValue = document.getElementById('trxInfo').value.trim();
             
-            if(!infoValue) { alert("পেমেন্ট তথ্য দিন!"); return; }
+            // ভ্যালিডেশন: তথ্য না দিলে কাজ করবে না
+            if(!infoValue) { 
+                alert("অনুগ্রহ করে পেমেন্ট তথ্য দিন!"); 
+                return; 
+            }
             
-            const msg = `আসসালামু আলাইকুম। আমি 'পশুপাখি গল্প' অ্যাপটির প্রিমিয়াম ভার্সন আনলক করার জন্য পেমেন্ট করেছি।\n\n🆔 আইডি: ${uuid}\n💳 মেথড: ${method}\n📝 ধরণ: ${infoType}\n🔢 তথ্য: ${infoValue}`;
-            window.open(`https://wa.me/8801303680618?text=${encodeURIComponent(msg)}`, '_blank');
+            const phoneNumber = "8801303680618";
+            const msg = `আসসালামু আলাইকুম। আমি 'পশুপাখি গল্প' অ্যাপটির প্রিমিয়াম ভার্সন আনলক করার জন্য পেমেন্ট করেছি। অনুগ্রহ করে আনলক করে দিন।\n\n` +
+                        `🆔 ইউজার আইডি: ${uuid}\n` +
+                        `💳 পেমেন্ট মেথড: ${method}\n` +
+                        `📝 তথ্যের ধরণ: ${infoType}\n` +
+                        `🔢 পেমেন্ট তথ্য: ${infoValue}`;
+
+            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         window.onload = () => {
