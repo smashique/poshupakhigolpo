@@ -6,14 +6,30 @@
     <title>প্রিমিয়াম আনলক করুন - পশুপাখি গল্প</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .payment-card { background: white; border-radius: 25px; padding: 25px; margin-bottom: 20px; border: 2px solid #e0e0e0; }
-        .method-title { font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .number-box { background: #f5f5f5; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; border: 1px dashed #ccc; text-align: center; }
-        .form-group { margin-top: 20px; text-align: left; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; }
-        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ccc; box-sizing: border-box; font-family: 'Hind Siliguri'; }
-        .btn-send { background: #25D366; color: white; border: none; padding: 15px; width: 100%; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.1rem; margin-top: 20px; }
-        .instruction { font-size: 0.85rem; color: #666; margin-top: 10px; text-align: center; }
+        /* ... (আগের স্টাইল) ... */
+
+        /* নতুন স্টাইল */
+        .file-upload-box {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px dashed #ccc;
+            text-align: center;
+            cursor: pointer;
+        }
+        .file-upload-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        input[type="file"] {
+            display: none; /* আসল ফাইল ইনপুট লুকান */
+        }
+        .uploaded-file-name {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -27,8 +43,13 @@
         </div>
 
         <div class="payment-card">
-            <div class="method-title"><span style="color:#8b2c8a">■</span> ডাচ-বাংলা / রকেট</div>
+            <div class="method-title"><span style="color:#8b2c8a">■</span> রকেট (পার্সোনাল)</div>
             <div class="number-box">019XXXXXXXX</div>
+        </div>
+
+        <div class="payment-card">
+            <div class="method-title"><span style="color:#004A99">■</span> ডাচ-বাংলা ব্যাংক অ্যাকাউন্ট</div>
+            <div class="number-box">অ্যাকাউন্ট নাম্বার: XXXXXXXXXXXXX</div>
         </div>
 
         <div class="payment-card">
@@ -36,30 +57,50 @@
                 <label>পেমেন্ট মেথড</label>
                 <select id="method">
                     <option value="bKash">বিকাশ</option>
-                    <option value="Rocket">রকেট/ডাচ-বাংলা</option>
+                    <option value="Rocket">রকেট</option>
+                    <option value="DBBL">ডাচ-বাংলা ব্যাংক</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>TrxID অথবা লাস্ট ৪ ডিজিট</label>
                 <input type="text" id="trxInfo" placeholder="উদা: T9X2... অথবা ৪৩২১">
             </div>
+            <div class="form-group">
+                <span class="file-upload-label">স্ক্রিনশট সংযুক্ত করুন (ঐচ্ছিক)</span>
+                <div class="file-upload-box" onclick="document.getElementById('paymentScreenshot').click()">
+                    <span id="uploadStatus">ক্লিক করে ফাইল নির্বাচন করুন</span>
+                    <input type="file" id="paymentScreenshot" accept="image/*" onchange="updateFileName(this)">
+                </div>
+                <div id="uploadedFileName" class="uploaded-file-name"></div>
+            </div>
             <button class="btn-send" onclick="sendToWhatsApp()">হোয়াটসঅ্যাপে ডিটেইলস পাঠান</button>
-            <p class="instruction">বাটনে ক্লিক করার পর আপনার হোয়াটসঅ্যাপ ওপেন হবে, সেখানে <b>পেমেন্টের স্ক্রিনশটটি</b> এটাচ করে পাঠিয়ে দিন।</p>
+            <p class="instruction">বাটনে ক্লিক করার পর আপনার হোয়াটসঅ্যাপ ওপেন হবে, সেখানে পেমেন্টের ডিটেইলস বা স্ক্রিনশটটি পাঠিয়ে দিন।</p>
         </div>
         
         <a href="index.html" style="text-decoration:none; color: #666; font-size: 0.9rem;">← ফিরে যান</a>
     </div>
 
     <script>
+        // ফাইল নাম দেখানোর জন্য ফাংশন
+        function updateFileName(input) {
+            const fileName = input.files[0] ? input.files[0].name : "কোনো ফাইল নির্বাচিত হয়নি";
+            document.getElementById("uploadedFileName").textContent = fileName;
+        }
+
         function sendToWhatsApp() {
             const uuid = localStorage.getItem('device_uuid') || 'Unknown';
             const method = document.getElementById('method').value;
             const trxInfo = document.getElementById('trxInfo').value;
+            const screenshotInput = document.getElementById('paymentScreenshot');
+            const fileName = screenshotInput.files[0] ? screenshotInput.files[0].name : "সংযুক্ত করা হয়নি";
 
-            if(!trxInfo) { alert('পেমেন্ট ডিটেইলস লিখুন!'); return; }
+            if(!trxInfo && fileName === "সংযুক্ত করা হয়নি") {
+                alert('পেমেন্ট ডিটেইলস বা স্ক্রিনশট দিন!');
+                return;
+            }
 
             const phoneNumber = "8801303680618";
-            const message = `আসসালামু আলাইকুম। আমি পেমেন্ট করেছি।\n\n🆔 ইউজার আইডি: ${uuid}\n💳 মেথড: ${method}\n🔢 ট্রাঞ্জেকশন/লাস্ট ডিজিট: ${trxInfo}\n\n(আমি নিচে পেমেন্টের স্ক্রিনশটটি এটাচ করে দিচ্ছি)`;
+            const message = `আসসালামু আলাইকুম। আমি পেমেন্ট করেছি।\n\n🆔 ইউজার আইডি: ${uuid}\n💳 মেথড: ${method}\n🔢 ট্রাঞ্জেকশন/লাস্ট ডিজিট: ${trxInfo}\n🖼️ স্ক্রিনশট: ${fileName}\n\n(স্ক্রিনশটটি ম্যানুয়ালি এখানে পাঠিয়ে দিন)`;
             
             const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(whatsappLink, '_blank');
