@@ -9,34 +9,37 @@
         
         :root { --primary-green: #2E7D32; --bg-light: #F1F8E9; --text-main: #263238; }
         body { font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg-light); display: flex; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        
         .container { max-width: 600px; text-align: center; width: 100%; }
         .payment-card { background: white; border-radius: 25px; padding: 20px; border: 2px solid #e0e0e0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; }
         
-        /* অফার টেক্সট স্টাইল */
-        .offer-text { font-size: 1.4rem; font-weight: 600; margin-bottom: 25px; color: #333; line-height: 1.6; }
+        /* অফার টেক্সট ও প্রাইস হাইলাইটিং */
+        .offer-text { font-size: 1.5rem; font-weight: 700; margin-bottom: 25px; color: #333; line-height: 1.6; }
         .old-price { text-decoration: line-through; color: #888; font-size: 1.2rem; margin: 0 5px; }
-        .new-price { color: #d32f2f; font-size: 1.8rem; font-weight: 800; background: #fff9c4; padding: 2px 12px; border-radius: 8px; }
+        .new-price { color: #d32f2f; font-size: 2rem; font-weight: 800; background: #fff9c4; padding: 2px 12px; border-radius: 10px; border: 2px solid #ffd600; }
 
         .method-title { font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; margin-bottom: 8px; justify-content: center; }
-        .number-box { background: #f5f5f5; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 1.2rem; border: 1px dashed #ccc; color: var(--primary-green); }
+        .number-box { background: #f5f5f5; padding: 10px; border-radius: 12px; font-weight: bold; font-size: 1.2rem; border: 1px dashed #ccc; color: var(--primary-green); letter-spacing: 1px; }
         
         .form-group { margin-top: 15px; text-align: left; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; }
-        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-family: 'Hind Siliguri'; box-sizing: border-box; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #444; }
+        input, select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ccc; font-family: 'Hind Siliguri'; box-sizing: border-box; font-size: 1rem; }
         
-        .btn-send { background: #25D366; color: white; border: none; padding: 15px; width: 100%; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-top: 20px; transition: 0.3s; }
-        .btn-send:hover { background: #1da851; transform: scale(1.02); }
+        .btn-send { background: #25D366; color: white; border: none; padding: 16px; width: 100%; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-top: 20px; transition: 0.3s; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
+        .btn-send:hover { background: #1da851; transform: translateY(-2px); }
         
-        .file-upload-box { background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px dashed #bbb; text-align: center; cursor: pointer; margin-top: 5px; }
+        .file-upload-box { background: #f9f9f9; padding: 15px; border-radius: 12px; border: 1px dashed #bbb; text-align: center; cursor: pointer; margin-top: 5px; transition: 0.2s; }
+        .file-upload-box:hover { background: #f0f0f0; border-color: var(--primary-green); }
         .back-link { display: inline-block; margin-top: 20px; text-decoration: none; color: #666; font-size: 0.9rem; }
-    </script>
+    </style>
 </head>
 <body>
     <div class="container">
         <h2 style="color: var(--primary-green);">✨ প্রিমিয়াম মেম্বারশিপ</h2>
         
         <p class="offer-text">
-            নিচের যেকোনো একটি মাধ্যমে <span class="old-price">৳৪৯৯</span> <span class="new-price">৳২৯৯</span> পাঠিয়ে তথ্য দিন।
+            নিচের যেকোনো একটি মাধ্যমে <br>
+            <span class="old-price">৳৪৯৯</span> <span class="new-price">৳২৯৯</span> পাঠিয়ে তথ্য দিন।
         </p>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
@@ -75,7 +78,7 @@
                     <input type="file" id="screenshot" hidden onchange="document.getElementById('fileName').innerText = this.files[0].name">
                 </div>
             </div>
-            <button class="btn-send" onclick="sendToWhatsApp()">হোয়াটসঅ্যাপে ডিটেইলস পাঠান</button>
+            <button class="btn-send" onclick="sendToWhatsApp()">হোয়াটসঅ্যাপে ডিটেইলস পাঠান</button>
         </div>
         
         <a href="index.html" class="back-link">← ফিরে যান</a>
@@ -88,7 +91,7 @@
             const info = document.getElementById('trxInfo').value;
             if(!info) return alert("পেমেন্ট তথ্য দিন!");
             
-            const msg = `আসসালামু আলাইকুম। আমি পেমেন্ট করেছি।\n\n🆔 আইডি: ${uuid}\n💳 মেথড: ${method}\n🔢 তথ্য: ${info}\n\n(স্ক্রিনশট নিচে দিচ্ছি)`;
+            const msg = `আসসালামু আলাইকুম। আমি পেমেন্ট করেছি।\n\n🆔 আইডি: ${uuid}\n💳 মেথড: ${method}\n🔢 তথ্য: ${info}\n\n(আমি নিচে স্ক্রিনশট দিচ্ছি)`;
             window.open(`https://wa.me/8801303680618?text=${encodeURIComponent(msg)}`, '_blank');
         }
     </script>
