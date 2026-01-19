@@ -11,16 +11,11 @@
 <body oncontextmenu="return false;">
 
     <header class="navbar">
-        <div class="logo-text" onclick="location.reload()">🐾 পশুপাখি গল্প</div>
         <button id="installPwa" class="btn-install hidden">🪁 No need searching! Just Install App🎯</button>
     </header>
 
     <main class="container">
-        <div id="trustBox" class="fomo-live hidden" style="grid-column: 1 / -1; margin-bottom: 20px;">
-            <span class="dot-pulse"></span> ইতিমদ্ধে <strong id="paidCount">...</strong> জন সচেতন অভিভাবক মেম্বারশিপ নিয়েছেন!
-        </div>
-
-        <section class="story-player">
+            <section class="story-player">
             <div class="player-container" id="playerArea">
                 <button id="fullscreenBtn" class="fs-pulse-btn">📺 বড় পর্দা</button>
                 <iframe id="storyFrame" src="about:blank" allowfullscreen></iframe>
@@ -36,12 +31,55 @@
             <div id="storyList" class="thumbnail-list"></div>
         </aside>
     </main>
-
-    <footer class="site-footer">
-        <p>সাপোর্ট আইডি: <strong id="footerUid">...</strong></p>
-    </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js?v=28.1"></script>
+
+    <footer class="site-footer" style="padding: 25px; border-top: 1px solid #e0e0e0; margin-top: 40px; text-align: center; color: #555;">
+    <div class="footer-container">
+        <p style="margin: 5px 0; font-size: 0.9rem;">
+            সাপোর্ট আইডি: 
+            <strong id="footerUid" onclick="copySupportId()" title="কপি করতে ক্লিক করুন" style="cursor: pointer; color: #2E7D32; border-bottom: 1px dashed #2E7D32;">...</strong>
+        </p>
+
+        <div class="logo-text" onclick="location.reload()" style="cursor: pointer; margin: 10px 0; font-weight: bold; color: var(--primary-green);">
+            poshupakhigolpo.online
+        </div>
+
+        <p style="margin: 5px 0; font-size: 1rem;"> Developed by: <strong>ITCraftBangladesh</strong></p>
+        
+        <p style="margin: 5px 0; font-size: 0.95rem; color: #333;">
+            হোয়াটসঅ্যাপ সাপোর্ট: <strong>+8801303680618</strong>
+        </p>
+        
+        <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">© 2026 ITCraftBangladesh | সোনামণিদের জন্য নিরাপদ ও নৈতিক গল্পের ভুবন।</p>
+    </div>
+</footer>
+
+<script>
+/**
+ * সাপোর্ট আইডি ক্লিপবোর্ডে কপি করার ফাংশন
+ */
+function copySupportId() {
+    const uidElement = document.getElementById('footerUid');
+    const uid = uidElement.innerText;
+    
+    if (uid && uid !== "...") {
+        navigator.clipboard.writeText(uid).then(() => {
+            // মাইক্রো-ইন্টারঅ্যাকশন: ইউজার ফিডব্যাক
+            const originalText = uid;
+            uidElement.innerText = "কপি হয়েছে!";
+            uidElement.style.color = "#25D366";
+            
+            setTimeout(() => {
+                uidElement.innerText = originalText;
+                uidElement.style.color = "#2E7D32";
+            }, 1500);
+        }).catch(err => {
+            console.error('Copy failed', err);
+        });
+    }
+}
+</script>
+    
 </body>
 </html>
