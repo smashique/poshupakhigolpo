@@ -8,12 +8,9 @@ let dailyStoryId = null;
 let currentStoryText = ""; 
 let currentStoryTitle = "";
 
-// ১. পেমেন্ট লজিক
+// ১. পেমেন্ট পেজে রিডাইরেক্ট করা
 window.initPayment = () => {
-    const userId = localStorage.getItem('device_uuid') || 'Unknown';
-    const phoneNumber = "8801303680618";
-    const message = `আসসালামু আলাইকুম। আমি 'পশুপাখি গল্প' অ্যাপটির আজীবনের জন্য প্রিমিয়াম এক্সেস নিতে চাই। \n\nসাপোর্ট আইডি: ${userId}\nএই ইউজার আইডির জন্য বাচ্চাদের পশু-পাখির গল্পগুলো আনলক করতে চাচ্ছি।`;
-    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    window.location.href = 'payment.html'; 
 };
 
 // ২. স্মার্ট শেয়ার (৪০% কন্টেন্ট + কৌতূহল জাগানিয়া CTA) - FIXED
