@@ -116,9 +116,11 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
             ✔ ইতিহাস, বিজ্ঞান ও মহামানবদের জীবনী থেকে সফলতার রোডম্যাপ।<br>
             ✔ বাংলা-ইংরেজি দুই ভাষায় ইংরেজি দক্ষতা বাড়বে ইনশাআল্লাহ।<br>
             ✔ আপনি পড়ে শোনাবেন, তাই সন্তানের সাথে আপনার বোঝাপড়া বাড়বে।
+            
         </div>
         <div style="background: #fff; padding: 15px; border-radius: 15px; margin: 20px 0; border: 1px solid #c8e6c9;">
-            <p style="font-size: 1rem; color: #555; margin-bottom: 10px;">এটি আপনার সন্তানের জন্য আপনার <strong>লাইফটাইম ইনভেস্টমেন্ট</strong>।</p>
+            <p style="font-size: 1rem; color: #555; margin-bottom: 10px;">ইনশাআল্লাহ পশু-পাখি গল্প ওয়েবএপ্সটিকে আমরা শিশুদের জন্য গল্পের <strong>বিশ্বকোষ</strong> হিসেবে তৈরী করছি। এখানে নিয়মিত গল্পগুলো আপলোড করা হচ্ছে। </p>
+            <p style="font-size: 1rem; color: #555; margin-bottom: 10px;">এটি আপনার সন্তানের জন্য আপনার <strong>লাইফটাইম ইনভেস্টমেন্ট</strong> আর আমাদের জন্য মোটিভেশন।</p>
             <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">
                 লাইফটাইম অফার: <del style="color: #999;">৳৪৯৯</del> <span style="color: #d32f2f; background: #fff9c4; padding: 2px 10px; border-radius: 8px;">৳২৯৯</span>
             </div>
