@@ -8,145 +8,51 @@
     
     <meta name="description" content="পশুপাখি গল্পের প্রিমিয়াম মেম্বারশিপ আনলক করে আপনার সোনামণিকে দিন এক জাদুকরী শৈশব।">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
         :root { --primary-green: #2E7D32; --bg-light: #F1F8E9; --text-main: #263238; }
-        body { 
-            font-family: 'Quicksand', 'Hind Siliguri', sans-serif; 
-            background-color: var(--bg-light); 
-            margin: 0; 
-            padding: 10px; 
-            display: flex; 
-            justify-content: center; 
-            align-items: flex-start; 
-            min-height: 100vh; 
-            box-sizing: border-box; 
-        }
-        
+        body { font-family: 'Quicksand', 'Hind Siliguri', sans-serif; background-color: var(--bg-light); margin: 0; padding: 10px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; box-sizing: border-box; }
         .container { max-width: 450px; width: 100%; text-align: center; }
-        .card { 
-            background: white; 
-            border-radius: 20px; 
-            padding: 15px; 
-            border: 1.5px solid #E8F5E9; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
-            margin-bottom: 12px; 
-        }
+        .card { background: white; border-radius: 20px; padding: 15px; border: 1.5px solid #E8F5E9; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 12px; }
 
-        /* নিউরো-মার্কেটিং সোশ্যাল প্রুফ ব্যানার */
-        .social-proof {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 8px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid #c8e6c9;
-        }
+        .social-proof { background: #e8f5e9; color: #2e7d32; padding: 8px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; margin-bottom: 12px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid #c8e6c9; }
         .live-dot { height: 8px; width: 8px; background: #2e7d32; border-radius: 50%; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* পেমেন্ট প্রাইস ডিজাইন */
         .price-box { margin: 10px 0; }
         .old-price { text-decoration: line-through; color: #888; font-size: 1.1rem; }
-        .new-price { 
-            color: #d32f2f; 
-            font-size: 1.8rem; 
-            font-weight: 800; 
-            background: #fff9c4; 
-            padding: 2px 15px; 
-            border-radius: 12px; 
-            border: 2px solid #ffd600; 
-            display: inline-block;
-            margin-left: 10px;
-        }
+        .new-price { color: #d32f2f; font-size: 1.8rem; font-weight: 800; background: #fff9c4; padding: 2px 15px; border-radius: 12px; border: 2px solid #ffd600; display: inline-block; margin-left: 10px; }
 
-        /* FOMO ব্যানার - সময় ফুরিয়ে যাচ্ছে */
-        .fomo-container {
-            background: #fff4e5;
-            border: 1.5px solid #ffcc80;
-            padding: 12px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-            animation: pulse-border 2s infinite;
-        }
+        .fomo-container { background: #fff4e5; border: 1.5px solid #ffcc80; padding: 12px; border-radius: 15px; display: flex; align-items: center; gap: 12px; margin-bottom: 12px; animation: pulse-border 2s infinite; }
         .fomo-icon { font-size: 1.5rem; }
         .fomo-text { font-size: 0.95rem; color: #5d4037; text-align: left; line-height: 1.4; font-weight: 600; }
-        .fomo-text strong { color: #d32f2f; font-weight: 800; }
         
-        @keyframes pulse-border {
-            0% { box-shadow: 0 0 0 0px rgba(255, 204, 128, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 204, 128, 0); }
-            100% { box-shadow: 0 0 0 0px rgba(255, 204, 128, 0); }
-        }
+        @keyframes pulse-border { 0% { box-shadow: 0 0 0 0px rgba(255, 204, 128, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 204, 128, 0); } 100% { box-shadow: 0 0 0 0px rgba(255, 204, 128, 0); } }
 
-        /* ইনস্ট্রাকশন বক্স */
-        .instruction-box {
-            background: #fafafa;
-            border: 1px solid #eee;
-            padding: 15px;
-            margin-bottom: 12px;
-            text-align: left;
-            border-radius: 18px;
-        }
+        .instruction-box { background: #fafafa; border: 1px solid #eee; padding: 15px; margin-bottom: 12px; text-align: left; border-radius: 18px; }
         .instruction-box ol { font-size: 0.9rem; color: #444; margin: 8px 0 0 0; padding-left: 20px; line-height: 1.6; }
 
-        /* পেমেন্ট নম্বর গ্রিড */
         .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
         .method-item { background: #fdfdfd; padding: 10px; border-radius: 15px; border: 1.2px solid #e0e0e0; text-align: center; }
         .method-item span { font-size: 0.75rem; color: #757575; font-weight: bold; display: block; margin-bottom: 4px; }
         .num { display: block; font-weight: 800; color: var(--primary-green); font-size: 1rem; letter-spacing: 0.5px; }
 
-        /* ফর্ম ডিজাইন */
         .form-group { margin-top: 10px; text-align: left; }
         label { font-size: 0.85rem; font-weight: 700; color: #455a64; margin-left: 5px; }
-        select, input { 
-            width: 100%; 
-            padding: 12px; 
-            border-radius: 12px; 
-            border: 1.5px solid #e0e0e0; 
-            font-family: inherit; 
-            font-size: 0.95rem; 
-            margin-top: 5px; 
-            box-sizing: border-box; 
-            transition: 0.3s;
-        }
-        select:focus, input:focus { border-color: var(--primary-green); outline: none; background: #fff; }
+        select, input { width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #e0e0e0; font-family: inherit; font-size: 0.95rem; margin-top: 5px; box-sizing: border-box; }
 
-        .btn-send { 
-            background: #25D366; 
-            color: white; 
-            border: none; 
-            padding: 16px; 
-            width: 100%; 
-            border-radius: 50px; 
-            cursor: pointer; 
-            font-weight: 800; 
-            font-size: 1.1rem; 
-            margin-top: 15px; 
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); 
-            transition: 0.3s;
-        }
-        .btn-send:active { transform: scale(0.98); }
-
+        .btn-send { background: #25D366; color: white; border: none; padding: 16px; width: 100%; border-radius: 50px; cursor: pointer; font-weight: 800; font-size: 1.1rem; margin-top: 15px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
         .back-link { display: inline-block; margin: 15px 0; text-decoration: none; color: #9e9e9e; font-size: 0.9rem; font-weight: 600; }
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
-   
     <div class="container">
         <div id="socialProof" class="social-proof hidden">
-          
+            <div class="live-dot"></div> <span id="paidCount">...</span> জন অভিভাবক আনলক করেছেন
+        </div>
+
         <h3 style="color: var(--primary-green); margin: 5px 0; font-size: 1.4rem;">✨ আজীবনের জন্য আনলক করুন</h3>
         
         <div class="price-box">
@@ -156,9 +62,7 @@
 
         <div class="fomo-container">
             <div class="fomo-icon">⏳</div>
-            <div class="fomo-text">
-                সময় গড়িয়ে যাচ্ছে! আপনার সন্তানের প্রতিটি দিন <strong>মূল্যবান।</strong>
-            </div>
+            <div class="fomo-text">সময় গড়িয়ে যাচ্ছে! আপনার সন্তানের প্রতিটি দিন <strong>মূল্যবান।</strong></div>
         </div>
 
         <div class="instruction-box">
@@ -166,7 +70,7 @@
             <ol>
                 <li>নিচের যেকোনো নাম্বারে <strong>৳২৯৯</strong> 'সেন্ড মানি' করুন।</li>
                 <li>TrxID অথবা নাম্বারের শেষ ৪ ডিজিট সংগ্রহ করুন।</li>
-                <li>নিচের ফর্মে তথ্য দিয়ে হোয়াটসঅ্যাপে আমাদের জানান।</li>
+                <li>নিচের ফর্মে তথ্য দিয়ে হোয়াটসঅ্যাপে আমাদের জানান।</li>
             </ol>
         </div>
 
@@ -247,13 +151,10 @@
             const uuid = localStorage.getItem('device_uuid') || 'User';
             const method = document.getElementById('method').value;
             const infoValue = document.getElementById('trxInfo').value.trim();
-            
             if(!infoValue) { alert("অনুগ্রহ করে পেমেন্ট তথ্য দিন!"); return; }
-            
             const msg = `আসসালামু আলাইকুম। আমি 'পশুপাখি গল্প' আনলক করার জন্য পেমেন্ট করেছি।\n\n🆔 ইউজার আইডি: ${uuid}\n💳 মেথড: ${method}\n🔢 তথ্য: ${infoValue}`;
             window.open(`https://wa.me/8801303680618?text=${encodeURIComponent(msg)}`, '_blank');
         }
-
         window.onload = () => { toggleInputOptions(); updateSocialProof(); };
     </script>
 </body>
