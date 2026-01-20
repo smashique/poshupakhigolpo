@@ -67,14 +67,21 @@ body {
 /* সাইডবার ও স্টোরি লিস্ট - ক্লিন লেআউট */
 .sidebar { display: flex; flex-direction: column; }
 
+/* গল্পের তালিকার হেডিং ফিক্স */
 .sidebar-title { 
     margin: 0 0 12px 5px; 
-    font-size: 1.1rem; /* সামান্য স্লিম করা হয়েছে */
+    font-size: 1.1rem; 
     color: var(--primary-green); 
     font-weight: 700; 
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    display: block; /* Flex সরিয়ে এটি ব্লক করা হয়েছে যাতে টেক্সট স্বাভাবিকভাবে থাকে */
+    line-height: 1.5;
+}
+
+/* নম্বরটির জন্য আলাদা স্টাইল (প্রয়োজন হলে) */
+#totalCount {
+    color: var(--primary-green);
+    font-weight: 800;
+    padding: 0 2px;
 }
 
 .thumbnail-list { 
