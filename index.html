@@ -6,13 +6,12 @@
     <meta name="google-site-verification" content="RXVoYBWqB5KlXCJPsWBQWB42tljv-7ERX509DML0M60" />
 
     <title>পশুপাখি গল্প - Encyclopedia of Moral Stories for Kids ✨ (Bangla & English)</title>
-    <meta name="description" content="সোনামণিদের জন্য বাংলা ও ইংরেজি ভাষায় পশুপাখির শিক্ষামূলক এবং নৈতিক গল্পের বিশ্বকোষ। Encyclopedia of moral and educational animal tales to make childhood joyful.">
+    <meta name="description" content="সোনামণিদের জন্য বাংলা ও ইংরেজি ভাষায় পশুপাখির শিক্ষামূলক এবং নৈতিক গল্পের বিশ্বকোষ।">
     <meta name="author" content="ITCraftBangladesh">
 
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="canonical" href="https://poshupakhigolpo.online/">
 </head>
 <body oncontextmenu="return false;">
 
@@ -23,23 +22,29 @@
                 <iframe id="storyFrame" src="about:blank" allowfullscreen></iframe>
             </div>
             <div class="player-footer">
-                <button onclick="shareApp()" class="btn-share">🎁 যাদেরকে আপনি ভালোবাসেন তাদের সাথে শেয়ার করুন</button>
+                <button onclick="shareApp()" class="btn-share">🎁 প্রিয়জনদের সাথে গল্পটি শেয়ার করুন</button>
             </div>
         </section>
 
         <aside class="sidebar">
-            <h3 class="sidebar-title">গল্প জমেছে [<span id="totalCount">...</span>] টি। ইনশাআল্লাহ আরো আসছে... </h3>
+            <h3 class="sidebar-title">গল্প জমেছে [<span id="totalCount">...</span>] টি।</h3>
             
-            <div class="series-container">
-                <select id="seriesSelect" onchange="filterBySeries()">
-                    <option value="All">সকল সিরিজ (All Series)</option>
+            <div class="selector-group">
+                <label class="sel-label">১. সিরিজ বেছে নিন:</label>
+                <select id="seriesSelect" onchange="handleSeriesChange()">
+                    <option value="All">সকল সিরিজ</option>
+                </select>
+
+                <label class="sel-label">২. গল্পের নাম বেছে নিন:</label>
+                <select id="storySelect" onchange="handleStoryChange()">
+                    <option value="">আগে সিরিজ সিলেক্ট করুন</option>
                 </select>
             </div>
 
             <div id="storyList" class="thumbnail-list"></div>
             
             <div class="search-container">
-                <input type="text" id="storySearch" placeholder="🔍 গল্পের নাম লিখুন..." oninput="filterStories()">
+                <input type="text" id="storySearch" placeholder="🔍 সরাসরি নাম লিখে খুঁজুন..." oninput="filterStories()">
             </div>
         </aside>
     </main>
@@ -48,26 +53,11 @@
         <div class="footer-container">
             <p>সাপোর্ট আইডি: <br> <strong id="footerUid" onclick="copySupportId()">...</strong></p>
             <div class="footer-brand" onclick="location.reload()">poshupakhigolpo.online</div>
-            <p>Developed by: <strong>ITCraft Bangladesh</strong></p>
-            <p class="copyright">© 2026 ITCraftBangladesh | সোনামণিদের নিরাপদ গল্পের ভুবন।</p>
+            <p>© 2026 ITCraftBangladesh | সোনামণিদের গল্পের ভুবন।</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
-    <script>
-        function copySupportId() {
-            const el = document.getElementById('footerUid');
-            const uid = el.innerText;
-            if (uid && uid !== "...") {
-                navigator.clipboard.writeText(uid).then(() => {
-                    const original = uid;
-                    el.innerText = "কপি হয়েছে!";
-                    el.style.color = "#25D366";
-                    setTimeout(() => { el.innerText = original; el.style.color = "#2E7D32"; }, 1500);
-                });
-            }
-        }
-    </script>
 </body>
 </html>
