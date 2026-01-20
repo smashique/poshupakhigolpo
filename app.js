@@ -1,11 +1,37 @@
-/* --- PoshuPakhi Golpo - Full Restored & Series Logic v32.1 --- */
+/* --- PoshuPakhi Golpo - Logic v32.2 (Error Fixed) --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let userStatus = 'free'; let dailyStoryId = null; let currentStoryTitle = ""; let allStories = [];
 
-// ১. অটো-এসইও আপডেট
+// ১. পেমেন্ট ফাংশন গ্লোবাল করা হলো
+window.initPayment = () => { 
+    window.location.assign(window.location.origin + '/payment.html'); 
+};
+
+// ২. শেয়ার ফাংশন গ্লোবাল করা হলো
+window.shareApp = async () => {
+    if (!currentStoryTitle) return alert("গল্প পড়তে শুরু করুন!");
+    const msg = `📖 '${currentStoryTitle}' - সোনামণির জন্য চমৎকার গল্প! ✨\n🔗 ${window.location.origin}`;
+    if (navigator.share) try { await navigator.share({ title: 'পশুপাখি গল্প', text: msg }); } catch (e) {}
+    else { navigator.clipboard.writeText(msg); alert("লিঙ্ক কপি হয়েছে!"); }
+};
+
+// ৩. ফুল-স্ক্রিন লজিক ফিক্স
+window.toggleFullscreen = () => {
+    const p = document.getElementById('playerArea');
+    const isFS = document.fullscreenElement || document.webkitFullscreenElement;
+    if (!isFS) {
+        if (p.requestFullscreen) p.requestFullscreen();
+        else if (p.webkitRequestFullscreen) p.webkitRequestFullscreen();
+    } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }
+};
+
+// ৪. অটো-এসইও আপডেট
 function updateStorySEO(title, content) {
     const siteTitle = "পশুপাখি গল্প - ছোটদের জাদুকরী ভুবন";
     const shortDesc = content.substring(0, 150).replace(/\n/g, ' ') + "...";
@@ -14,7 +40,7 @@ function updateStorySEO(title, content) {
     if (metaDesc) metaDesc.setAttribute("content", shortDesc);
 }
 
-// ২. স্টোরি ইঞ্জিন ও আপনার সেই পরিশ্রমী মার্কেটিং বক্স
+// ৫. স্টোরি ইঞ্জিন ও আপনার নিউরোমার্কেটিং কন্টেন্ট
 async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     const story = allStories.find(s => s.id == storyId);
     if (!story) return;
@@ -26,7 +52,6 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
         ? story.content : story.content.substring(0, Math.floor(story.content.length * 0.2)) + "...";
     if (content.length < story.content.length) isLocked = true;
 
-    // আপনার সেই পূর্ণাঙ্গ নিউরোমার্কেটিং বয়ান
     const marketingBoxHTML = `
     <div class="m-box">
         <strong style="color: #1b5e20; font-size: 1.25rem; display: block; margin-bottom: 10px;">
@@ -71,18 +96,8 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     frame.src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
 }
 
-// ৩. ড্রপডাউন লজিক
-function renderSeriesDropdown(stories) {
-    const select = document.getElementById('seriesSelect');
-    const series = [...new Set(stories.map(s => s.series_name || 'একক গল্প'))];
-    series.forEach(name => {
-        const opt = document.createElement('option');
-        opt.value = name; opt.innerText = name;
-        select.appendChild(opt);
-    });
-}
-
-function handleSeriesChange() {
+// ড্রপডাউন ফাংশনগুলো গ্লোবাল করা হলো
+window.handleSeriesChange = () => {
     const selectedSeries = document.getElementById('seriesSelect').value;
     const storySelect = document.getElementById('storySelect');
     storySelect.innerHTML = '<option value="">গল্প বেছে নিন...</option>';
@@ -93,12 +108,18 @@ function handleSeriesChange() {
         storySelect.appendChild(opt);
     });
     renderSidebar(filtered);
-}
+};
 
-function handleStoryChange() {
+window.handleStoryChange = () => {
     const storyId = document.getElementById('storySelect').value;
     if(storyId) fetchAndPlay(storyId);
-}
+};
+
+window.filterStories = () => {
+    const term = document.getElementById('storySearch').value.toLowerCase();
+    const filtered = allStories.filter(s => s.title.toLowerCase().includes(term));
+    renderSidebar(filtered);
+};
 
 async function initApp() {
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
@@ -112,7 +133,13 @@ async function initApp() {
         if (stories) {
             allStories = stories;
             document.getElementById('totalCount').innerText = stories.length;
-            renderSeriesDropdown(stories);
+            const seriesSelect = document.getElementById('seriesSelect');
+            const series = [...new Set(stories.map(s => s.series_name || 'একক গল্প'))];
+            series.forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name; opt.innerText = name;
+                seriesSelect.appendChild(opt);
+            });
             dailyStoryId = stories[Math.floor(Date.now() / 86400000) % stories.length].id;
             fetchAndPlay(dailyStoryId, true, true);
             renderSidebar(stories);
@@ -128,11 +155,10 @@ function renderSidebar(stories) {
         const div = document.createElement('div');
         div.className = 'story-banner';
         div.style.backgroundColor = colors[i % colors.length];
-        div.innerHTML = `${(userStatus === 'free' && s.id !== dailyStoryId) ? '🔒 ' : ''}${s.title}`;
+        // তালা চিহ্ন (🔒) রিমুভ করা হয়েছে
+        div.innerHTML = `${s.title}`;
         div.onclick = () => fetchAndPlay(s.id);
         list.appendChild(div);
     });
 }
-window.shareApp = async () => { /* share logic provided before */ };
-window.toggleFullscreen = () => { /* fs logic provided before */ };
 document.addEventListener('DOMContentLoaded', initApp);
