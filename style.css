@@ -1,161 +1,40 @@
-/* --- PoshuPakhi Golpo - Neuro-Optimized v31.1 --- */
+/* --- PoshuPakhi Golpo - Series & Layout Fix v31.2 --- */
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap');
 
 :root { 
-    --primary-green: #2E7D32; 
-    --accent-yellow: #FFD600;
-    --bg-light: #F1F8E9; 
-    --card-white: #ffffff;
-    --text-dark: #263238;
-    --font-main: 'Quicksand', 'Hind Siliguri', sans-serif; 
+    --primary-green: #2E7D32; --bg-light: #F1F8E9; --font-main: 'Quicksand', 'Hind Siliguri', sans-serif; 
 }
 
-body { 
-    margin: 0; 
-    font-family: var(--font-main); 
-    background-color: var(--bg-light); 
-    color: var(--text-dark);
-    overflow-x: hidden; 
-    -webkit-font-smoothing: antialiased;
+body { margin: 0; font-family: var(--font-main); background-color: var(--bg-light); overflow-x: hidden; }
+
+.container { display: grid; grid-template-columns: 1fr 340px; gap: 20px; max-width: 1300px; margin: 15px auto; padding: 0 15px; }
+
+/* হেডিং ভাঙা সমস্যার সমাধান */
+.sidebar-title { 
+    margin: 0 0 12px 5px; font-size: 1.1rem; color: var(--primary-green); font-weight: 700; 
+    display: block; line-height: 1.5; 
 }
 
-.container { 
-    display: grid; 
-    grid-template-columns: 1fr 340px; 
-    gap: 20px; 
-    max-width: 1300px; 
-    margin: 15px auto; 
-    padding: 0 15px; 
+/* সিরিজ সিলেক্টর ডিজাইন */
+.series-container { margin-bottom: 12px; }
+#seriesSelect {
+    width: 100%; padding: 10px; border-radius: 15px; border: 2px solid #E8F5E9; 
+    font-family: inherit; font-size: 0.9rem; cursor: pointer; background: white; outline: none;
 }
+#seriesSelect:focus { border-color: var(--primary-green); }
 
-/* প্লেয়ার কন্টেইনার - চিকন বর্ডার ও রিফাইন্ড ডিজাইন */
-.player-container { 
-    height: 420px; 
-    background: var(--card-white); 
-    border-radius: 30px; 
-    border: 2px solid white; /* বর্ডার চিকন করা হয়েছে */
-    box-shadow: 0 15px 35px rgba(46, 125, 50, 0.1); 
-    overflow: hidden; 
-    position: relative;
-    transition: transform 0.3s ease;
-}
-
+.player-container { height: 420px; background: white; border-radius: 30px; border: 2px solid white; box-shadow: 0 15px 35px rgba(46,125, 50, 0.1); overflow: hidden; position: relative; }
 #storyFrame { width: 100%; height: 100%; border: none; }
 
-/* বাটন ডিজাইন - অ্যাকশন ওরিয়েন্টেড */
 .player-footer { display: flex; gap: 12px; margin-top: 12px; }
+.btn-share { flex: 1; padding: 12px; border-radius: 50px; font-weight: 700; cursor: pointer; border: 2px solid var(--primary-green); font-family: inherit; background: white; color: var(--primary-green); display: flex; align-items: center; justify-content: center; }
 
-.btn-share { 
-    flex: 1; 
-    padding: 12px; 
-    border-radius: 50px; 
-    font-weight: 700; 
-    cursor: pointer; 
-    border: 2px solid var(--primary-green); 
-    font-family: inherit; 
-    font-size: 1rem; 
-    background: white;
-    color: var(--primary-green);
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+.thumbnail-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; max-height: 400px; padding-right: 5px; }
+.story-banner { padding: 15px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-weight: 700; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
 
-.btn-share:hover { background: var(--bg-light); }
-
-/* সাইডবার ও স্টোরি লিস্ট - ক্লিন লেআউট */
-.sidebar { display: flex; flex-direction: column; }
-
-/* গল্পের তালিকার হেডিং ফিক্স */
-.sidebar-title { 
-    margin: 0 0 12px 5px; 
-    font-size: 1.1rem; 
-    color: var(--primary-green); 
-    font-weight: 700; 
-    display: block; /* Flex সরিয়ে এটি ব্লক করা হয়েছে যাতে টেক্সট স্বাভাবিকভাবে থাকে */
-    line-height: 1.5;
-}
-
-/* নম্বরটির জন্য আলাদা স্টাইল (প্রয়োজন হলে) */
-#totalCount {
-    color: var(--primary-green);
-    font-weight: 800;
-    padding: 0 2px;
-}
-
-.thumbnail-list { 
-    flex-grow: 1; 
-    overflow-y: auto; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 12px; /* হিজিবিজি কমাতে গ্যাপ অ্যাডজাস্টমেন্ট */
-    max-height: 450px; 
-    padding-right: 5px;
-}
-
-.story-banner { 
-    padding: 15px; 
-    border-radius: 20px; 
-    cursor: pointer; 
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-    font-weight: 700; 
-    font-size: 0.95rem; 
-    border: 1.5px solid transparent;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: white;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-}
-
-.story-banner:hover { 
-    transform: translateX(5px);
-    box-shadow: 0 6px 15px rgba(46, 125, 50, 0.1);
-    border-color: rgba(46, 125, 50, 0.2);
-}
-
-/* সার্চ বক্স */
 .search-container { margin-top: 15px; border-top: 1px solid #e0e0e0; padding-top: 15px; }
-#storySearch { 
-    width: 100%; 
-    padding: 10px 20px; 
-    border-radius: 50px; 
-    border: 2px solid #E8F5E9; 
-    outline: none; 
-    font-family: inherit; 
-    box-sizing: border-box; 
-    font-size: 0.9rem;
-    transition: 0.3s;
-}
+#storySearch { width: 100%; padding: 10px 20px; border-radius: 50px; border: 2px solid #E8F5E9; outline: none; font-family: inherit; box-sizing: border-box; }
 
-/* ফুটার আইডি সেকশন - ওভারল্যাপ ফিক্স */
-.footer-container { 
-    text-align: center; 
-    margin: 25px 0; 
-    padding: 10px;
-    font-size: 0.85rem; 
-    color: #78909c;
-}
+#footerUid { word-break: break-all; display: inline-block; font-size: 0.75rem; background: #ffffff; padding: 5px 12px; border-radius: 8px; border: 1px solid #eee; }
 
-#footerUid { 
-    word-break: break-all; /* লম্বা আইডি ফিক্স */
-    display: inline-block; 
-    font-size: 0.75rem; 
-    background: #ffffff; 
-    padding: 5px 12px; 
-    border-radius: 8px; 
-    cursor: pointer; 
-    border: 1px solid #eee;
-    margin-top: 8px;
-}
-
-/* মোবাইল অপ্টিমাইজেশন */
-@media (max-width: 1000px) { 
-    .container { grid-template-columns: 1fr; gap: 15px; } 
-    .player-container { height: 320px; border-radius: 20px; } 
-}
-
-/* গ্যামিফিকেশন বেলুন */
-.balloon { position: fixed; bottom: -100px; animation: riseUp 20s linear infinite; z-index: 100; cursor: pointer; user-select: none; }
-@keyframes riseUp { 0% { transform: translateY(0); } 100% { transform: translateY(-120vh); } }
+@media (max-width: 1000px) { .container { grid-template-columns: 1fr; } .player-container { height: 320px; } }
