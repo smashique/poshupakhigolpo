@@ -4,51 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="RXVoYBWqB5KlXCJPsWBQWB42tljv-7ERX509DML0M60" />
-
-    <title>পশুপাখি গল্প - Encyclopedia of Moral Stories for Kids ✨ (Bangla & English)</title>
-    <meta name="description" content="সোনামণিদের জন্য বাংলা ও ইংরেজি ভাষায় পশুপাখির শিক্ষামূলক এবং নৈতিক গল্পের বিশ্বকোষ।">
-    <meta name="author" content="ITCraftBangladesh">
-
+    <title>পশুপাখি গল্প - Encyclopedia of Moral Stories for Kids ✨</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
-
     <main class="container">
         <section class="story-player">
             <div class="player-container" id="playerArea">
-                <button id="fullscreenBtn" class="fs-pulse-btn" onclick="toggleFullscreen()">📺 বড় পর্দায় দেখুন</button>
+                <button id="fullscreenBtn" class="fs-pulse-btn" onclick="window.toggleFullscreen()">📺 বড় পর্দায় দেখুন</button>
                 <iframe id="storyFrame" src="about:blank" allowfullscreen></iframe>
             </div>
             <div class="player-footer">
-                <button onclick="shareApp()" class="btn-share">🎁 প্রিয়জনদের সাথে গল্পটি শেয়ার করুন</button>
+                <button onclick="window.shareApp()" class="btn-share">🎁 প্রিয়জনদের সাথে গল্পটি শেয়ার করুন</button>
             </div>
         </section>
 
         <aside class="sidebar">
             <h3 class="sidebar-title">গল্প জমেছে [<span id="totalCount">...</span>] টি।</h3>
-            
             <div class="selector-group">
                 <label class="sel-label">১. সিরিজ বেছে নিন:</label>
-                <select id="seriesSelect" onchange="handleSeriesChange()">
-                    <option value="All">সকল সিরিজ (All Series)</option>
+                <select id="seriesSelect" onchange="window.handleSeriesChange()">
+                    <option value="All">সকল সিরিজ</option>
                 </select>
-
                 <label class="sel-label">২. গল্পের নাম বেছে নিন:</label>
-                <select id="storySelect" onchange="handleStoryChange()">
+                <select id="storySelect" onchange="window.handleStoryChange()">
                     <option value="">আগে সিরিজ সিলেক্ট করুন</option>
                 </select>
             </div>
-
             <div id="storyList" class="thumbnail-list"></div>
-            
             <div class="search-container">
-                <input type="text" id="storySearch" placeholder="🔍 সরাসরি নাম লিখে খুঁজুন..." oninput="filterStories()">
+                <input type="text" id="storySearch" placeholder="🔍 সরাসরি নাম লিখে খুঁজুন..." oninput="window.filterStories()">
             </div>
         </aside>
     </main>
-    
     <footer class="site-footer">
         <div class="footer-container">
             <p>সাপোর্ট আইডি: <br> <strong id="footerUid" onclick="copySupportId()">...</strong></p>
@@ -56,7 +46,6 @@
             <p>© 2026 ITCraftBangladesh | সোনামণিদের গল্পের ভুবন।</p>
         </div>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
 </body>
