@@ -1,17 +1,22 @@
-/* --- PoshuPakhi Golpo - Full Restored & Free Story Logic v32.3 --- */
+/* --- PoshuPakhi Golpo - Full Restored & Logic Fix v32.4 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let userStatus = 'free'; let dailyStoryId = null; let currentStoryTitle = ""; let allStories = [];
+let userStatus = 'free'; 
+let dailyStoryId = null; 
+let currentStoryTitle = ""; 
+let allStories = [];
 
-// ১. গ্লোবাল ফাংশনসমূহ (বাটন এরর ফিক্স করতে এগুলো window অবজেক্টে রাখা হয়েছে)
-window.initPayment = () => { window.location.assign(window.location.origin + '/payment.html'); };
+// ১. বাটন এবং নেভিগেশন ফাংশন (গ্লোবাল করা হয়েছে যাতে সব জায়গা থেকে কাজ করে)
+window.initPayment = () => { 
+    window.location.assign(window.location.origin + '/payment.html'); 
+};
 
 window.shareApp = async () => {
     if (!currentStoryTitle) return alert("গল্প পড়তে শুরু করুন!");
     const msg = `📖 '${currentStoryTitle}' - সোনামণির জন্য চমৎকার গল্প! ✨\n🔗 ${window.location.origin}`;
-    if (navigator.share) try { await navigator.share({ title: 'পשুপাখি গল্প', text: msg }); } catch (e) {}
+    if (navigator.share) try { await navigator.share({ title: 'পশুপাখি গল্প', text: msg }); } catch (e) {}
     else { navigator.clipboard.writeText(msg); alert("লিঙ্ক কপি হয়েছে!"); }
 };
 
@@ -21,26 +26,41 @@ window.toggleFullscreen = () => {
     if (!isFS) {
         if (p.requestFullscreen) p.requestFullscreen();
         else if (p.webkitRequestFullscreen) p.webkitRequestFullscreen();
-    } else { if (document.exitFullscreen) document.exitFullscreen(); }
+    } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+    }
 };
 
-// ২. স্টোরি ইঞ্জিন ও ফ্রি স্টোরি লজিক
+// ২. এসইও আপডেট
+function updateStorySEO(title, content) {
+    const siteTitle = "পশুপাখি গল্প - ছোটদের জাদুকরী ভুবন";
+    const shortDesc = content.substring(0, 150).replace(/\n/g, ' ') + "...";
+    document.title = `${title} | ${siteTitle}`;
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute("content", shortDesc);
+}
+
+// ৩. স্টোরি ইঞ্জিন ও ফ্রি স্টোরি আনলক লজিক (সংশোধিত)
 async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
-    const story = allStories.find(s => s.id == storyId);
+    const story = allStories.find(s => String(s.id) === String(storyId));
     if (!story) return;
-    currentStoryTitle = story.title;
     
-    // নতুন লজিক: যদি গল্পটি সুপাবেইজে ফ্রি (is_free === true) হয় তবে সেটি আনলক থাকবে
+    currentStoryTitle = story.title;
+    updateStorySEO(story.title, story.content);
+
+    // লজিক ফিক্স: আইডি এবং ফ্রি স্ট্যাটাস চেক আরও শক্তিশালী করা হয়েছে
     let canReadFull = (
         userStatus === 'paid' || 
-        isDailyFree || 
-        storyId === dailyStoryId || 
-        story.is_free === true 
+        isDailyFree === true || 
+        String(storyId) === String(dailyStoryId) || 
+        story.is_free === true || 
+        String(story.is_free) === 'true'
     );
 
     let isLocked = !canReadFull;
     let content = canReadFull ? story.content : story.content.substring(0, Math.floor(story.content.length * 0.2)) + "...";
 
+    // আপনার সেই পূর্ণাঙ্গ নিউরোমার্কেটিং বয়ান পুনরুদ্ধার
     const marketingBoxHTML = `
     <div class="m-box">
         <strong style="color: #1b5e20; font-size: 1.25rem; display: block; margin-bottom: 10px;">
@@ -66,10 +86,10 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
 
     const storyHtml = `<html><head><style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&family=Quicksand:wght@500;700&display=swap');
-        body { margin:0; background:#FDFBF7; font-family: 'Quicksand', 'Hind Siliguri', sans-serif; padding:25px; user-select:none; }
+        body { margin:0; background:#FDFBF7; font-family: 'Quicksand', 'Hind Siliguri', sans-serif; padding:25px; user-select:none; color:#333; }
         .card { background:white; padding:35px; border-radius:30px; border: 2px solid #E8F5E9; text-align:center; }
         h1 { color:#2E7D32; font-size: 1.8rem; border-bottom: 2px dashed #A5D6A7; padding-bottom: 15px; font-weight: 700; margin-top: 0; }
-        p { line-height: 1.8; font-size: 1.4rem; color:#333; text-align:justify; font-weight: 500; }
+        p { line-height: 1.8; font-size: 1.4rem; text-align:justify; font-weight: 500; }
         .m-box { background:#f0fdf4; padding:25px; border-radius:25px; border:2px dashed #2E7D32; margin-top:30px; }
         .btn { background:#2E7D32; color:white; border:none; padding:16px 40px; border-radius:50px; font-weight:700; cursor:pointer; font-family: inherit; font-size: 1.1rem; }
     </style></head><body><div class="card"><h1>${story.title}</h1><p>${content.replace(/\n/g, '<br>')}</p>${isLocked ? marketingBoxHTML : ''}</div></body></html>`;
@@ -77,7 +97,7 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     document.getElementById('storyFrame').src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
 }
 
-// ৩. ড্রপডাউন ও সাইডবার লজিক
+// ৪. সিরিজ ও ড্রপডাউন ফাংশন (গ্লোবাল)
 window.handleSeriesChange = () => {
     const selectedSeries = document.getElementById('seriesSelect').value;
     const storySelect = document.getElementById('storySelect');
@@ -102,6 +122,7 @@ window.filterStories = () => {
     renderSidebar(filtered);
 };
 
+// ৫. ইনিশিয়ালাইজেশন
 async function initApp() {
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
     localStorage.setItem('device_uuid', uuid);
@@ -111,7 +132,6 @@ async function initApp() {
         const { data: user } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
         if (user?.status === 'paid') userStatus = 'paid';
         
-        // সব কলাম সিলেক্ট করা হচ্ছে যাতে is_free এবং series_name পাওয়া যায়
         const { data: stories } = await _supabase.from('stories').select('*').order('created_at', { ascending: true });
         if (stories) {
             allStories = stories;
@@ -119,8 +139,7 @@ async function initApp() {
             const seriesSelect = document.getElementById('seriesSelect');
             const seriesList = [...new Set(stories.map(s => s.series_name || 'একক গল্প'))];
             seriesList.forEach(name => {
-                const opt = document.createElement('option');
-                opt.value = name; opt.innerText = name;
+                const opt = document.createElement('option'); opt.value = name; opt.innerText = name;
                 seriesSelect.appendChild(opt);
             });
             dailyStoryId = stories[Math.floor(Date.now() / 86400000) % stories.length].id;
@@ -138,7 +157,7 @@ function renderSidebar(stories) {
         const div = document.createElement('div');
         div.className = 'story-banner';
         div.style.backgroundColor = colors[i % colors.length];
-        div.innerHTML = `${s.title}`; // তালা চিহ্ন (🔒) রিমুভ করা হয়েছে
+        div.innerHTML = `${s.title}`;
         div.onclick = () => fetchAndPlay(s.id);
         list.appendChild(div);
     });
