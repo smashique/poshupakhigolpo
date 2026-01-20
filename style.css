@@ -1,10 +1,13 @@
-/* --- PoshuPakhi Golpo - Visual Stability v32.2 --- */
+/* --- PoshuPakhi Golpo - UI Stability v32.3 --- */
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap');
+
 :root { --primary-green: #2E7D32; --bg-light: #F1F8E9; --font-main: 'Quicksand', 'Hind Siliguri', sans-serif; }
+
 body { margin: 0; font-family: var(--font-main); background-color: var(--bg-light); overflow-x: hidden; }
+
 .container { display: grid; grid-template-columns: 1fr 340px; gap: 20px; max-width: 1300px; margin: 15px auto; padding: 0 15px; }
 
-/* হেডিং ফিক্স - display: block নিশ্চিত করা হয়েছে */
+/* হেডিং ফিক্স */
 .sidebar-title { margin: 0 0 12px 5px; font-size: 1.1rem; color: var(--primary-green); font-weight: 700; display: block; line-height: 1.5; }
 
 .selector-group { background: #fff; padding: 12px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); margin-bottom: 15px; border: 1.5px solid #E8F5E9; }
@@ -14,48 +17,14 @@ select { width: 100%; padding: 10px; border-radius: 12px; border: 1.5px solid #F
 .player-container { height: 420px; background: white; border-radius: 30px; border: 2px solid white; box-shadow: 0 15px 35px rgba(46,125, 50, 0.1); overflow: hidden; position: relative; }
 #storyFrame { width: 100%; height: 100%; border: none; }
 
-.btn-share { width: 100%; padding: 12px; border-radius: 50px; font-weight: 700; cursor: pointer; border: 2px solid var(--primary-green); background: white; color: var(--primary-green); }
+.btn-share { width: 100%; padding: 12px; border-radius: 50px; font-weight: 700; cursor: pointer; border: 2px solid var(--primary-green); background: white; color: var(--primary-green); font-size: 0.9rem; }
 
 .thumbnail-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; max-height: 300px; padding-right: 5px; }
 .story-banner { padding: 12px; border-radius: 15px; cursor: pointer; transition: 0.3s; font-weight: 700; background: white; border: 1.2px solid #f0f0f0; font-size: 0.85rem; }
 
+/* ফুটার ফিক্স */
+.site-footer { margin-top: 40px; background: #fff; padding: 25px 0; border-top: 1px solid #e8f5e9; width: 100%; clear: both; }
+.footer-container { text-align: center; max-width: 600px; margin: 0 auto; color: #78909c; font-size: 0.85rem; }
+#footerUid { word-break: break-all; display: inline-block; font-size: 0.75rem; background: #f9f9f9; padding: 6px 12px; border-radius: 8px; border: 1px solid #eee; margin-top: 8px; cursor: pointer; }
 
-/* --- ফুটার ফিক্স --- */
-.site-footer { 
-    margin-top: 40px; 
-    background: #ffffff; 
-    padding: 25px 0; 
-    border-top: 1px solid #e8f5e9; 
-    width: 100%;
-    clear: both; /* গ্রিডের বাইরে ফুটারকে পজিশন করার জন্য */
-}
-
-.footer-container { 
-    text-align: center; 
-    max-width: 600px; 
-    margin: 0 auto; 
-    color: #78909c;
-    font-size: 0.85rem;
-}
-
-.footer-brand { 
-    font-weight: bold; 
-    color: var(--primary-green); 
-    cursor: pointer; 
-    font-size: 1.1rem; 
-    margin: 12px 0; 
-}
-
-/* আইডি ভাঙা ফিক্স */
-#footerUid { 
-    word-break: break-all; 
-    display: inline-block; 
-    font-size: 0.75rem; 
-    background: #f9f9f9; 
-    padding: 6px 12px; 
-    border-radius: 8px; 
-    border: 1px solid #eee; 
-    margin-top: 8px;
-    cursor: pointer;
-}
 @media (max-width: 1000px) { .container { grid-template-columns: 1fr; } .player-container { height: 320px; } }
