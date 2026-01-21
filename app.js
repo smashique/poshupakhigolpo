@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Full Restored & Deep Linking v33.0 --- */
+/* --- PoshuPakhi Golpo - Deep Linking & Share Fix v33.1 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -6,10 +6,10 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let userStatus = 'free'; 
 let dailyStoryId = null; 
 let currentStoryTitle = ""; 
-let currentStoryId = null; // বর্তমান গল্পের আইডি ট্র্যাক করার জন্য
+let currentStoryId = null; 
 let allStories = [];
 
-// ১. বাটন এবং নেভিগেশন ফাংশন (Deep Linking যুক্ত শেয়ার লজিক)
+// ১. বাটন এবং নেভিগেশন ফাংশন (শেয়ার রিপিট ফিক্স করা হয়েছে)
 window.initPayment = () => { 
     window.location.assign(window.location.origin + '/payment.html'); 
 };
@@ -17,12 +17,18 @@ window.initPayment = () => {
 window.shareApp = async () => {
     if (!currentStoryId) return alert("গল্প পড়তে শুরু করুন!");
     
-    // ইউআরএল এর সাথে ?story=id প্যারামিটার যুক্ত করা হচ্ছে
     const shareUrl = `${window.location.origin}/?story=${currentStoryId}`;
+    // সম্পূর্ণ মেসেজটি টেক্সট হিসেবে সাজানো হলো যাতে ব্রাউজার ডাবল লিঙ্ক না করে
     const msg = `📖 '${currentStoryTitle}' - সোনামণির জন্য চমৎকার গল্প! ✨\n🔗 ${shareUrl}`;
     
     if (navigator.share) {
-        try { await navigator.share({ title: 'পশুপাখি গল্প', text: msg, url: shareUrl }); } catch (e) {}
+        try { 
+            await navigator.share({ 
+                title: 'পশুপাখি গল্প', 
+                text: msg 
+                // url: shareUrl -> এটি বাদ দেওয়া হলো কারণ এটি মেসেজ টেক্সটে অলরেডি আছে
+            }); 
+        } catch (e) { console.log("Share cancelled"); }
     } else {
         navigator.clipboard.writeText(msg); 
         alert("লিঙ্ক কপি হয়েছে!"); 
@@ -49,27 +55,29 @@ function updateStorySEO(title, content) {
     if (metaDesc) metaDesc.setAttribute("content", shortDesc);
 }
 
-// ৩. স্টোরি ইঞ্জিন ও আনলক লজিক (সংশোধিত)
+// ৩. স্টোরি ইঞ্জিন ও সুপাবেজ প্রিমিয়াম লজিক
 async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     const story = allStories.find(s => String(s.id) === String(storyId));
     if (!story) return;
     
-    currentStoryId = storyId; // গ্লোবাল ভেরিয়েবলে আইডি সেট করা হলো
+    currentStoryId = storyId;
     currentStoryTitle = story.title;
     updateStorySEO(story.title, story.content);
 
+    // is_premium কলাম চেক করা হচ্ছে (সুপাবেজ ডাটা টাইপ অনুযায়ী)
     let canReadFull = (
         userStatus === 'paid' || 
         isDailyFree === true || 
         String(storyId) === String(dailyStoryId) || 
         story.is_premium === false || 
-        story.is_premium === null
+        story.is_premium === null ||
+        String(story.is_premium) === 'false'
     );
 
     let isLocked = !canReadFull;
     let content = canReadFull ? story.content : story.content.substring(0, Math.floor(story.content.length * 0.2)) + "...";
 
-    // আপনার সেই পূর্ণাঙ্গ নিউরোমার্কেটিং বয়ান
+    // আপনার নিউরোমার্কেটিং মার্কেটিং বক্স
     const marketingBoxHTML = `
     <div class="m-box">
         <strong style="color: #1b5e20; font-size: 1.25rem; display: block; margin-bottom: 10px;">
@@ -129,7 +137,7 @@ window.filterStories = () => {
     renderSidebar(filtered);
 };
 
-// ৫. ইনিশিয়ালাইজেশন (URL প্যারামিটার চেক লজিকসহ)
+// ৫. ইনিশিয়ালাইজেশন
 async function initApp() {
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
     localStorage.setItem('device_uuid', uuid);
@@ -150,15 +158,13 @@ async function initApp() {
                 const opt = document.createElement('option'); opt.value = name; opt.innerText = name; seriesSelect.appendChild(opt);
             });
 
-            // ইউআরএল থেকে 'story' প্যারামিটারটি চেক করা হচ্ছে
+            // Deep Link লজিক: ইউআরএল থেকে আইডি চেক করা হচ্ছে
             const urlParams = new URLSearchParams(window.location.search);
             const storyIdFromUrl = urlParams.get('story');
 
             if (storyIdFromUrl) {
-                // লিঙ্কে আইডি থাকলে সরাসরি সেটি প্লে হবে
                 fetchAndPlay(storyIdFromUrl, true, true); 
             } else {
-                // না থাকলে আজকের ফ্রি গল্পটি আসবে
                 dailyStoryId = stories[Math.floor(Date.now() / 86400000) % stories.length].id;
                 fetchAndPlay(dailyStoryId, true, true);
             }
