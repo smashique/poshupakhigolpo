@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Expert Optimized v35.5 --- */
+/* --- PoshuPakhi Golpo - Colorful Line Art SVG Template v36.0 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -6,7 +6,7 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let userStatus = 'free'; let dailyStoryId = null; 
 let currentStoryTitle = ""; let currentStoryId = null; let allStories = [];
 
-// ১. এক্সপার্ট-লেভেল ডাইনামিক ইমেজ শেয়ারিং (Kids & Neuro-Optimized)
+// ১. ডাইনামিক SVG-স্টাইল কার্ড জেনারেশন ও স্মার্ট শেয়ারিং
 window.shareApp = async () => {
     if (!currentStoryId) return alert("আগে একটি গল্প শুরু করুন!");
     const shareUrl = `${window.location.origin}/?story=${currentStoryId}`;
@@ -15,58 +15,104 @@ window.shareApp = async () => {
         canvas.width = 1200; canvas.height = 630; 
         const ctx = canvas.getContext('2d');
         
-        // --- ডিজাইন থিম: "ম্যাজিকাল স্টোরিবুক" ---
-        // ব্যাকগ্রাউন্ড: সফট প্যাস্টেল গ্রিন
-        ctx.fillStyle = '#F1F8E9'; ctx.fillRect(0, 0, 1200, 630);
+        // --- নতুন ডিজাইন টেমপ্লেট (Colorful Line Art Animals) ---
+        // ব্যাকগ্রাউন্ড: সফট ক্রিম কালার
+        ctx.fillStyle = '#FFFBF0'; ctx.fillRect(0, 0, 1200, 630);
         
-        // আলংকারিক বর্ডার (Rounded Corners & Pattern)
-        ctx.strokeStyle = '#2E7D32'; ctx.lineWidth = 15;
-        roundRect(ctx, 40, 40, 1120, 550, 40, false, true);
-        
-        // কর্নার ডেকোরেশন (নিউরোমার্কেটিং: শিশুদের কৌতূহল বাড়াতে ডটস ব্যবহার)
-        drawCornerDecor(ctx, 1200, 630);
+        // ডেকোরেটিভ আর্ট ড্রইং (চোখ-মুখ ছাড়া রঙিন প্রাণী)
+        drawColorfulLineArtAnimals(ctx);
 
-        // গল্পের শিরোনাম (Центральный фокус - Cognitive Fluency)
-        ctx.fillStyle = '#1B5E20'; ctx.textAlign = 'center';
+        // গল্পের শিরোনাম (Visual Hierarchy: সবচেয়ে বড় ও বোল্ড)
+        ctx.fillStyle = '#2E7D32'; ctx.textAlign = 'center';
         ctx.font = 'bold 75px "Hind Siliguri", sans-serif';
         const lines = wrapText(ctx, `📖 ${currentStoryTitle}`, 1000);
-        const startY = 300 - ((lines.length - 1) * 45);
-        lines.forEach((line, i) => ctx.fillText(line, 600, startY + (i * 100)));
+        // টেক্সটটিকে একটু উপরে উঠানো হয়েছে যাতে প্রাণীদের ওপর না পড়ে
+        const startY = 250 - ((lines.length - 1) * 40);
+        lines.forEach((line, i) => ctx.fillText(line, 600, startY + (i * 95)));
 
-        // ব্র্যান্ডিং এবং কল-টু-অ্যাকশন
-        ctx.font = 'bold 35px "Quicksand", sans-serif'; ctx.fillStyle = '#2E7D32';
-        ctx.fillText("পশুপাখি গল্প - সোনামণিদের নিরাপদ ভুবন ✨", 600, 520);
-        ctx.font = 'italic 30px "Quicksand", sans-serif'; ctx.fillStyle = '#78909C';
-        ctx.fillText("poshupakhigolpo.online", 600, 570);
+        // ব্র্যান্ডিং ও লিঙ্ক (ফুটার)
+        ctx.font = 'bold 35px "Quicksand", sans-serif'; ctx.fillStyle = '#1B5E20';
+        ctx.fillText("পশুপাখি গল্প - সোনামণিদের নিরাপদ ভুবন ✨", 600, 500);
+        ctx.font = 'italic 30px "Quicksand", sans-serif'; ctx.fillStyle = '#546E7A';
+        ctx.fillText("poshupakhigolpo.online", 600, 550);
 
         canvas.toBlob(async (blob) => {
             const file = new File([blob], 'story-card.png', { type: 'image/png' });
+            
+            // ক্যাপশন ফিক্স: লিঙ্কটি টেক্সটের মধ্যে স্পষ্টভাবে দেওয়া হয়েছে
+            const captionText = `✨ চমৎকার এই গল্পটি "${currentStoryTitle}" আপনার সোনামণিকে আজই পড়ে শোনান!\n\nগল্পটি পড়তে নিচের লিঙ্কে ক্লিক করুন: 👇\n🔗 ${shareUrl}`;
+            
             const shareData = {
                 title: 'পশুপাখি গল্প',
-                text: `✨ চমৎকার এই গল্পটি আপনার সোনামণিকে আজই পড়ে শোনান!\n\nগল্পটি পড়তে নিচের লিঙ্কে ক্লিক করুন:\n🔗 ${shareUrl}`,
+                text: captionText, 
                 files: [file]
             };
-            if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share(shareData);
-            else { navigator.clipboard.writeText(`📖 ${currentStoryTitle}\n🔗 ${shareUrl}`); alert("লিঙ্ক কপি হয়েছে!"); }
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share(shareData);
+                } catch (err) {
+                    // শেয়ার ক্যান্সেল বা ফেইল করলে ফলব্যাক
+                    console.log("Share API failed, using fallback");
+                    fallbackShare(captionText);
+                }
+            } else {
+                // পিসি বা ব্রাউজার সাপোর্ট না করলে ফলব্যাক
+                fallbackShare(captionText);
+            }
         });
-    } catch (err) { console.error("Share failed", err); }
+    } catch (err) { console.error("Error generating card", err); }
 };
 
-// ডিজাইন হেল্পার ফাংশনসমূহ
-function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
-    ctx.beginPath(); ctx.moveTo(x + radius, y); ctx.lineTo(x + width - radius, y); ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-    ctx.lineTo(x + width, y + height - radius); ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-    ctx.lineTo(x + radius, y + height); ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-    ctx.lineTo(x, y + radius); ctx.quadraticCurveTo(x, y, x + radius, y); ctx.closePath();
-    if (fill) ctx.fill(); if (stroke) ctx.stroke();
+// ফলব্যাক শেয়ার ফাংশন (ক্লিপবোর্ডে কপি)
+function fallbackShare(text) {
+    navigator.clipboard.writeText(text);
+    alert("গল্পের লিঙ্ক ও ক্যাপশন কপি করা হয়েছে! আপনি এখন যেকোনো জায়গায় পেস্ট করতে পারেন।");
 }
 
-function drawCornerDecor(ctx, w, h) {
-    ctx.fillStyle = 'rgba(46, 125, 50, 0.1)';
-    for(let i=0; i<5; i++) {
-        ctx.beginPath(); ctx.arc(100 + (i*30), 100, 15, 0, Math.PI*2); ctx.fill();
-        ctx.beginPath(); ctx.arc(w - 100 - (i*30), h - 100, 15, 0, Math.PI*2); ctx.fill();
-    }
+// --- নতুন ড্রইং ফাংশন (Colorful Line Art - No Eyes) ---
+function drawColorfulLineArtAnimals(ctx) {
+    ctx.lineWidth = 8; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    
+    // ১. জিরাফ (ডানপাশে, কমলা-হলুদ লাইন)
+    ctx.strokeStyle = '#FFB300'; ctx.beginPath();
+    // গলা ও মাথা (সরলীকৃত)
+    ctx.moveTo(950, 450); ctx.quadraticCurveTo(920, 200, 980, 150); // গলা
+    ctx.quadraticCurveTo(1020, 130, 1050, 160); // মাথা
+    ctx.quadraticCurveTo(1080, 200, 1050, 250); 
+    ctx.lineTo(1020, 450); // পিঠ
+    // শিং (ছোট লাইন)
+    ctx.moveTo(1000, 130); ctx.lineTo(990, 100);
+    ctx.moveTo(1030, 130); ctx.lineTo(1040, 100);
+    ctx.stroke();
+
+    // ২. হাতি (বামপাশে, নীল-আकाशी লাইন)
+    ctx.strokeStyle = '#42A5F5'; ctx.beginPath();
+    // শরীর ও মাথা
+    ctx.moveTo(150, 480); ctx.quadraticCurveTo(100, 300, 250, 280); // পিঠ ও মাথা
+    ctx.quadraticCurveTo(350, 280, 400, 350);
+    // শুঁড় (বাঁকানো লাইন)
+    ctx.quadraticCurveTo(450, 400, 500, 380); ctx.quadraticCurveTo(520, 370, 530, 400);
+    // কান (বড় কার্ভ)
+    ctx.moveTo(250, 320); ctx.quadraticCurveTo(180, 350, 200, 450);
+    ctx.stroke();
+
+    // ৩. সিংহ (মাঝখানে নিচে, সোনালি-বাদামী লাইন)
+    ctx.strokeStyle = '#8D6E63'; ctx.beginPath();
+    // কেশর (Gode)
+    ctx.moveTo(500, 550); ctx.quadraticCurveTo(450, 450, 550, 400);
+    ctx.quadraticCurveTo(650, 380, 750, 420); ctx.quadraticCurveTo(800, 500, 750, 550);
+    // শরীর (সামান্য অংশ)
+    ctx.moveTo(550, 550); ctx.lineTo(700, 550);
+    ctx.stroke();
+    
+    // ৪. লতাপাতা ও ঘাস (নিচে, সবুজ লাইন)
+    ctx.strokeStyle = '#66BB6A'; ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(50, 580); ctx.quadraticCurveTo(100, 550, 150, 580);
+    ctx.moveTo(1050, 580); ctx.quadraticCurveTo(1100, 550, 1150, 580);
+    ctx.moveTo(400, 600); ctx.quadraticCurveTo(450, 560, 500, 600);
+    ctx.stroke();
 }
 
 function wrapText(ctx, text, maxWidth) {
@@ -78,13 +124,13 @@ function wrapText(ctx, text, maxWidth) {
     lines.push(currentLine); return lines;
 }
 
-// ২. স্টোরি ইঞ্জিন ও আপনার সেই অমূল্য নিউরোমার্কেটিং কন্টেন্ট
+// ২. স্টোরি ইঞ্জিন ও আপনার সেই অমূল্য নিউরোমার্কেটিং কন্টেন্ট (হুবহু আছে)
 async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     const story = allStories.find(s => String(s.id) === String(storyId));
     if (!story) return;
     currentStoryId = storyId; currentStoryTitle = story.title;
 
-    // প্রিমিয়াম ও ২০% লক লজিক অডিট
+    // প্রিমিয়াম লজিক অডিট
     const isPremium = (story.is_premium === true || String(story.is_premium) === 'true');
     const isDaily = (isDailyFree === true || String(storyId) === String(dailyStoryId));
     const isPaid = (userStatus === 'paid');
@@ -95,7 +141,7 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     let isLocked = !canReadFull;
     let content = canReadFull ? story.content : story.content.substring(0, Math.floor(story.content.length * 0.2)) + "...";
 
-    // আপনার সেই নির্দিষ্ট এবং পরিশ্রমী মার্কেটিং বক্স
+    // আপনার নিউরোমার্কেটিং বক্স (কোনো পরিবর্তন নেই)
     const marketingBoxHTML = `
     <div class="m-box">
         <strong style="color: #1b5e20; font-size: 1.25rem; display: block; margin-bottom: 10px;">
@@ -131,7 +177,17 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     document.getElementById('storyFrame').src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
 }
 
-// ৩. ইনিশিয়ালাইজেশন ও সিরিজ ফিল্টারিং
+// ৩. ইনিশিয়ালাইজেশন ও অন্যান্য লজিক (অক্ষুণ্ণ)
+window.handleSeriesChange = () => {
+    const selectedSeries = document.getElementById('seriesSelect').value;
+    const filtered = (selectedSeries === "All") ? allStories : allStories.filter(s => (s.series_name || 'একক গল্প') === selectedSeries);
+    renderSidebar(filtered);
+};
+window.filterStories = () => {
+    const term = document.getElementById('storySearch').value.toLowerCase();
+    const filtered = allStories.filter(s => s.title.toLowerCase().includes(term));
+    renderSidebar(filtered);
+};
 async function initApp() {
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
     localStorage.setItem('device_uuid', uuid);
@@ -155,7 +211,6 @@ async function initApp() {
         }
     } catch (e) { console.error("Init Error", e); }
 }
-
 function renderSidebar(stories) {
     const list = document.getElementById('storyList'); list.innerHTML = '';
     const colors = ['#FFD1DC', '#D1F2EB', '#FFF4BD', '#E1F5FE'];
@@ -166,16 +221,6 @@ function renderSidebar(stories) {
         list.appendChild(div);
     });
 }
-window.handleSeriesChange = () => {
-    const selectedSeries = document.getElementById('seriesSelect').value;
-    const filtered = (selectedSeries === "All") ? allStories : allStories.filter(s => (s.series_name || 'একক গল্প') === selectedSeries);
-    renderSidebar(filtered);
-};
-window.filterStories = () => {
-    const term = document.getElementById('storySearch').value.toLowerCase();
-    const filtered = allStories.filter(s => s.title.toLowerCase().includes(term));
-    renderSidebar(filtered);
-};
 window.initPayment = () => window.location.assign(window.location.origin + '/payment.html');
 window.toggleFullscreen = () => {
     const p = document.getElementById('playerArea');
