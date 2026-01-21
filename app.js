@@ -1,44 +1,75 @@
-/* --- PoshuPakhi Golpo - Premium Logic Fix v32.5 --- */
+/* --- PoshuPakhi Golpo - Full Restored & Deep Linking v33.0 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let userStatus = 'free'; let dailyStoryId = null; let currentStoryTitle = ""; let allStories = [];
+let userStatus = 'free'; 
+let dailyStoryId = null; 
+let currentStoryTitle = ""; 
+let currentStoryId = null; // বর্তমান গল্পের আইডি ট্র্যাক করার জন্য
+let allStories = [];
 
-// বাটন ফাংশনসমূহ (গ্লোবাল)
-window.initPayment = () => { window.location.assign(window.location.origin + '/payment.html'); };
-window.shareApp = async () => {
-    if (!currentStoryTitle) return alert("গল্প পড়তে শুরু করুন!");
-    const msg = `📖 '${currentStoryTitle}' - সোনামণির জন্য চমৎকার গল্প! ✨\n🔗 ${window.location.origin}`;
-    if (navigator.share) try { await navigator.share({ title: 'পশুপাখি গল্প', text: msg }); } catch (e) {}
-    else { navigator.clipboard.writeText(msg); alert("লিঙ্ক কপি হয়েছে!"); }
+// ১. বাটন এবং নেভিগেশন ফাংশন (Deep Linking যুক্ত শেয়ার লজিক)
+window.initPayment = () => { 
+    window.location.assign(window.location.origin + '/payment.html'); 
 };
+
+window.shareApp = async () => {
+    if (!currentStoryId) return alert("গল্প পড়তে শুরু করুন!");
+    
+    // ইউআরএল এর সাথে ?story=id প্যারামিটার যুক্ত করা হচ্ছে
+    const shareUrl = `${window.location.origin}/?story=${currentStoryId}`;
+    const msg = `📖 '${currentStoryTitle}' - সোনামণির জন্য চমৎকার গল্প! ✨\n🔗 ${shareUrl}`;
+    
+    if (navigator.share) {
+        try { await navigator.share({ title: 'পশুপাখি গল্প', text: msg, url: shareUrl }); } catch (e) {}
+    } else {
+        navigator.clipboard.writeText(msg); 
+        alert("লিঙ্ক কপি হয়েছে!"); 
+    }
+};
+
 window.toggleFullscreen = () => {
     const p = document.getElementById('playerArea');
     const isFS = document.fullscreenElement || document.webkitFullscreenElement;
-    if (!isFS) { if (p.requestFullscreen) p.requestFullscreen(); else if (p.webkitRequestFullscreen) p.webkitRequestFullscreen(); }
-    else { if (document.exitFullscreen) document.exitFullscreen(); }
+    if (!isFS) {
+        if (p.requestFullscreen) p.requestFullscreen();
+        else if (p.webkitRequestFullscreen) p.webkitRequestFullscreen();
+    } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+    }
 };
 
-// স্টোরি ইঞ্জিন ও আনলক লজিক (সংশোধিত)
+// ২. এসইও আপডেট
+function updateStorySEO(title, content) {
+    const siteTitle = "পশুপাখি গল্প - ছোটদের জাদুকরী ভুবন";
+    const shortDesc = content.substring(0, 150).replace(/\n/g, ' ') + "...";
+    document.title = `${title} | ${siteTitle}`;
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute("content", shortDesc);
+}
+
+// ৩. স্টোরি ইঞ্জিন ও আনলক লজিক (সংশোধিত)
 async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     const story = allStories.find(s => String(s.id) === String(storyId));
     if (!story) return;
+    
+    currentStoryId = storyId; // গ্লোবাল ভেরিয়েবলে আইডি সেট করা হলো
     currentStoryTitle = story.title;
+    updateStorySEO(story.title, story.content);
 
-    // লজিক: is_premium যদি false হয় তবে সেটি ফ্রি গল্প
     let canReadFull = (
         userStatus === 'paid' || 
         isDailyFree === true || 
         String(storyId) === String(dailyStoryId) || 
         story.is_premium === false || 
-        story.is_premium === null // ডিফল্ট হিসেবে নাল থাকলেও ফ্রি ধরা হবে
+        story.is_premium === null
     );
 
     let isLocked = !canReadFull;
     let content = canReadFull ? story.content : story.content.substring(0, Math.floor(story.content.length * 0.2)) + "...";
 
-    // আপনার সেই পূর্ণাঙ্গ নিউরোমার্কেটিং বয়ান পুনরুদ্ধার
+    // আপনার সেই পূর্ণাঙ্গ নিউরোমার্কেটিং বয়ান
     const marketingBoxHTML = `
     <div class="m-box">
         <strong style="color: #1b5e20; font-size: 1.25rem; display: block; margin-bottom: 10px;">
@@ -75,7 +106,7 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     document.getElementById('storyFrame').src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
 }
 
-// ড্রপডাউন ফাংশনসমূহ (গ্লোবাল)
+// ৪. সিরিজ ও ড্রপডাউন ফাংশন (গ্লোবাল)
 window.handleSeriesChange = () => {
     const selectedSeries = document.getElementById('seriesSelect').value;
     const storySelect = document.getElementById('storySelect');
@@ -98,24 +129,40 @@ window.filterStories = () => {
     renderSidebar(filtered);
 };
 
+// ৫. ইনিশিয়ালাইজেশন (URL প্যারামিটার চেক লজিকসহ)
 async function initApp() {
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
     localStorage.setItem('device_uuid', uuid);
     if(document.getElementById('footerUid')) document.getElementById('footerUid').innerText = uuid;
+
     try {
         const { data: user } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
         if (user?.status === 'paid') userStatus = 'paid';
+        
         const { data: stories } = await _supabase.from('stories').select('*').order('created_at', { ascending: true });
         if (stories) {
             allStories = stories;
             document.getElementById('totalCount').innerText = stories.length;
+            
             const seriesSelect = document.getElementById('seriesSelect');
             const seriesList = [...new Set(stories.map(s => s.series_name || 'একক গল্প'))];
             seriesList.forEach(name => {
                 const opt = document.createElement('option'); opt.value = name; opt.innerText = name; seriesSelect.appendChild(opt);
             });
-            dailyStoryId = stories[Math.floor(Date.now() / 86400000) % stories.length].id;
-            fetchAndPlay(dailyStoryId, true, true);
+
+            // ইউআরএল থেকে 'story' প্যারামিটারটি চেক করা হচ্ছে
+            const urlParams = new URLSearchParams(window.location.search);
+            const storyIdFromUrl = urlParams.get('story');
+
+            if (storyIdFromUrl) {
+                // লিঙ্কে আইডি থাকলে সরাসরি সেটি প্লে হবে
+                fetchAndPlay(storyIdFromUrl, true, true); 
+            } else {
+                // না থাকলে আজকের ফ্রি গল্পটি আসবে
+                dailyStoryId = stories[Math.floor(Date.now() / 86400000) % stories.length].id;
+                fetchAndPlay(dailyStoryId, true, true);
+            }
+            
             renderSidebar(stories);
         }
     } catch (e) { console.error("Init Error", e); }
