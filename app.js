@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Pure Deep Link & Marketing Sync v36.1 --- */
+/* --- PoshuPakhi Golpo - Premium Logic Fix & Deep Link v36.2 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -9,30 +9,25 @@ let currentStoryTitle = "";
 let currentStoryId = null; 
 let allStories = [];
 
-// ১. স্মার্ট শেয়ারিং লজিক (সরাসরি লিঙ্ক ও ক্যাপশন)
+// ১. স্মার্ট শেয়ারিং লজিক (সরাসরি লিঙ্ক ও ক্যাপশন - আগের মতো)
 window.shareApp = async () => {
     if (!currentStoryId) return alert("আগে একটি গল্প নির্বাচন করুন!");
     
-    // আইফ্রেমে থাকা নির্দিষ্ট গল্পের ডিপ লিঙ্ক তৈরি
+    // বর্তমানে আইফ্রেমে থাকা গল্পের ডিপ লিঙ্ক
     const shareUrl = `${window.location.origin}/?story=${currentStoryId}`;
     const msg = `📖 '${currentStoryTitle}' - সোনামণির জন্য চমৎকার গল্প! ✨\n🔗 ${shareUrl}`;
     
     if (navigator.share) {
         try { 
-            await navigator.share({ 
-                title: 'পশুপাখি গল্প', 
-                text: msg 
-                // ডাবল লিঙ্ক সমস্যা এড়াতে url ফিল্ডটি ফাঁকা রাখা হয়েছে
-            }); 
+            await navigator.share({ title: 'পশুপাখি গল্প', text: msg }); 
         } catch (e) { console.log("Share cancelled"); }
     } else {
-        // ফলব্যাক: ক্লিপবোর্ডে কপি করা
         navigator.clipboard.writeText(msg); 
         alert("গল্পের লিঙ্ক ও ক্যাপশন কপি করা হয়েছে!"); 
     }
 };
 
-// ২. স্টোরি ইঞ্জিন ও নিউরোমার্কেটিং লজিক অডিট
+// ২. স্টোরি ইঞ্জিন ও সংশোধিত প্রিমিয়াম লক লজিক
 async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     const story = allStories.find(s => String(s.id) === String(storyId));
     if (!story) return;
@@ -40,12 +35,18 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     currentStoryId = storyId; 
     currentStoryTitle = story.title;
 
-    // সুপাবেজ bool টাইপ অনুযায়ী প্রিমিয়াম যাচাই
-    const isPremium = (story.is_premium === true || String(story.is_premium) === 'true');
+    // প্রিমিয়াম লজিক অডিট: ডাটা টাইপ সেনসিটিভ চেক
+    const isPremium = (
+        story.is_premium === true || 
+        String(story.is_premium).toLowerCase() === 'true' || 
+        story.is_premium === 1 || 
+        story.is_premium === '1'
+    );
+    
     const isDaily = (isDailyFree === true || String(storyId) === String(dailyStoryId));
     const isPaid = (userStatus === 'paid');
 
-    // পেইড ইউজার বা আজকের ফ্রি গল্প না হলে ২০% লক হবে
+    // লজিক: প্রিমিয়াম হলে এবং (পেইড না হলে বা আজকের ফ্রি না হলে) লক হবে
     let canReadFull = true;
     if (isPremium && !isDaily && !isPaid) {
         canReadFull = false;
@@ -54,7 +55,7 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     let isLocked = !canReadFull;
     let content = canReadFull ? story.content : story.content.substring(0, Math.floor(story.content.length * 0.2)) + "...";
 
-    // আপনার সেই নির্দিষ্ট নিউরোমার্কেটিং বক্স
+    // আপনার সেই নির্দিষ্ট এবং পরিশ্রমী নিউরোমার্কেটিং বক্স
     const marketingBoxHTML = `
     <div class="m-box">
         <strong style="color: #1b5e20; font-size: 1.25rem; display: block; margin-bottom: 10px;">
@@ -75,7 +76,7 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
             </div>
             <button onclick="window.parent.initPayment()" class="btn">আজীবনের জন্য আনলক করুন</button>
         </div>
-        <p style="font-size: 0.95rem; color: #666;">এখনই আনলক করতে না চাইলে <span onclick="window.parent.location.reload()" style="color: #2E7D32; text-decoration: underline; cursor: pointer; font-weight: bold;">আজকের গল্পটি</span> পড়ুন।</p>
+        <p style="font-size: 0.95rem; color: #666;">এখনই আনলক করতে না চাইলে <span onclick="window.parent.location.reload()" style="color: #2E7D32; text-decoration: underline; cursor: pointer; font-weight: bold;">আজকের ফ্রি গল্পটি</span> পড়ুন।</p>
     </div>`;
 
     const storyHtml = `<html><head><style>
@@ -90,26 +91,28 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     document.getElementById('storyFrame').src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
 }
 
-// ৩. অটো-ফিল্টারিং ও নেভিগেশন লজিক
+// ৩. অটো-ফিল্টারিং ও নেভিগেশন লজিক (অক্ষুণ্ণ)
 window.handleSeriesChange = () => {
     const selectedSeries = document.getElementById('seriesSelect').value;
     const filtered = (selectedSeries === "All") ? allStories : allStories.filter(s => (s.series_name || 'একক গল্প') === selectedSeries);
     renderSidebar(filtered);
 };
-
 window.filterStories = () => {
     const term = document.getElementById('storySearch').value.toLowerCase();
     const filtered = allStories.filter(s => s.title.toLowerCase().includes(term));
     renderSidebar(filtered);
 };
 
+// ৪. ইনিশিয়ালাইজেশন ও ডিপ লিঙ্ক সাপোর্ট
 async function initApp() {
     let uuid = localStorage.getItem('device_uuid') || self.crypto.randomUUID();
     localStorage.setItem('device_uuid', uuid);
     if(document.getElementById('footerUid')) document.getElementById('footerUid').innerText = uuid;
+
     try {
         const { data: user } = await _supabase.from('users').select('status').eq('device_uuid', uuid).maybeSingle();
         if (user?.status === 'paid') userStatus = 'paid';
+        
         const { data: stories } = await _supabase.from('stories').select('*').order('created_at', { ascending: true });
         if (stories) {
             allStories = stories; document.getElementById('totalCount').innerText = stories.length;
@@ -119,7 +122,7 @@ async function initApp() {
                 const opt = document.createElement('option'); opt.value = name; opt.innerText = name; seriesSelect.appendChild(opt);
             });
 
-            // Deep Link লজিক: ইউআরএল থেকে নির্দিষ্ট গল্প লোড করা
+            // Deep Link লজিক: লিঙ্কে আইডি থাকলে সেটি লক হিসেবে লোড হবে
             const urlParams = new URLSearchParams(window.location.search);
             const storyIdFromUrl = urlParams.get('story');
             if (storyIdFromUrl) {
