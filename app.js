@@ -1,4 +1,4 @@
-/* --- PoshuPakhi Golpo - Advanced Global Logic v35.1 --- */
+/* --- PoshuPakhi Golpo - Neuro-Marketing & Premium Logic v35.3 --- */
 const SUPABASE_URL = 'https://xptwwlrcygimfislsutz.supabase.co'.trim(); 
 const SUPABASE_ANON_KEY = 'sb_publishable_N0YqY-tMEW_KWxFdS7zgVA_3CgR8Go-'.trim();
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -6,34 +6,34 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let userStatus = 'free'; let dailyStoryId = null; 
 let currentStoryTitle = ""; let currentStoryId = null; let allStories = [];
 
-// ১. ডাইনামিক সোশ্যাল কার্ড শেয়ারিং (Algorithm Friendly)
+// ১. ডাইনামিক ইমেজ শেয়ারিং লজিক (সোশ্যাল রিচ অপ্টিমাইজড)
 window.shareApp = async () => {
-    if (!currentStoryId) return alert("আগে একটি গল্প শুরু করুন!");
+    if (!currentStoryId) return alert("আগে একটি গল্প নির্বাচন করুন!");
     const shareUrl = `${window.location.origin}/?story=${currentStoryId}`;
     try {
         const canvas = document.createElement('canvas');
         canvas.width = 1200; canvas.height = 630; 
         const ctx = canvas.getContext('2d');
-        
-        // ব্যাকগ্রাউন্ড ও বর্ডার (Visual Dominance)
         ctx.fillStyle = '#F1F8E9'; ctx.fillRect(0, 0, 1200, 630);
         ctx.strokeStyle = '#2E7D32'; ctx.lineWidth = 25; ctx.strokeRect(40, 40, 1120, 550);
-        
         ctx.fillStyle = '#1B5E20'; ctx.textAlign = 'center';
         ctx.font = 'bold 70px "Hind Siliguri", sans-serif';
         const lines = wrapText(ctx, `📖 ${currentStoryTitle}`, 1000);
         lines.forEach((line, i) => ctx.fillText(line, 600, 260 + (i * 90)));
-
         ctx.font = 'italic 45px "Quicksand", sans-serif'; ctx.fillStyle = '#78909C';
         ctx.fillText("poshupakhigolpo.online", 600, 540);
 
         canvas.toBlob(async (blob) => {
             const file = new File([blob], 'story-card.png', { type: 'image/png' });
-            const shareData = { title: 'পশুপাখি গল্প', text: `✨ চমৎকার এই গল্পটি আপনার সোনামণিকে আজই পড়ে শোনান!\n🔗 ${shareUrl}`, files: [file] };
+            const shareData = {
+                title: 'পশুপাখি গল্প',
+                text: `✨ চমৎকার এই গল্পটি আপনার সোনামণিকে আজই পড়ে শোনান!\n\nগল্পটি পড়তে এখানে ক্লিক করুন:\n🔗 ${shareUrl}`,
+                files: [file]
+            };
             if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share(shareData);
             else { navigator.clipboard.writeText(`📖 ${currentStoryTitle}\n🔗 ${shareUrl}`); alert("লিঙ্ক কপি হয়েছে!"); }
         });
-    } catch (err) { console.error("Share fail", err); }
+    } catch (err) { console.error("Share failed", err); }
 };
 
 function wrapText(ctx, text, maxWidth) {
@@ -45,18 +45,27 @@ function wrapText(ctx, text, maxWidth) {
     lines.push(currentLine); return lines;
 }
 
-// ২. স্টোরি রেন্ডারিং ও আপনার সেই নির্দিষ্ট মার্কেটিং বক্স
+// ২. স্টোরি ইঞ্জিন ও আনলক লজিক (সংশোধিত ও অত্যন্ত নিরাপদ)
 async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     const story = allStories.find(s => String(s.id) === String(storyId));
     if (!story) return;
     currentStoryId = storyId; currentStoryTitle = story.title;
 
-    // is_premium কলাম চেক (Boolean লজিক ফিক্স)
-    let canReadFull = (userStatus === 'paid' || isDailyFree || String(storyId) === String(dailyStoryId) || story.is_premium === false || story.is_premium === null || String(story.is_premium) === 'false');
+    // প্রিমিয়াম লজিক অডিট: এখানে কঠোরভাবে ২০% লক নিশ্চিত করা হয়েছে
+    const isPremium = (story.is_premium === true || String(story.is_premium) === 'true');
+    const isDaily = (isDailyFree === true || String(storyId) === String(dailyStoryId));
+    const isPaid = (userStatus === 'paid');
+
+    // যদি প্রিমিয়াম হয় এবং ইউজার পেইড না হয় এবং আজকের ফ্রি গল্প না হয়, তবে লক হবে
+    let canReadFull = true;
+    if (isPremium && !isDaily && !isPaid) {
+        canReadFull = false;
+    }
+
     let isLocked = !canReadFull;
     let content = canReadFull ? story.content : story.content.substring(0, Math.floor(story.content.length * 0.2)) + "...";
 
-    // আপনার নিউরোমার্কেটিং কন্টেন্ট পুনরুদ্ধার
+    // আপনার সেই নির্দিষ্ট এবং অত্যন্ত পরিশ্রমী মার্কেটিং বক্স
     const marketingBoxHTML = `
     <div class="m-box">
         <strong style="color: #1b5e20; font-size: 1.25rem; display: block; margin-bottom: 10px;">
@@ -92,7 +101,7 @@ async function fetchAndPlay(storyId, isDailyFree = false, isAutoLoad = false) {
     document.getElementById('storyFrame').src = URL.createObjectURL(new Blob([storyHtml], { type: 'text/html' }));
 }
 
-// ৩. অটো-ফিল্টারিং ও নেভিগেশন লজিক
+// ৩. সিরিজ ফিল্টারিং ও অটো-নেভিগেশন
 window.handleSeriesChange = () => {
     const selectedSeries = document.getElementById('seriesSelect').value;
     const filtered = (selectedSeries === "All") ? allStories : allStories.filter(s => (s.series_name || 'একক গল্প') === selectedSeries);
@@ -122,8 +131,11 @@ async function initApp() {
             });
             const urlParams = new URLSearchParams(window.location.search);
             const storyIdFromUrl = urlParams.get('story');
-            if (storyIdFromUrl) fetchAndPlay(storyIdFromUrl, true, true);
-            else { dailyStoryId = stories[Math.floor(Date.now() / 86400000) % stories.length].id; fetchAndPlay(dailyStoryId, true, true); }
+            if (storyIdFromUrl) fetchAndPlay(storyIdFromUrl, false, true); // লিঙ্ক থেকে আসলে সেটি অটো ফ্রি হবে না
+            else { 
+                dailyStoryId = stories[Math.floor(Date.now() / 86400000) % stories.length].id; 
+                fetchAndPlay(dailyStoryId, true, true); 
+            }
             renderSidebar(stories);
         }
     } catch (e) { console.error("Init Error", e); }
@@ -139,6 +151,7 @@ function renderSidebar(stories) {
         list.appendChild(div);
     });
 }
+
 window.initPayment = () => window.location.assign(window.location.origin + '/payment.html');
 window.toggleFullscreen = () => {
     const p = document.getElementById('playerArea');
